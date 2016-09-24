@@ -54,7 +54,7 @@ const GLchar *fragmentShaderSource=
     "color=vec4(1.0f,0.5f,0.2f,1.0f);\n"
     "}\n";
 
-
+//教程实现
 void helloTriangle(){
     //初始化窗口
     GLFWwindow *window=initWindow("HelloKenLee!",800,600);
@@ -116,7 +116,7 @@ void helloTriangle(){
     return;
 }
 
-
+//练习1实现
 void helloTriangleEx1(){
     //初始化窗口
     GLFWwindow *window=initWindow("HelloKenLee!",800,600);
@@ -226,4 +226,6 @@ void helloTriangleEx2(){
     glfwTerminate();
     return;
 }
+
+
 #endif // HELLO_TRIANGLE_HPP
