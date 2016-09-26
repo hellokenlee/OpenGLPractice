@@ -10,8 +10,14 @@
 //Private libraries
 #include "utils.hpp"
 #include "Hello-Triangle.hpp"
+#include "Shaders.hpp"
+
 
 int main(){
+<<<<<<< HEAD
     helloTriangleEx3();
+=======
+    shaders();
+>>>>>>> 7b3960116f0bc4747bc677fa06172f1205df12c8
     return 0;
 }
