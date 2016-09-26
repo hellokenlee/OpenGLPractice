@@ -1,6 +1,8 @@
 #ifndef UTILS_HPP
 #define UTILS_HPP
+
 using namespace std;
+
 //向 stdout 输出OpenGL,GLEW,GLFW版本信息
 void showEnviroment(){
     fprintf(stdout,"Working at:\n\t%s\n",glGetString(GL_RENDERER));
@@ -8,6 +10,7 @@ void showEnviroment(){
     fprintf(stdout,"\tGLEW %s\n", glewGetString(GLEW_VERSION));
     fprintf(stdout,"\tGLFW %s\n",glfwGetVersionString());
 }
+
 //检查GLSL编译情况
 void checkShaderCompile(GLuint shaderID){
     GLint isSuccess;
@@ -15,10 +18,11 @@ void checkShaderCompile(GLuint shaderID){
     if(!isSuccess){
         GLchar infoLog[512];
         glGetShaderInfoLog(shaderID,512,nullptr,infoLog);
-        cout<<"ERROR: Comlile VertexShader Error:"<<endl<<infoLog<<endl;
+        cout<<"ERROR: Comlile Shader Error:"<<endl<<infoLog<<endl;
         exit(-1);
     }
 }
+
 //检查多Shader链接情况
 void checkProgramLink(GLuint programID){
     GLint isSuccess;
@@ -30,6 +34,7 @@ void checkProgramLink(GLuint programID){
         exit(-1);
     }
 }
+
 //初始化窗口
 GLFWwindow* initWindow(const char* window_name,int w,int h){
     //初始化GLFW。设置GLFW参数，GL版本3.3，只使用CORE_PROFILE，不能Resize

@@ -12,6 +12,6 @@
 #include "Hello-Triangle.hpp"
 
 int main(){
-    helloTriangleEx1();
+    helloTriangleEx3();
     return 0;
 }
