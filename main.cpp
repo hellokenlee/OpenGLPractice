@@ -1,3 +1,4 @@
+/*Copyright reserved by KenLee@2016 ken4000kl@gmail.com*/
 //GLEW
 #define GLEW_STATIC
 #include <GL/glew.h>
