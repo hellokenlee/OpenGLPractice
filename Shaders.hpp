@@ -1,7 +1,7 @@
 /*Copyright reserved by KenLee@2016 ken4000kl@gmail.com*/
 #ifndef SHADERS_HPP
 #define SHADERS_HPP
-
+namespace shaders{};
 #include <math.h>
 void shaders(){
     //数据
