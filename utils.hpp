@@ -22,7 +22,6 @@ void checkShaderCompile(GLuint shaderID){
         exit(-1);
     }
 }
-
 //检查多Shader链接情况
 void checkProgramLink(GLuint programID){
     GLint isSuccess;
