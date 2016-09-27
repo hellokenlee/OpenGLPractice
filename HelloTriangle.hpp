@@ -1,7 +1,8 @@
 #ifndef HELLO_TRIANGLE_HPP
 #define HELLO_TRIANGLE_HPP
 
-using namespace std;
+//Chapcter 1 namespace
+namespace HelloTriangle{
 //所有顶点数据
 GLfloat vertices[] = {
      0.5f,  0.5f, 0.0f,  // Top Right
@@ -32,9 +33,9 @@ const GLchar *fragmentShaderSource=
     "}\n";
 
 //教程实现
-void helloTriangle(){
+void turtorial(){
     //初始化窗口
-    GLFWwindow *window=initWindow("HelloKenLee!",800,600);
+    GLFWwindow *window=initWindow("HelloTriangle",800,600);
     showEnviroment();
     //创建VBO 申请显存访问
     GLuint VBO;
@@ -105,9 +106,9 @@ GLfloat verticesEx1[] = {
     -0.5f, -0.5f, 0.0f,  // Bottom Left
     -0.5f,  0.5f, 0.0f   // Top Left
 };
-void helloTriangleEx1(){
+void exercies1(){
     //初始化窗口
-    GLFWwindow *window=initWindow("HelloKenLee!",800,600);
+    GLFWwindow *window=initWindow("HelloTriangle-EX1",800,600);
     showEnviroment();
     //创建VBO 申请显存访问
     GLuint VBO;
@@ -176,9 +177,9 @@ GLfloat verticesEx2_2[]={
     -0.5f, -0.5f, 0.0f,  // Bottom Left
     -0.5f,  0.5f, 0.0f   // Top Left
 };
-void helloTriangleEx2(){
+void exercise2(){
     //初始化窗口
-    GLFWwindow *window=initWindow("HelloKenLee!",800,600);
+    GLFWwindow *window=initWindow("HelloTriangle-EX2",800,600);
     showEnviroment();
     //创建VBO数组
     GLuint VBO[2];
@@ -249,9 +250,9 @@ const GLchar *fragmentShaderSourceEx3=
     "{\n"
     "color=vec4(1.0f,1.0f,0.0f,1.0f);\n"
     "}\n";
-void helloTriangleEx3(){
+void exercies3(){
     //初始化窗口
-    GLFWwindow *window=initWindow("HelloKenLee!",800,600);
+    GLFWwindow *window=initWindow("HelloTriangle-EX3",800,600);
     showEnviroment();
     //创建VBO数组
     GLuint VBO[2];
@@ -326,4 +327,5 @@ void helloTriangleEx3(){
     glfwTerminate();
     return;
 }
+};
 #endif // HELLO_TRIANGLE_HPP
