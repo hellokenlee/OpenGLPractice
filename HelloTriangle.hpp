@@ -332,4 +332,3 @@ void exercies3(){
 
 };		//end of namespace
 #endif // HELLO_TRIANGLE_HPP
->>>>>>> 92837879efe2857e244a113ec6db2e5ae4352040:HelloTriangle.hpp
