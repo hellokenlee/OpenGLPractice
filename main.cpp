@@ -16,6 +16,6 @@
 
 
 int main(){
-    Shaders::tutorial();
+    Shaders::exercise3();
     return 0;
 }
