@@ -20,8 +20,8 @@ public:
         std::string fShaderSource;
         std::ifstream vShaderFile;
         std::ifstream fShaderFile;
-        vShaderFile.exceptions(std::ifstream::badbit);
-        fShaderFile.exceptions(std::ifstream::badbit);
+        vShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+        fShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
         try {
             //读入Shader文件
             vShaderFile.open(vShaderSourcePath);
@@ -35,7 +35,7 @@ public:
             fShaderSource=fShaderStream.str();
         } catch(std::ifstream::failure e) {
             //处理异常
-            std::cout<<"Error::Can not read shader source file!"<<std::endl;
+            std::cout<<"Error::Shader(const char*,const char*)::Fail to find shader source file!"<<std::endl;
             std::cout<<e.what()<<endl;
             this->programID=0;
             return;
@@ -234,6 +234,7 @@ void exercise3(){
         glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,6*sizeof(GL_FLOAT),(GLvoid*)0);
         glEnableVertexAttribArray(0);
     glBindVertexArray(0);
+    checkError();
     //主循环
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
@@ -251,5 +252,5 @@ void exercise3(){
     glfwTerminate();
 }
 
-};
-#endif
+};      ////namespace Shaders
+#endif  //SHADERS_HPP

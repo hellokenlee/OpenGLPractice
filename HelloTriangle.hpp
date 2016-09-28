@@ -1,4 +1,4 @@
-
+/*Copyright reserved by KenLee@2016 ken4000kl@gmail.com*/
 #ifndef HELLO_TRIANGLE_HPP
 #define HELLO_TRIANGLE_HPP
 
@@ -330,5 +330,5 @@ void exercies3(){
 }
 
 
-};		//end of namespace
+};		//namespace HelloTriangle
 #endif // HELLO_TRIANGLE_HPP

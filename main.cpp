@@ -4,6 +4,8 @@
 #include <GL/glew.h>
 //GLFW
 #include <GLFW/glfw3.h>
+//FreeImage
+#include <FreeImage.h>
 //C++ Library
 #include <cstdlib>
 #include <cstdio>
@@ -13,7 +15,7 @@
 //Tutorial and exercises
 #include "HelloTriangle.hpp"
 #include "Shaders.hpp"
-
+#include "Textures.hpp"
 
 int main(){
     Shaders::exercise3();
