@@ -32,13 +32,13 @@ GLuint loadTextureFromImage(const char* filename){
     //生产纹理
     glGenTextures(1,&texID);
     //指定纹理类型
-    glBindTexture(GL_TEXTURE_2D,texID)；
+    glBindTexture(GL_TEXTURE_2D,texID);
     //载入图片数据到纹理
     glTexImage2D(GL_TEXTURE,0,GL_RGB,width,height,0,GL_RGB,GL_UNSIGNED_BYTE,bits);
     //释放图片
     FreeImage_Unload(image);
     //恢复状态机状态
-    glBindTextures(GL_TEXTURE_2D,0);
+    glBindTexture(GL_TEXTURE_2D,0);
     return texID;
 }
 GLfloat vertices[] = {
@@ -73,12 +73,12 @@ void tutorial(){
     GLuint tex=loadTextureFromImage("");
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
-        glClearColor(1.0f,1.0f,1.0f);
+        glClearColor(1.0f,1.0f,1.0f,1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         shaderProgram.use();
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES,0,3);
-        glBindVertexArray(0));
+        glBindVertexArray(0);
 
     }
     glfwTerminate();
