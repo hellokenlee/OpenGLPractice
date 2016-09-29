@@ -18,6 +18,6 @@
 #include "Textures.hpp"
 
 int main(){
-    Shaders::exercise3();
+    Textures::tutorial();
     return 0;
 }
