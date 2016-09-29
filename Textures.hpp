@@ -4,7 +4,7 @@
 
 namespace Textures{
 //从图片文件生产纹理
-GLuint loadTextureFromImage(const char* filename){
+GLuint loadTextureFromImage(const char* filename,GLenum texformat,GLenum imageformat){
     //纹理ID
     GLuint texID;
     //图片格式
@@ -43,7 +43,7 @@ GLuint loadTextureFromImage(const char* filename){
     //指定纹理类型
     glBindTexture(GL_TEXTURE_2D,texID);
     //载入图片数据到纹理
-    glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,width,height,0,GL_BGR,GL_UNSIGNED_BYTE,bits);
+    glTexImage2D(GL_TEXTURE_2D,0,texformat,width,height,0,imageformat,GL_UNSIGNED_BYTE,bits);
     glGenerateMipmap(GL_TEXTURE_2D);
     //释放图片
     FreeImage_Unload(image);
@@ -87,16 +87,23 @@ void tutorial(){
         glEnableVertexAttribArray(2);
     glBindVertexArray(0);
     //设置纹理
-    GLuint tex=loadTextureFromImage("textures/wall.jpg");
+    GLuint tex2=loadTextureFromImage("textures/face.png",GL_RGBA,GL_BGRA);
+    GLuint tex1=loadTextureFromImage("textures/container.jpg",GL_RGB,GL_BGR);
     //主循环
     while(!glfwWindowShouldClose(window)){
-        //
+        //Keybord and mouse
         glfwPollEvents();
         //BGC
         glClearColor(1.0f,1.0f,1.0f,1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         //bind texture
-        glBindTexture(GL_TEXTURE_2D,tex);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D,tex1);
+        glUniform1i(glGetUniformLocation(shaderProgram.programID,"tex1"),0);
+
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D,tex2);
+        glUniform1i(glGetUniformLocation(shaderProgram.programID,"tex2"),1);
         //Draw
         shaderProgram.use();
         glBindVertexArray(VAO);
