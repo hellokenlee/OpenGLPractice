@@ -35,7 +35,7 @@ const GLchar *fragmentShaderSource=
 //教程实现
 void turtorial(){
     //初始化窗口
-    GLFWwindow *window=initWindow("HelloTriangle",800,600);
+    GLFWwindow *window=initWindow("HelloTriangle",800,600,nullptr);
     showEnviroment();
     //创建VBO 申请显存访问
     GLuint VBO;
@@ -108,7 +108,7 @@ GLfloat verticesEx1[] = {
 };
 void exercies1(){
     //初始化窗口
-    GLFWwindow *window=initWindow("HelloTriangle-EX1",800,600);
+    GLFWwindow *window=initWindow("HelloTriangle-EX1",800,600,nullptr);
     showEnviroment();
     //创建VBO 申请显存访问
     GLuint VBO;
@@ -179,7 +179,7 @@ GLfloat verticesEx2_2[]={
 };
 void exercise2(){
     //初始化窗口
-    GLFWwindow *window=initWindow("HelloTriangle-EX2",800,600);
+    GLFWwindow *window=initWindow("HelloTriangle-EX2",800,600,nullptr);
     showEnviroment();
     //创建VBO数组
     GLuint VBO[2];
@@ -252,7 +252,7 @@ const GLchar *fragmentShaderSourceEx3=
     "}\n";
 void exercies3(){
     //初始化窗口
-    GLFWwindow *window=initWindow("HelloTriangle-EX3",800,600);
+    GLFWwindow *window=initWindow("HelloTriangle-EX3",800,600,nullptr);
     showEnviroment();
     //创建VBO数组
     GLuint VBO[2];

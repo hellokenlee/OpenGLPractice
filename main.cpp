@@ -18,6 +18,7 @@
 #include "Textures.hpp"
 
 int main(){
-    Textures::tutorial();
+    //Shaders::exercise2();
+    Textures::exercise4();
     return 0;
 }

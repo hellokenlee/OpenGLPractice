@@ -4,7 +4,7 @@
 using namespace std;
 
 //初始化窗口
-GLFWwindow* initWindow(const char* window_name,int w,int h){
+GLFWwindow* initWindow(const char* window_name,int w,int h,void (*key_callback)(GLFWwindow*,int,int,int,int)){
     //初始化GLFW。设置GLFW参数，GL版本3.3，只使用CORE_PROFILE，不能Resize
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,3);
@@ -20,6 +20,9 @@ GLFWwindow* initWindow(const char* window_name,int w,int h){
         exit(-1);
     }
     glfwMakeContextCurrent(window);
+
+    //绑定按键回调函数
+    glfwSetKeyCallback(window,key_callback);
     //初始化GLEW。 使用Experimental函数允许我们更好的使用core_profile
     glewExperimental = GL_TRUE;
     if(glewInit()!=GLEW_OK){
