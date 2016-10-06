@@ -122,7 +122,7 @@ void tutorial(){
 //练习1: 只更改fShader， 让笑脸朝向不同方向(沿xy翻转)
 void exercise1(){
     //创建窗口
-    GLFWwindow *window=initWindow("Shaders-EX1",800,600,nullptr);
+    GLFWwindow *window=initWindow("Textures-EX1",800,600,nullptr);
     showEnviroment();
     //创建Shader
     Shaders::Shader shaderProgram("shaders/Textures/shader.vs","shaders/Textures/shaderEx1.frag");
@@ -175,7 +175,7 @@ void exercise1(){
 //练习2 让纹理坐标越界，用不同得WRAP方法处理2个纹理
 void exercise2(){
     //创建窗口
-    GLFWwindow *window=initWindow("Shaders-EX2",800,600,nullptr);
+    GLFWwindow *window=initWindow("Textures-EX2",800,600,nullptr);
     showEnviroment();
     //创建Shader
     Shaders::Shader shaderProgram("shaders/Textures/shader.vs","shaders/Textures/shaderEx2.frag");
@@ -236,7 +236,7 @@ GLfloat verticesEx3[] = {
 };
 void exercise3(){
     //创建窗口
-    GLFWwindow *window=initWindow("Shaders-EX3",800,600,nullptr);
+    GLFWwindow *window=initWindow("Texture-EX3",800,600,nullptr);
     showEnviroment();
     //创建Shader
     Shaders::Shader shaderProgram("shaders/Textures/shader.vs","shaders/Textures/shaderEx4.frag");
@@ -307,7 +307,7 @@ void exercise4(){
     //FPS计算
     FPSCounter fc;
     //创建窗口
-    GLFWwindow *window=initWindow("Shaders-EX4",800,600,key_callback);
+    GLFWwindow *window=initWindow("Texture-EX4",800,600,key_callback);
     //关闭垂直同步
     glfwSwapInterval(0);
     //显示环境
