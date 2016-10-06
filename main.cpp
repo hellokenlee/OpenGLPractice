@@ -16,9 +16,10 @@
 #include "HelloTriangle.hpp"
 #include "Shaders.hpp"
 #include "Textures.hpp"
+#include "Benchmark.hpp"
 
 int main(){
-    //Shaders::exercise2();
-    Textures::exercise4();
+    //Benchmark::oldOpenGLTest();
+    //Benchmark::coreprofileTest();
     return 0;
 }

@@ -48,7 +48,7 @@ GLuint loadTextureFromImage(const char* filename,GLenum texformat,GLenum imagefo
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
     //载入图片数据到纹理
     glTexImage2D(GL_TEXTURE_2D,0,texformat,width,height,0,imageformat,GL_UNSIGNED_BYTE,bits);
-    glGenerateMipmap(GL_TEXTURE_2D);
+    //glGenerateMipmap(GL_TEXTURE_2D);
     //释放图片
     FreeImage_Unload(image);
     //恢复状态机状态
@@ -301,9 +301,17 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         }
     }
 }
+
+//
 void exercise4(){
+    //FPS计算
+    double lastTime=glfwGetTime(),currentTime;
+    int nbFrames=0;
     //创建窗口
     GLFWwindow *window=initWindow("Shaders-EX4",800,600,key_callback);
+    //关闭垂直同步
+    glfwSwapInterval(0);
+    //显示环境
     showEnviroment();
     //创建Shader
     Shaders::Shader shaderProgram("shaders/Textures/shader.vs","shaders/Textures/shaderEx4.frag");
@@ -350,6 +358,14 @@ void exercise4(){
         glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
         glBindVertexArray(0);
         glfwSwapBuffers(window);
+        //Count FPS
+        currentTime=glfwGetTime();
+        ++nbFrames;
+        if(currentTime-lastTime >=1.0){
+            printf("%f ms/frame\n",1000.0/double(nbFrames));
+            nbFrames=0;
+            lastTime+=1.0;
+        }
     }
     glfwTerminate();
     return;

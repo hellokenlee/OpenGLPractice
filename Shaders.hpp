@@ -177,11 +177,16 @@ void exercise1(){
 //练习2：令三角形向右偏移任意值
 //(uniform 实现)
 void exercise2(){
+    //FPS计算
+    double lastTime=glfwGetTime(),currentTime=glfwGetTime();
+    int nbFrames=0;
     //偏移值
-    GLfloat offset=0.4,time_v;
+    GLfloat offset=0.4;
     GLint offsetLocation;
     //初始化
     GLFWwindow *window=initWindow("Shader-EX2",800,600,nullptr);
+    //关闭垂直同步
+    glfwSwapInterval(0);
     showEnviroment();
     Shader shaderProgram("shaders/Shaders/shaderEx2.vs","shaders/Shaders/shader.frag");
     GLuint VAO,VBO;
@@ -202,8 +207,7 @@ void exercise2(){
         glClearColor(1.0f,1.0f,1.0f,1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         //更新uniform
-        time_v=glfwGetTime();
-        offset=sin(time_v);
+        offset=sin(currentTime);
         offsetLocation=glGetUniformLocation(shaderProgram.programID,"offset");
         glUniform1f(offsetLocation,offset);
         //绘制
@@ -213,6 +217,14 @@ void exercise2(){
         glBindVertexArray(0);
         //置换双缓冲
         glfwSwapBuffers(window);
+        //Count FPS
+        currentTime=glfwGetTime();
+        ++nbFrames;
+        if(currentTime-lastTime >=1.0){
+            printf("%f ms/frame\n",1000.0/double(nbFrames));
+            nbFrames=0;
+            lastTime+=1.0;
+        }
     }
     glfwTerminate();
 }
