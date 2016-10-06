@@ -305,8 +305,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 //
 void exercise4(){
     //FPS计算
-    double lastTime=glfwGetTime(),currentTime;
-    int nbFrames=0;
+    FPSCounter fc;
     //创建窗口
     GLFWwindow *window=initWindow("Shaders-EX4",800,600,key_callback);
     //关闭垂直同步
@@ -359,13 +358,7 @@ void exercise4(){
         glBindVertexArray(0);
         glfwSwapBuffers(window);
         //Count FPS
-        currentTime=glfwGetTime();
-        ++nbFrames;
-        if(currentTime-lastTime >=1.0){
-            printf("%f ms/frame\n",1000.0/double(nbFrames));
-            nbFrames=0;
-            lastTime+=1.0;
-        }
+        fc.update();
     }
     glfwTerminate();
     return;

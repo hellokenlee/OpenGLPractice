@@ -19,7 +19,6 @@
 #include "Benchmark.hpp"
 
 int main(){
-    //Benchmark::oldOpenGLTest();
-    //Benchmark::coreprofileTest();
+    Textures::exercise4();
     return 0;
 }

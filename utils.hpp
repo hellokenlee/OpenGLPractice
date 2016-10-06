@@ -3,6 +3,32 @@
 
 using namespace std;
 
+//FPS计数器
+class FPSCounter{
+public:
+    FPSCounter(){
+        init();
+    }
+    void init(){
+        lastTime=currentTime=glfwGetTime();
+        frameCounter=0;
+    }
+    //Call in main loop.
+    void update(){
+        currentTime=glfwGetTime();
+        ++frameCounter;
+        if(currentTime-lastTime >=1.0){
+            printf("%f ms/frame\n",1000.0/double(frameCounter));
+            frameCounter=0;
+            lastTime+=1.0;
+        }
+    }
+private:
+    double lastTime,currentTime;
+    int frameCounter;
+};
+
+
 //初始化窗口
 GLFWwindow* initWindow(const char* window_name,int w,int h,void (*key_callback)(GLFWwindow*,int,int,int,int)){
     //初始化GLFW。设置GLFW参数，GL版本3.3，只使用CORE_PROFILE，不能Resize
@@ -47,7 +73,7 @@ void showEnviroment(){
     fprintf(stdout,"\tGLFW %s\n",glfwGetVersionString());
 }
 
-//检查OpenGL状态机
+//获取GL状态机错误
 void checkError(){
     cout<<"ERROR Check: "<<gluErrorString(glGetError())<<endl;
 }
