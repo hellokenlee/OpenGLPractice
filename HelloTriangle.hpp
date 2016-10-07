@@ -32,7 +32,7 @@ const GLchar *fragmentShaderSource=
     "{\n"
     "color=vec4(1.0f,0.5f,0.2f,1.0f);\n"
     "}\n";
-//教程实现
+//教程实现:绘制两个三角形组成的一个矩形
 void turtorial(){
     //初始化窗口
     GLFWwindow *window=initWindow("HelloTriangle",800,600,nullptr);

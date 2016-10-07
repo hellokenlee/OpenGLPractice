@@ -20,6 +20,6 @@
 #include "Transformations.hpp"
 
 int main(){
-    Transformations::tutorial();
+    HelloTriangle::turtorial();
     return 0;
 }

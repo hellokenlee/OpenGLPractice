@@ -8,5 +8,5 @@ uniform sampler2D tex1;//texture var
 uniform sampler2D tex2;
 
 void main(){
-	color = mix( texture(tex1, vertexTexCoord).rgba, texture(tex2, vertexTexCoord).rgba, vec4(texture(tex2, vertexTexCoord)).a * 0.2);
+	color = mix( texture(tex1, vertexTexCoord).rgba, texture(tex2, vertexTexCoord).rgba, vec4(texture(tex2, vertexTexCoord)).a * 0.5);
 }
