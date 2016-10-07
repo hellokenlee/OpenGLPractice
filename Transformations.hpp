@@ -1,7 +1,7 @@
 /*Copyright reserved by KenLee@2016 ken4000kl@gmail.com*/
 #ifndef TRANSFORMATIONS_HPP
 #define TRANSFORMATIONS_HPP
-//GL math libraries
+//GL Math Library
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>

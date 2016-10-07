@@ -12,14 +12,17 @@
 #include <iostream>
 //Toolset
 #include "utils.hpp"
+
 //Tutorial and exercises
 #include "HelloTriangle.hpp"
 #include "Shaders.hpp"
 #include "Textures.hpp"
 #include "Benchmark.hpp"
 #include "Transformations.hpp"
+#include "CoordinateSystem.hpp"
 
 int main(){
-    HelloTriangle::turtorial();
+    CoordinateSystem::tutorial();
+    //Transformations::exercise2();
     return 0;
 }
