@@ -15,22 +15,23 @@ public:
     }
     //Call in main loop.
     void update(){
+        deltaTime=glfwGetTime()-currentTime;
         currentTime=glfwGetTime();
         ++frameCounter;
-        if(currentTime-lastTime >=1.0){
+        if(currentTime-lastTime>=1.0){
             printf("%f ms/frame\n",1000.0/double(frameCounter));
             frameCounter=0;
             lastTime+=1.0;
         }
     }
-private:
-    double lastTime,currentTime;
+public:
+    double lastTime,currentTime,deltaTime;//上次输出FPS的时间，当前时间，最近2帧的间隔时间
     int frameCounter;
 };
 
 
 //初始化窗口
-GLFWwindow* initWindow(const char* window_name,int w,int h,void (*key_callback)(GLFWwindow*,int,int,int,int)){
+GLFWwindow* initWindow(const char* window_name,int w,int h,void (*key_callback)(GLFWwindow*,int,int,int,int)=nullptr,void (*mouse_callback)(GLFWwindow*,double,double)=nullptr){
     //初始化GLFW。设置GLFW参数，GL版本3.3，只使用CORE_PROFILE，不能Resize
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,3);
@@ -39,6 +40,11 @@ GLFWwindow* initWindow(const char* window_name,int w,int h,void (*key_callback)(
     glfwWindowHint(GLFW_RESIZABLE,GL_TRUE);
     //创建窗口
     GLFWwindow *window = glfwCreateWindow(w,h,window_name,nullptr,nullptr);
+    //获取显示器大小
+    const GLFWvidmode *screen;
+    screen=glfwGetVideoMode(glfwGetPrimaryMonitor());
+    //设置窗口在中间
+    glfwSetWindowPos(window,(screen->width-w)/2,(screen->height-h)/2);
     //检查是否成功
     if(window == nullptr){
         cout<<"ERROR: Fail to create GLFW window"<<endl;
@@ -49,6 +55,7 @@ GLFWwindow* initWindow(const char* window_name,int w,int h,void (*key_callback)(
 
     //绑定按键回调函数
     glfwSetKeyCallback(window,key_callback);
+    glfwSetCursorPosCallback(window, mouse_callback);
     //初始化GLEW。 使用Experimental函数允许我们更好的使用core_profile
     glewExperimental = GL_TRUE;
     if(glewInit()!=GLEW_OK){

@@ -20,9 +20,9 @@
 #include "Benchmark.hpp"
 #include "Transformations.hpp"
 #include "CoordinateSystem.hpp"
-
+#include "Camera.hpp"
 int main(){
-    CoordinateSystem::tutorial();
+    Camera::tutorial();
     //Transformations::exercise2();
     return 0;
 }

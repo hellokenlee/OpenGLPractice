@@ -1,7 +1,7 @@
 /*Copyright reserved by KenLee@2016 ken4000kl@gmail.com*/
-#ifndef COORDINATESYSTEM_HPP
-#define COORDINATESYSTEM_HPP
-namespace CoordinateSystem{
+#ifndef CAMERA_HPP
+#define CAMERA_HPP
+namespace Camera{
 //窗口宽高
 const float ScreenHeight=600.0;
 const float ScreenWidth=800.0;
@@ -9,14 +9,33 @@ const float ScreenWidth=800.0;
 extern GLfloat vertices[36*5];
 //位置信息前置声明
 extern glm::vec3 cubePositions[10];
+//按键回调函数前置声明
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
+//位置更新函数
+void doMovement();
+//鼠标回调函数
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+//摄像机信息
+glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);      //摄像机位置
+glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);   //摄像机前方(摄像机永远注视着摄像机的以摄像机为原点 0,0,-1的 位置)
+glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);       //摄像机的上方向(喂！不许歪着头看东西!)
+//FPS计数器
+FPSCounter fc;
+bool keys[1024]={0};
+double sensitivity = 0.05f;
+GLfloat pitch=0,yaw= -90.0f;
+bool firstMouseMove=true;
 //教程实现：
 void tutorial(){
-    FPSCounter fc;
+
     //窗口初始化
-    GLFWwindow *window=initWindow("CoordinateSystem",ScreenWidth,ScreenHeight,nullptr);
+    GLFWwindow *window=initWindow("CoordinateSystem",ScreenWidth,ScreenHeight,key_callback,mouse_callback);
     //关闭垂直同步
-    glfwSwapInterval(1);
+    glfwSwapInterval(0);
+    //启用深度测试
     glEnable(GL_DEPTH_TEST);
+    //关闭鼠标显示
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     showEnviroment();
     //创建Shader
     Shaders::Shader shaderProgram("shaders/CoordinateSystem/shader.vs","shaders/CoordinateSystem/shader.frag");
@@ -40,7 +59,6 @@ void tutorial(){
     glm::mat4 model;
     //观察矩阵(世界coord -> 观察coord)
     glm::mat4 view;
-    view=glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
     //投影矩阵(观察coord -> 裁剪coord)
     glm::mat4 projection;
     projection=glm::perspective(45.0f,ScreenWidth/ScreenHeight,0.1f,100.0f);
@@ -52,14 +70,16 @@ void tutorial(){
     while(!glfwWindowShouldClose(window)){
         //Keybord and mouse
         glfwPollEvents();
+        doMovement();
         //BGC
         glClearColor(1.0f,1.0f,1.0f,1.0f);
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-        //旋转
-        //model=glm::mat4();
-        //model=glm::rotate(model, (GLfloat)glfwGetTime()*50.0f, glm::vec3(0.5f, 1.0f, 0.0f));
-        //设置3个坐标变换矩阵
-        //glUniformMatrix4fv(modelPos,1,GL_FALSE,glm::value_ptr(model));
+        //设置矩阵的值
+        view = glm::lookAt(
+            cameraPos,//摄像机位置
+            cameraPos+cameraFront,//摄像机需要看到的位置//正前方
+            cameraUp//摄像机的正上方（需要指定上方的原因是，在同一个位置看同一个地方，头可以歪）
+        );
         glUniformMatrix4fv(viewPos,1,GL_FALSE,glm::value_ptr(view));
         glUniformMatrix4fv(projPos,1,GL_FALSE,glm::value_ptr(projection));
         //绑定纹理1
@@ -90,6 +110,56 @@ void tutorial(){
     glDeleteBuffers(1, &VBO);
     glfwTerminate();
     return;
+}
+//上次鼠标位置
+double lastX,lastY;
+//处理鼠标位移
+void mouse_callback(GLFWwindow* window, double nowX, double nowY){
+    if(firstMouseMove){
+        lastX=nowX;
+        lastY=nowY;
+        firstMouseMove=false;
+    }
+    GLfloat deltaX=nowX-lastX,deltaY=lastY-nowY;
+    lastX=nowX;
+    lastY=nowY;
+    deltaX *= sensitivity;
+    deltaY *= sensitivity;
+    yaw+=deltaX;
+    pitch+=deltaY;
+    if(pitch>89.5f)
+        pitch=89.5f;
+    else if(pitch<-89.5)
+        pitch=-89.5;
+    //cout<<pitch<<" , "<<yaw<<endl;
+    cameraFront.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    cameraFront.y = sin(glm::radians(pitch));
+    cameraFront.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    cameraFront=glm::normalize(cameraFront);
+    //cout<<cameraFront.x<<" , "<<cameraFront.y<<" , "<<cameraFront.z<<endl;
+}
+//处理按键
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode){
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, GL_TRUE);
+    if(action == GLFW_PRESS)
+        keys[key] = true;
+    else if(action == GLFW_RELEASE)
+        keys[key] = false;
+}
+void doMovement(){
+    float cameraSpeed=5.0f*fc.deltaTime;
+    if(keys[GLFW_KEY_W])
+        //往前
+        cameraPos+=cameraSpeed*cameraFront;
+    if(keys[GLFW_KEY_S])
+        //往后
+        cameraPos-=cameraSpeed*cameraFront;
+    if(keys[GLFW_KEY_A])
+        //往左：右边方向通过正前方 叉乘 正上方获得，往左则反方向
+        cameraPos-=glm::normalize(glm::cross(cameraFront, cameraUp))*cameraSpeed;
+    if(keys[GLFW_KEY_D])
+        cameraPos+=glm::normalize(glm::cross(cameraFront, cameraUp))*cameraSpeed;
 }
 //位置信息
 glm::vec3 cubePositions[10] = {
@@ -149,5 +219,7 @@ GLfloat vertices[36*5] = {
     -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
     -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 };
-};      //  namespace CoordinateSystem
-#endif  //  COORDINATESYSTEM
+
+
+};      //  namespace Camera
+#endif  //  CAMERA_HPP
