@@ -12,17 +12,18 @@
 #include <iostream>
 //Toolset
 #include "utils.hpp"
-
 //Tutorial and exercises
-#include "HelloTriangle.hpp"
-#include "Shaders.hpp"
-#include "Textures.hpp"
-#include "Benchmark.hpp"
-#include "Transformations.hpp"
-#include "CoordinateSystem.hpp"
-#include "Camera.hpp"
+#include "tutorials/HelloTriangle.hpp"
+#include "tutorials/Shaders.hpp"
+#include "tutorials/Textures.hpp"
+#include "tutorials/Benchmark.hpp"
+#include "tutorials/Transformations.hpp"
+#include "tutorials/CoordinateSystem.hpp"
+#include "tutorials/Camera.hpp"
+
+
 int main(){
-    Camera::tutorial();
-    //Transformations::exercise2();
+    Camera::exercise1();
     return 0;
 }
+
