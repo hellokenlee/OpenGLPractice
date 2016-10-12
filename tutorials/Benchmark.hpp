@@ -15,10 +15,12 @@ float texCoord[]={
     0.0,1.0
 };
 
-void readVerticesFromFile(const char* filename){
+bool readVerticesFromFile(const char* filename){
     vNums=0;
     int pos=0;
     FILE *file=fopen(filename,"r+");
+    if(file==nullptr)
+        return false;
     while(fscanf(file,"%f%f%f%f%f%f%f%f",&vertices[pos+0],&vertices[pos+1],&vertices[pos+2]
                                         ,&vertices[pos+3],&vertices[pos+4],&vertices[pos+5]
                                         ,&vertices[pos+6],&vertices[pos+7])!=EOF){
@@ -30,16 +32,19 @@ void readVerticesFromFile(const char* filename){
 //    cout<<vertices[0]<<" "<<vertices[1]<<" "<<vertices[2]<<endl;
 //    cout<<vertices[3]<<" "<<vertices[4]<<" "<<vertices[5]<<endl;
 //    cout<<vertices[6]<<" "<<vertices[7]<<endl;
-    return;
+    return true;
 }
 
 void oldOpenGLTest(){
-    //∂¡»°∂•µ„–≈œ¢
-    readVerticesFromFile("3vertices10000.txt");
-    //FPSº∆À„
+    //ËØªÂèñÈ°∂ÁÇπ‰ø°ÊÅØ
+    if(!readVerticesFromFile("3vertices10000.txt")){
+        cout<<"ERROR: Fail to read file"<<endl;
+        return;
+    }
+    //FPSËÆ°ÁÆó
     double lastTime=glfwGetTime(),currentTime=glfwGetTime();
     int nbFrames=0;
-    //≥ı ºªØ
+    //ÂàùÂßãÂåñ
     glfwInit();
     glfwWindowHint(GLFW_RESIZABLE,GL_FALSE);
     GLFWwindow *window = glfwCreateWindow(800,600,"Old OpenGL",nullptr,nullptr);
@@ -50,8 +55,10 @@ void oldOpenGLTest(){
     glEnable(GL_TEXTURE_2D);
     glfwSwapInterval(0);
     showEnviroment();
-    //∞Û∂®Àÿ≤ƒ
-    GLuint tex=Textures::loadTextureFromImage("textures/face.png",GL_RGBA,GL_BGRA,GL_REPEAT,GL_LINEAR);
+    //ÁªëÂÆöÁ¥†Êùê
+    unsigned int texMid=0;
+    TextureManager *texManager=TextureManager::getManager();
+    texManager->loadTexture("textures/face.png",texMid);
 
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
@@ -59,7 +66,7 @@ void oldOpenGLTest(){
         glClearColor(1.0f,1.0f,1.0f,1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         //draw
-        glBindTexture(GL_TEXTURE_2D,tex);
+        texManager->bindTexture(texMid);
         glBegin(GL_TRIANGLES);
             for(int i=0;i<vNums;++i){
                 //glColor3f(1,0,0);
@@ -83,12 +90,15 @@ void oldOpenGLTest(){
 
 
 void coreprofileTest(){
-    //∂¡»°∂•µ„–≈œ¢
-    readVerticesFromFile("3vertices10000.txt");
-    //FPSº∆À„
+    //ËØªÂèñÈ°∂ÁÇπ‰ø°ÊÅØ
+    if(!readVerticesFromFile("3vertices10000.txt")){
+        cout<<"ERROR: Fail to read file"<<endl;
+        return;
+    }
+    //FPSËÆ°ÁÆó
     double lastTime=glfwGetTime(),currentTime=glfwGetTime();
     int nbFrames=0,cnt=3*vNums;
-    //≥ı ºªØ
+    //ÂàùÂßãÂåñ
     glfwInit();
     glfwWindowHint(GLFW_RESIZABLE,GL_FALSE);
     GLFWwindow *window = glfwCreateWindow(800,600,"New OpenGL",nullptr,nullptr);
@@ -98,7 +108,7 @@ void coreprofileTest(){
         cout<<"ERROR: Fail to init GLEW"<<endl;
         exit(-1);
     }
-    glGetError();//∫ˆ¬‘”…glew“˝∆µƒINVALID_ENUM¥ÌŒÛ
+    glGetError();//ÂøΩÁï•Áî±glewÂºïËµ∑ÁöÑINVALID_ENUMÈîôËØØ
     int width,height;
     glfwGetFramebufferSize(window,&width,&height);
     glViewport(0,0,width,height);
@@ -106,10 +116,15 @@ void coreprofileTest(){
     glfwSwapInterval(0);
 
     showEnviroment();
-    //∞Û∂®Àÿ≤ƒ
-    GLuint tex=Textures::loadTextureFromImage("textures/face.png",GL_RGBA,GL_BGRA,GL_REPEAT,GL_LINEAR);
-    //Shader∞Û∂®
-    Shaders::Shader shaderProgram("shader.vs","shader.frag");
+    //ÁªëÂÆöÁ¥†Êùê
+    unsigned int texMid=0;
+    TextureManager *texManager=TextureManager::getManager();
+    if(!texManager->loadTexture("textures/face.png",texMid)){
+        cout<<"load texture failed"<<endl;
+        return ;
+    }
+    //ShaderÁªëÂÆö
+    Shader shaderProgram("shader.vs","shader.frag");
 
     GLuint VBO,VAO;
     glGenBuffers(1,&VBO);
@@ -127,16 +142,16 @@ void coreprofileTest(){
 
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
-        //±≥æ∞…´
+        //ËÉåÊôØËâ≤
         glClearColor(1.0f,1.0f,1.0f,1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         //
         glBindVertexArray(VAO);
         shaderProgram.use();
-        glBindTexture(GL_TEXTURE_2D,tex);
-        //ªÊ÷∆
+        texManager->bindTexture(texMid);
+        //ÁªòÂà∂
         glDrawArrays(GL_TRIANGLES,0,cnt);
-        //÷√ªªÀ´ª∫≥Â
+        //ÁΩÆÊç¢ÂèåÁºìÂÜ≤
         glfwSwapBuffers(window);
         //Count FPS
         currentTime=glfwGetTime();

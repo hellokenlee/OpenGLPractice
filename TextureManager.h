@@ -15,7 +15,8 @@
 
 class TextureManager{
 public:
-	static TextureManager* getManager(); 
+	static TextureManager* getManager();
+	~TextureManager();
 	//从文件加载纹理
 	bool loadTexture(
 		const char* filepath,				//路径
@@ -28,20 +29,20 @@ public:
 		GLenum filter = GL_LINEAR
 		);
 	//绑定纹理
-	void bindTexture(unsigned int texID);
+	bool bindTexture(unsigned int texID);
 	//释放
-	bool freeTexture(unsigned int texID)；
+	bool freeTexture(unsigned int texID);
 	//释放所有
-	bool freeAllTextures();
+	void freeAllTextures();
 private:
+    //单例变量
+	static TextureManager *manager;
 	//单例模式禁止构造/拷贝构造
 	TextureManager();
 	TextureManager(const TextureManager& tm);
 	TextureManager& operator=(const TextureManager& tm);
 	//纹理池
-	unordered_map<unsigned int,GLuint> tex_pool;
-	//单例变量
-	static TextureManager *manaer;
+	std::unordered_map<unsigned int,GLuint> texturesMap;
 };
 
 

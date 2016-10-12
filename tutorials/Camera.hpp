@@ -32,6 +32,10 @@ GLfloat pitch=0,yaw= -90.0f;
 GLfloat fov=45.0;
 //上次鼠标位置
 double lastX,lastY;
+
+
+GLfloat deltaTime = 0.0f;	// Time between current frame and last frame
+GLfloat lastFrame = 0.0f;  	// Time of last frame
 //教程实现： 实现一个FPS视角摄像机
 void tutorial(){
     //窗口初始化
@@ -46,7 +50,7 @@ void tutorial(){
     //显示环境
     showEnviroment();
     //创建Shader
-    Shaders::Shader shaderProgram("shaders/CoordinateSystem/shader.vs","shaders/CoordinateSystem/shader.frag");
+    Shader shaderProgram("shaders/CoordinateSystem/shader.vs","shaders/CoordinateSystem/shader.frag");
     //读入数据
     GLuint VBO,VAO;
     glGenBuffers(1,&VBO);
@@ -126,7 +130,10 @@ void tutorial(){
 //练习1
 
 void doMovementEx1(){
-    float cameraSpeed=5.0f*fc.deltaTime;
+    GLfloat currentFrame = glfwGetTime();
+    deltaTime = currentFrame - lastFrame;
+    lastFrame = currentFrame;
+    GLfloat cameraSpeed = 5.0f * deltaTime;
     glm::vec3 playerFront=cameraFront;
     //playerFront.y=0;
     //glm::normalize(playerFront);
@@ -156,7 +163,7 @@ void exercise1(){
     //显示环境
     showEnviroment();
     //创建Shader
-    Shaders::Shader shaderProgram("shaders/CoordinateSystem/shader.vs","shaders/CoordinateSystem/shader.frag");
+    Shader shaderProgram("shaders/CoordinateSystem/shader.vs","shaders/CoordinateSystem/shader.frag");
     //读入数据
     GLuint VBO,VAO;
     glGenBuffers(1,&VBO);
@@ -262,7 +269,10 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         keys[key] = false;
 }
 void doMovement(){
-    float cameraSpeed=5.0f*fc.deltaTime;
+    GLfloat currentFrame = glfwGetTime();
+    deltaTime = currentFrame - lastFrame;
+    lastFrame = currentFrame;
+    GLfloat cameraSpeed = 5.0f * deltaTime;
     if(keys[GLFW_KEY_W])
         //往前
         cameraPos+=cameraSpeed*cameraFront;

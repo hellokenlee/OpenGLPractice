@@ -3,6 +3,9 @@
 #define FPS_COUNTER_H
 
 
+#include <GLFW/glfw3.h>
+#include <stdio.h>
+
 class FPSCounter{
 public:
 	//构造函数

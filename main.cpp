@@ -10,20 +10,31 @@
 #include <cstdlib>
 #include <cstdio>
 #include <iostream>
+
+//Helper Classes
+#include "FPSCounter.h"
+#include "Shader.h"
+#include "TextureManager.h"
 //Toolset
 #include "utils.hpp"
+#include "tutorials/Benchmark.hpp"
 //Tutorial and exercises
 #include "tutorials/HelloTriangle.hpp"
 #include "tutorials/Shaders.hpp"
 #include "tutorials/Textures.hpp"
-#include "tutorials/Benchmark.hpp"
+
 #include "tutorials/Transformations.hpp"
 #include "tutorials/CoordinateSystem.hpp"
 #include "tutorials/Camera.hpp"
 
+void test();
 
 int main(){
-    Camera::exercise1();
     return 0;
+}
+
+//!TODO Test the compacity of benchmark with new classes
+void test(){
+
 }
 

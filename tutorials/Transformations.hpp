@@ -28,7 +28,7 @@ void tutorial(){
     GLFWwindow *window=initWindow("Transformation",800,600,nullptr);
     showEnviroment();
     //创建Shader
-    Shaders::Shader shaderProgram("shaders/Transformations/shader.vs","shaders/Transformations/shader.frag");
+    Shader shaderProgram("shaders/Transformations/shader.vs","shaders/Transformations/shader.frag");
     //读入数据
     GLuint VBO,VAO,EBO;
     glGenBuffers(1,&VBO);
@@ -93,7 +93,7 @@ void exercise1(){
     GLFWwindow *window=initWindow("Transformation-EX1",800,600,nullptr);
     showEnviroment();
     //创建Shader
-    Shaders::Shader shaderProgram("shaders/Transformations/shader.vs","shaders/Transformations/shader.frag");
+    Shader shaderProgram("shaders/Transformations/shader.vs","shaders/Transformations/shader.frag");
     //读入数据
     GLuint VBO,VAO,EBO;
     glGenBuffers(1,&VBO);
@@ -154,7 +154,7 @@ void exercise2(){
     GLFWwindow *window=initWindow("Transformation-EX2",800,600,nullptr);
     showEnviroment();
     //创建Shader
-    Shaders::Shader shaderProgram("shaders/Transformations/shader.vs","shaders/Transformations/shader.frag");
+    Shader shaderProgram("shaders/Transformations/shader.vs","shaders/Transformations/shader.frag");
     //读入数据
     GLuint VBO,VAO,EBO;
     glGenBuffers(1,&VBO);

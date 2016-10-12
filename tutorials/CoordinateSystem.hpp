@@ -19,7 +19,7 @@ void tutorial(){
     glEnable(GL_DEPTH_TEST);
     showEnviroment();
     //创建Shader
-    Shaders::Shader shaderProgram("shaders/CoordinateSystem/shader.vs","shaders/CoordinateSystem/shader.frag");
+    Shader shaderProgram("shaders/CoordinateSystem/shader.vs","shaders/CoordinateSystem/shader.frag");
     //读入数据
     GLuint VBO,VAO;
     glGenBuffers(1,&VBO);

@@ -72,7 +72,7 @@ void tutorial(){
     GLFWwindow *window=initWindow("Shaders",800,600,nullptr);
     showEnviroment();
     //创建Shader
-    Shaders::Shader shaderProgram("shaders/Textures/shader.vs","shaders/Textures/shader.frag");
+    Shader shaderProgram("shaders/Textures/shader.vs","shaders/Textures/shader.frag");
     //读入数据
     GLuint VBO,VAO,EBO;
     glGenBuffers(1,&VBO);
@@ -125,7 +125,7 @@ void exercise1(){
     GLFWwindow *window=initWindow("Textures-EX1",800,600,nullptr);
     showEnviroment();
     //创建Shader
-    Shaders::Shader shaderProgram("shaders/Textures/shader.vs","shaders/Textures/shaderEx1.frag");
+    Shader shaderProgram("shaders/Textures/shader.vs","shaders/Textures/shaderEx1.frag");
     //读入数据
     GLuint VBO,VAO,EBO;
     glGenBuffers(1,&VBO);
@@ -178,7 +178,7 @@ void exercise2(){
     GLFWwindow *window=initWindow("Textures-EX2",800,600,nullptr);
     showEnviroment();
     //创建Shader
-    Shaders::Shader shaderProgram("shaders/Textures/shader.vs","shaders/Textures/shaderEx2.frag");
+    Shader shaderProgram("shaders/Textures/shader.vs","shaders/Textures/shaderEx2.frag");
     //读入数据
     GLuint VBO,VAO,EBO;
     glGenBuffers(1,&VBO);
@@ -239,7 +239,7 @@ void exercise3(){
     GLFWwindow *window=initWindow("Texture-EX3",800,600,nullptr);
     showEnviroment();
     //创建Shader
-    Shaders::Shader shaderProgram("shaders/Textures/shader.vs","shaders/Textures/shaderEx4.frag");
+    Shader shaderProgram("shaders/Textures/shader.vs","shaders/Textures/shaderEx4.frag");
     //读入数据
     GLuint VBO,VAO,EBO;
     glGenBuffers(1,&VBO);
@@ -313,7 +313,7 @@ void exercise4(){
     //显示环境
     showEnviroment();
     //创建Shader
-    Shaders::Shader shaderProgram("shaders/Textures/shader.vs","shaders/Textures/shaderEx4.frag");
+    Shader shaderProgram("shaders/Textures/shader.vs","shaders/Textures/shaderEx4.frag");
     //读入数据
     GLuint VBO,VAO,EBO;
     glGenBuffers(1,&VBO);

@@ -59,18 +59,15 @@ void turtorial(){
     GLuint vertexShader=glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader,1,&vertexShaderSource,nullptr);
     glCompileShader(vertexShader);
-    checkShaderCompile(vertexShader);
     //创建fragmentShader
     GLuint fragmentShader=glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragmentShader,1,&fragmentShaderSource,nullptr);
     glCompileShader(fragmentShader);
-    checkShaderCompile(fragmentShader);
     //创建ShaderProgram
     GLuint shaderProgram=glCreateProgram();
     glAttachShader(shaderProgram,vertexShader);
     glAttachShader(shaderProgram,fragmentShader);
     glLinkProgram(shaderProgram);
-    checkProgramLink(shaderProgram);
     //删除Shader
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
@@ -127,18 +124,15 @@ void exercies1(){
     GLuint vertexShader=glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader,1,&vertexShaderSource,nullptr);
     glCompileShader(vertexShader);
-    checkShaderCompile(vertexShader);
     //创建fragmentShader
     GLuint fragmentShader=glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragmentShader,1,&fragmentShaderSource,nullptr);
     glCompileShader(fragmentShader);
-    checkShaderCompile(fragmentShader);
     //创建ShaderProgram
     GLuint shaderProgram=glCreateProgram();
     glAttachShader(shaderProgram,vertexShader);
     glAttachShader(shaderProgram,fragmentShader);
     glLinkProgram(shaderProgram);
-    checkProgramLink(shaderProgram);
     //删除Shader
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
@@ -203,18 +197,15 @@ void exercise2(){
     GLuint vertexShader=glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader,1,&vertexShaderSource,nullptr);
     glCompileShader(vertexShader);
-    checkShaderCompile(vertexShader);
     //创建fragmentShader
     GLuint fragmentShader=glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragmentShader,1,&fragmentShaderSource,nullptr);
     glCompileShader(fragmentShader);
-    checkShaderCompile(fragmentShader);
     //创建ShaderProgram
     GLuint shaderProgram=glCreateProgram();
     glAttachShader(shaderProgram,vertexShader);
     glAttachShader(shaderProgram,fragmentShader);
     glLinkProgram(shaderProgram);
-    checkProgramLink(shaderProgram);
     //删除Shader
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
@@ -276,30 +267,25 @@ void exercies3(){
     GLuint vertexShader=glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader,1,&vertexShaderSource,nullptr);
     glCompileShader(vertexShader);
-    checkShaderCompile(vertexShader);
     //创建fragmentShader1
     GLuint fragmentShader1=glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragmentShader1,1,&fragmentShaderSource,nullptr);
     glCompileShader(fragmentShader1);
-    checkShaderCompile(fragmentShader1);
     //创建FS2
     GLuint fragmentShader2=glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragmentShader2,1,&fragmentShaderSourceEx3,nullptr);
     glCompileShader(fragmentShader2);
-    checkShaderCompile(fragmentShader2);
     //创建ShaderProgram
     //橙色FS
     GLuint shaderProgram=glCreateProgram();
     glAttachShader(shaderProgram,vertexShader);
     glAttachShader(shaderProgram,fragmentShader1);
     glLinkProgram(shaderProgram);
-    checkProgramLink(shaderProgram);
     //黄色YS
     GLuint shaderProgram2=glCreateProgram();
     glAttachShader(shaderProgram2,vertexShader);
     glAttachShader(shaderProgram2,fragmentShader2);
     glLinkProgram(shaderProgram2);
-    checkProgramLink(shaderProgram2);
     //删除Shader
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader1);
