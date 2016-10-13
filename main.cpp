@@ -22,19 +22,14 @@
 #include "tutorials/HelloTriangle.hpp"
 #include "tutorials/Shaders.hpp"
 #include "tutorials/Textures.hpp"
-
 #include "tutorials/Transformations.hpp"
 #include "tutorials/CoordinateSystem.hpp"
 #include "tutorials/Camera.hpp"
 
-void test();
-
 int main(){
+    //Benchmark::test();
+    CoordinateSystem::tutorial();
     return 0;
 }
 
-//!TODO Test the compacity of benchmark with new classes
-void test(){
-
-}
 

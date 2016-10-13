@@ -15,7 +15,7 @@ void tutorial(){
     //窗口初始化
     GLFWwindow *window=initWindow("CoordinateSystem",ScreenWidth,ScreenHeight,nullptr);
     //关闭垂直同步
-    glfwSwapInterval(1);
+    glfwSwapInterval(0);
     glEnable(GL_DEPTH_TEST);
     showEnviroment();
     //创建Shader

@@ -21,8 +21,8 @@ public:
 	bool loadTexture(
 		const char* filepath,				//路径
 		const unsigned int texID,			//纹理ID
-		GLenum image_format = GL_RGB,		//图片数据格式
-		GLint internal_format = GL_BGR,		//内部数据格式
+		GLenum image_format = GL_BGR,		//图片数据格式
+		GLint internal_format = GL_RGB,		//内部数据格式
 		GLint level = 0,					//mipmapping level
 		GLint border = 0,					//边界宽度
 		GLenum wrap = GL_REPEAT,

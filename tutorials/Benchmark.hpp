@@ -3,6 +3,10 @@
 #define BENCHMARK_HPP
 
 #define MAX_VERTICES_NUM 100000
+//GLM
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 namespace Benchmark{
 
 
@@ -58,7 +62,10 @@ void oldOpenGLTest(){
     //绑定素材
     unsigned int texMid=0;
     TextureManager *texManager=TextureManager::getManager();
-    texManager->loadTexture("textures/face.png",texMid);
+    if(!texManager->loadTexture("textures/face.png",texMid,GL_RGBA,GL_BGRA)){
+        cout<<"load texture failed"<<endl;
+        return ;
+    }
 
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
@@ -119,12 +126,12 @@ void coreprofileTest(){
     //绑定素材
     unsigned int texMid=0;
     TextureManager *texManager=TextureManager::getManager();
-    if(!texManager->loadTexture("textures/face.png",texMid)){
+    if(!texManager->loadTexture("textures/face.png",texMid,GL_RGBA,GL_BGRA)){
         cout<<"load texture failed"<<endl;
         return ;
     }
     //Shader绑定
-    Shader shaderProgram("shader.vs","shader.frag");
+    Shader shaderProgram("shaders/Benchmark/shader.vs","shaders/Benchmark/shader.frag");
 
     GLuint VBO,VAO;
     glGenBuffers(1,&VBO);
@@ -163,6 +170,149 @@ void coreprofileTest(){
         }
     }
     glfwTerminate();
+}
+
+//顶点信息
+GLfloat verticesTest[36*5] = {
+    //position            //texture
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+};
+//位置信息
+glm::vec3 cubePositions[10] = {
+    glm::vec3( 0.0f,  0.0f,  0.0f),
+    glm::vec3( 2.0f,  5.0f, -15.0f),
+    glm::vec3(-1.5f, -2.2f, -2.5f),
+    glm::vec3(-3.8f, -2.0f, -12.3f),
+    glm::vec3( 2.4f, -0.4f, -3.5f),
+    glm::vec3(-1.7f,  3.0f, -7.5f),
+    glm::vec3( 1.3f, -2.0f, -2.5f),
+    glm::vec3( 1.5f,  2.0f, -2.5f),
+    glm::vec3( 1.5f,  0.2f, -1.5f),
+    glm::vec3(-1.3f,  1.0f, -1.5f)
+};
+
+//测试台
+void test(){
+    FPSCounter fc;
+    //窗口初始化
+    GLFWwindow *window=initWindow("Test",800,600);
+    //glfwSetScrollCallback(window,scroll_callback);
+    //关闭垂直同步
+    glfwSwapInterval(0);
+    //启用深度测试
+    glEnable(GL_DEPTH_TEST);
+    //关闭鼠标显示
+    //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    //显示环境
+    showEnviroment();
+    //创建Shader
+    Shader shaderProgram("shaders/CoordinateSystem/shader.vs","shaders/CoordinateSystem/shader.frag");
+    //读入数据
+    GLuint VBO,VAO;
+    glGenBuffers(1,&VBO);
+    glGenVertexArrays(1,&VAO);
+    glBindVertexArray(VAO);
+        glBindBuffer(GL_ARRAY_BUFFER,VBO);
+        glBufferData(GL_ARRAY_BUFFER,sizeof(verticesTest),verticesTest,GL_STATIC_DRAW);
+        glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,5*sizeof(GLfloat),(GLvoid*)0);                  //pos
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(1,2,GL_FLOAT,GL_FALSE,5*sizeof(GLfloat),(GLvoid*)(3*sizeof(GLfloat)));//tex coord
+        glEnableVertexAttribArray(1);
+    glBindVertexArray(0);
+    //设置纹理
+    unsigned int texs[]={0,1};
+    TextureManager *texManager=TextureManager::getManager();
+    if(!texManager->loadTexture("textures/face.png",texs[1],GL_BGRA,GL_RGBA))
+        return;
+    if(!texManager->loadTexture("textures/container.jpg",texs[0]))
+        return;
+    //初始化矩阵
+    glm::mat4 model,view,projection;
+    view=glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+    projection=glm::perspective(45.0f,(float)(800.0/600.0),0.1f,100.0f);
+    //3个矩阵的Shader uniform位置
+    GLuint modelPos=glGetUniformLocation(shaderProgram.programID,"model");
+    GLuint viewPos=glGetUniformLocation(shaderProgram.programID,"view");
+    GLuint projPos=glGetUniformLocation(shaderProgram.programID,"proj");
+    //初始化鼠标位置
+    //glfwGetCursorPos(window,&lastX,&lastY);
+    //主循环
+    while(!glfwWindowShouldClose(window)){
+        //Keybord and mouse
+        glfwPollEvents();
+        //doMovement();
+        //BGC
+        glClearColor(1.0f,1.0f,1.0f,1.0f);
+        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+        glUniformMatrix4fv(viewPos,1,GL_FALSE,glm::value_ptr(view));
+        glUniformMatrix4fv(projPos,1,GL_FALSE,glm::value_ptr(projection));
+        //绑定纹理1
+        glActiveTexture(GL_TEXTURE0);
+        texManager->bindTexture(texs[0]);
+        glUniform1i(glGetUniformLocation(shaderProgram.programID,"tex1"),0);
+        //绑定纹理2
+        glActiveTexture(GL_TEXTURE1);
+        texManager->bindTexture(texs[1]);
+        glUniform1i(glGetUniformLocation(shaderProgram.programID,"tex2"),1);
+        //Draw
+        shaderProgram.use();
+        glBindVertexArray(VAO);
+        for(GLuint i=0;i<10;i++){
+          model=glm::mat4();
+          model = glm::translate(model, cubePositions[i]);
+          GLfloat angle = 20.0f * i*(GLfloat)glfwGetTime();
+          model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
+          glUniformMatrix4fv(modelPos, 1, GL_FALSE, glm::value_ptr(model));
+          glDrawArrays(GL_TRIANGLES, 0, 36);
+        }
+        glBindVertexArray(0);
+        glfwSwapBuffers(window);
+        fc.update();
+    }//GLFW
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
+    glfwTerminate();
+    return;
 }
 };
 #endif // BENCHMARK_HPP

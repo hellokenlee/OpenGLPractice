@@ -3,7 +3,9 @@
 #define SHADER_H
 
 #include <GL/glew.h>
+
 #include <string>
+#include <cstdlib>
 #include <iostream>
 #include <fstream>
 #include <sstream>
