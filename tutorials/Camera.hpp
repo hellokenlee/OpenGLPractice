@@ -1,7 +1,7 @@
 /*Copyright reserved by KenLee@2016 ken4000kl@gmail.com*/
-#ifndef CAMERA_HPP
-#define CAMERA_HPP
-namespace Camera{
+#ifndef CAMERAS_HPP
+#define CAMERAS_HPP
+namespace Cameras{
 //窗口宽高
 const float ScreenHeight=600.0;
 const float ScreenWidth=800.0;
@@ -128,7 +128,6 @@ void tutorial(){
 }
 
 //练习1
-
 void doMovementEx1(){
     GLfloat currentFrame = glfwGetTime();
     deltaTime = currentFrame - lastFrame;

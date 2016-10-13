@@ -242,7 +242,7 @@ void test(){
     //启用深度测试
     glEnable(GL_DEPTH_TEST);
     //关闭鼠标显示
-    //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     //显示环境
     showEnviroment();
     //创建Shader
@@ -266,10 +266,12 @@ void test(){
         return;
     if(!texManager->loadTexture("textures/container.jpg",texs[0]))
         return;
+    //控制器绑定
+    glfwSetKeyCallback(window,CameraController::keyCallback);
+    glfwSetCursorPosCallback(window,CameraController::mouseCallback);
+    glfwSetScrollCallback(window,CameraController::scrollCallback);
     //初始化矩阵
-    glm::mat4 model,view,projection;
-    view=glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-    projection=glm::perspective(45.0f,(float)(800.0/600.0),0.1f,100.0f);
+    glm::mat4 model;
     //3个矩阵的Shader uniform位置
     GLuint modelPos=glGetUniformLocation(shaderProgram.programID,"model");
     GLuint viewPos=glGetUniformLocation(shaderProgram.programID,"view");
@@ -280,12 +282,13 @@ void test(){
     while(!glfwWindowShouldClose(window)){
         //Keybord and mouse
         glfwPollEvents();
-        //doMovement();
+        CameraController::update();
         //BGC
         glClearColor(1.0f,1.0f,1.0f,1.0f);
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-        glUniformMatrix4fv(viewPos,1,GL_FALSE,glm::value_ptr(view));
-        glUniformMatrix4fv(projPos,1,GL_FALSE,glm::value_ptr(projection));
+        //摄像机更新
+        glUniformMatrix4fv(viewPos,1,GL_FALSE,CameraController::camera.getViewMatrixVal());
+        glUniformMatrix4fv(projPos,1,GL_FALSE,CameraController::camera.getProjectionMatrixVal());
         //绑定纹理1
         glActiveTexture(GL_TEXTURE0);
         texManager->bindTexture(texs[0]);

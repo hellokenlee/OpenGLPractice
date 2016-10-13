@@ -15,6 +15,8 @@
 #include "FPSCounter.h"
 #include "Shader.h"
 #include "TextureManager.h"
+#include "Camera.h"
+#include "CameraController.h"
 //Toolset
 #include "utils.hpp"
 #include "tutorials/Benchmark.hpp"
@@ -27,8 +29,8 @@
 #include "tutorials/Camera.hpp"
 
 int main(){
-    //Benchmark::test();
-    CoordinateSystem::tutorial();
+    Benchmark::test();
+    //CoordinateSystem::tutorial();
     return 0;
 }
 

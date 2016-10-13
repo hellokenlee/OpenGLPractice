@@ -29,19 +29,23 @@ public:
 	void rotate(GLfloat pitch, GLfloat yaw);
 	//放大视角
 	void zoom(GLfloat angle);
+	void setPerspective(GLfloat fov,GLfloat r,GLfloat near,GLfloat far);
 	//返回View矩阵
 	GLfloat* getViewMatrixVal();
-	GLfloat getFov();
+	//返回Projection矩阵（透视模式ONLY）
+	GLfloat* getProjectionMatrixVal();
 private:
     //更新函数
 	void update();
 private:
-	GLfloat fov;
+	GLfloat pfov,pratio,pnear,pfar;
 	glm::vec3 cameraPos;//摄像机位置
 	glm::vec3 cameraFront;//摄像机前方
 	glm::vec3 cameraRight;//摄像机右方
 	glm::vec3 cameraUp;//摄像机的上方向
+
 	glm::mat4 view;//矩阵
+	glm::mat4 projection;
 };
 
 #endif	// CAMERA_H
