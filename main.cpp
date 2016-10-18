@@ -12,15 +12,15 @@
 #include <iostream>
 
 //Helper Classes
-#include "FPSCounter.h"
-#include "Shader.h"
-#include "TextureManager.h"
-#include "Camera.h"
-#include "CameraController.h"
-//Toolset
-#include "utils.hpp"
-#include "tutorials/Benchmark.hpp"
+#include "wmdge/FPSCounter.h"
+#include "wmdge/Shader.h"
+#include "wmdge/TextureManager.h"
+#include "wmdge/Camera.h"
+#include "wmdge/CameraController.h"
+#include "wmdge/CoordinateAxes.h"
+#include "wmdge/utils.hpp"
 //Tutorial and exercises
+#include "tutorials/Benchmark.hpp"
 #include "tutorials/HelloTriangle.hpp"
 #include "tutorials/Shaders.hpp"
 #include "tutorials/Textures.hpp"

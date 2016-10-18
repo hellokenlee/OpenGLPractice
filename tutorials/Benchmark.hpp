@@ -276,8 +276,8 @@ void test(){
     GLuint modelPos=glGetUniformLocation(shaderProgram.programID,"model");
     GLuint viewPos=glGetUniformLocation(shaderProgram.programID,"view");
     GLuint projPos=glGetUniformLocation(shaderProgram.programID,"proj");
-    //初始化鼠标位置
-    //glfwGetCursorPos(window,&lastX,&lastY);
+    //
+    CoordinateAxes ca(&CameraController::camera);
     //主循环
     while(!glfwWindowShouldClose(window)){
         //Keybord and mouse
@@ -286,6 +286,8 @@ void test(){
         //BGC
         glClearColor(1.0f,1.0f,1.0f,1.0f);
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+        ca.draw();
+        shaderProgram.use();
         //摄像机更新
         glUniformMatrix4fv(viewPos,1,GL_FALSE,CameraController::camera.getViewMatrixVal());
         glUniformMatrix4fv(projPos,1,GL_FALSE,CameraController::camera.getProjectionMatrixVal());
@@ -298,7 +300,6 @@ void test(){
         texManager->bindTexture(texs[1]);
         glUniform1i(glGetUniformLocation(shaderProgram.programID,"tex2"),1);
         //Draw
-        shaderProgram.use();
         glBindVertexArray(VAO);
         for(GLuint i=0;i<10;i++){
           model=glm::mat4();
