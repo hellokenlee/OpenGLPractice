@@ -29,7 +29,7 @@
 #include "tutorials/Camera.hpp"
 
 int main(){
-    Benchmark::test();
+    Cameras::tutorial();
     //CoordinateSystem::tutorial();
     return 0;
 }
