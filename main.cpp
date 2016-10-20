@@ -26,7 +26,7 @@
 #include "tutorials/Textures.hpp"
 #include "tutorials/Transformations.hpp"
 #include "tutorials/CoordinateSystem.hpp"
-#include "tutorials/Camera.hpp"
+#include tutorials/Camera.hpp"
 
 int main(){
     Cameras::tutorial();
