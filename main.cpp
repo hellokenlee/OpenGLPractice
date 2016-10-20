@@ -10,7 +10,6 @@
 #include <cstdlib>
 #include <cstdio>
 #include <iostream>
-
 //Helper Classes
 #include "wmdge/FPSCounter.h"
 #include "wmdge/Shader.h"
@@ -26,11 +25,14 @@
 #include "tutorials/Textures.hpp"
 #include "tutorials/Transformations.hpp"
 #include "tutorials/CoordinateSystem.hpp"
-#include tutorials/Camera.hpp"
+#include "tutorials/Camera.hpp"
+#include "tutorials/Colors.hpp"
 
 int main(){
-    Cameras::tutorial();
+    //Cameras::tutorial();
     //CoordinateSystem::tutorial();
+    Colors::tutorial();
+
     return 0;
 }
 
