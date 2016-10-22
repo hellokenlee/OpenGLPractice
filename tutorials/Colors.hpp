@@ -67,6 +67,8 @@ void tutorial(){
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     //显示坐标轴
     CoordinateAxes ca(&CameraController::camera);
+    //
+    FPSCounter fc;
     //Main loop
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
@@ -75,7 +77,6 @@ void tutorial(){
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
         ca.draw();
-
 
         lampShader.use();
         glUniformMatrix4fv(lampViewPos,1,GL_FALSE,CameraController::camera.getViewMatrixVal());
@@ -91,7 +92,15 @@ void tutorial(){
         glDrawArrays(GL_TRIANGLES,0,36);
 
         glBindVertexArray(0);
+
+        glUseProgram(0);
+        glBegin(GL_LINES);
+            glColor3f(1,1,1);
+            glVertex2d(1,1);
+            glVertex2d(0,0);
+        glEnd();
         glfwSwapBuffers(window);
+        fc.update();
     }
     glDeleteVertexArrays(1, &lampVAO);
     glDeleteVertexArrays(1, &cubeVAO);
