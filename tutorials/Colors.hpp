@@ -7,8 +7,8 @@ extern GLfloat cubeVertices[36*5];
 //
 float cubeColor[]={1.0f, 0.5f, 0.31f};
 float lampColor[]={1.0f,1.0f,1.0f};
-glm::vec3 cubePos(0.0,0.0,0.0);
-glm::vec3 lampPos(1.2f,1.0f,-2.0f);
+glm::vec3 cubePos(0.0f,0.5f,0.0f);
+glm::vec3 lampPos(1.2f,1.5f,-2.0f);
 //教程实现
 void tutorial(){
     GLFWwindow *window=initWindow("Colors",800,600);
@@ -67,7 +67,7 @@ void tutorial(){
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     //显示坐标轴
     CoordinateAxes ca(&CameraController::camera);
-    //
+    //帧数计数器
     FPSCounter fc;
     //Main loop
     while(!glfwWindowShouldClose(window)){
@@ -84,7 +84,6 @@ void tutorial(){
         glBindVertexArray(lampVAO);
         glDrawArrays(GL_TRIANGLES,0,36);
 
-
         cubeShader.use();
         glUniformMatrix4fv(cubeViewPos,1,GL_FALSE,CameraController::camera.getViewMatrixVal());
         glUniformMatrix4fv(cubeProjPos,1,GL_FALSE,CameraController::camera.getProjectionMatrixVal());
@@ -93,13 +92,8 @@ void tutorial(){
 
         glBindVertexArray(0);
 
-        glUseProgram(0);
-        glBegin(GL_LINES);
-            glColor3f(1,1,1);
-            glVertex2d(1,1);
-            glVertex2d(0,0);
-        glEnd();
         glfwSwapBuffers(window);
+
         fc.update();
     }
     glDeleteVertexArrays(1, &lampVAO);
