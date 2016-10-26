@@ -133,7 +133,7 @@ void exercise1(){
 }
 
 //练习2只是改变发光值(Shininess),因此没有再写一个函数
-//练习3： 在viewspace中计算光照
+//练习3： 在viewspace中计算光照:注意 法线的更新计算
 void exercise3(){
     //创建窗口
     GLFWwindow *window=initWindow("BasicLighting",800,600);
@@ -188,7 +188,60 @@ void exercise3(){
     glfwTerminate();
 }
 
+//练习4： 实现 Gouraud 光照，即在vertexShader中实现光照计算，对像素插值处理
+void exercise4(){
+    //创建窗口
+    GLFWwindow *window=initWindow("BasicLighting",800,600);
+    showEnviroment();
+    //着色器程序初始化
+    Shader cubeShader("shaders/BasicLighting/cubeEx4.vs","shaders/BasicLighting/cubeEx4.frag");
+    Shader lampShader("shaders/BasicLighting/lamp.vs","shaders/BasicLighting/lamp.frag");
+    cubeShader.use();
+    glUniform3f(glGetUniformLocation(cubeShader.programID,"objColor"),cubeColor[0],cubeColor[1],cubeColor[2]);
+    glUniform3f(glGetUniformLocation(cubeShader.programID,"lightColor"),lampColor[0],lampColor[1],lampColor[2]);
+    glUniform3f(glGetUniformLocation(cubeShader.programID,"LightPos"),lampPos[0],lampPos[1],lampPos[2]);
+    lampShader.use();
+    glUniform3f(glGetUniformLocation(lampShader.programID,"lampColor"),lampColor[0],lampColor[1],lampColor[2]);
+    //物体对象初始化
+    Object cube(cubeVertices,36,POSITIONS_NORMALS,GL_TRIANGLES);
+    cube.setCamera(&CameraController::camera);
+    cube.setShader(&cubeShader);
+    cube.moveTo(cubePos);
 
+    Object lamp(cubeVertices,36,POSITIONS_NORMALS,GL_TRIANGLES);
+    lamp.setCamera(&CameraController::camera);
+    lamp.setShader(&lampShader);
+    lamp.moveTo(lampPos);
+    lamp.scaleTo(0.4);
+    //绑定控制
+    glfwSetKeyCallback(window,CameraController::keyCallback);
+    glfwSetCursorPosCallback(window,CameraController::mouseCallback);
+    glfwSetScrollCallback(window,CameraController::scrollCallback);
+    //关闭鼠标显示
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    //显示坐标轴
+    CoordinateAxes ca(&CameraController::camera);
+    //帧数计数器
+    FPSCounter fc;
+    //主循环
+    while(!glfwWindowShouldClose(window)){
+        glfwPollEvents();
+        CameraController::update();
+        glClearColor(0.0f,0.0f,0.0f,1.0f);
+        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+
+        ca.draw();
+
+        lamp.draw();
+
+        cube.draw();
+
+        glfwSwapBuffers(window);
+        fc.update();
+    }
+    glfwDestroyWindow(window);
+    glfwTerminate();
+}
 //顶点信息
 GLfloat cubeVertices[36*6] = {
     -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,

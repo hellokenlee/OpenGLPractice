@@ -19,5 +19,5 @@ void main(){
 	fragPos = vec3(view * model * vec4(position,1.0f));
 	lightPos = vec3(view * vec4(LightPos,1.0f));
 	//vertexNormal = normal;
-	vertexNormal = mat3(transpose(inverse(model))) * normal;
+	vertexNormal = mat3(transpose(inverse(view*model))) * normal;
 }
