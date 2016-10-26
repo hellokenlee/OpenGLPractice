@@ -4,3 +4,4 @@ obj/*
 *.depend
 *.layout
 *.txt
+*.xml
