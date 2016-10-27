@@ -32,7 +32,7 @@
 #include "tutorials/Materials.hpp"
 
 int main(){
-    Materials::tutorial();
+    Textures::tutorial();
     return 0;
 }
 

@@ -69,7 +69,7 @@ GLuint indices[] = {
 //教程实现: 两张纹理叠加在一个矩形内
 void tutorial(){
     //创建窗口
-    GLFWwindow *window=initWindow("Shaders",800,600,nullptr);
+    GLFWwindow *window=initWindow("Textures",800,600,nullptr);
     showEnviroment();
     //创建Shader
     Shader shaderProgram("shaders/Textures/shader.vs","shaders/Textures/shader.frag");

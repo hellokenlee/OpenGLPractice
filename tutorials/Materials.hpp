@@ -17,6 +17,7 @@ void tutorial(){
     //创建窗口
     GLFWwindow *window=initWindow("Materials",800,600);
     showEnviroment();
+    glEnable(GL_DEPTH_TEST);
     //着色器程序初始化
     Shader cubeShader("shaders/Materials/cube.vs","shaders/Materials/cube.frag");
     Shader lampShader("shaders/Materials/lamp.vs","shaders/Materials/lamp.frag");
@@ -98,6 +99,7 @@ void exercise1(){
     //创建窗口
     GLFWwindow *window=initWindow("Materials",800,600);
     showEnviroment();
+    glEnable(GL_DEPTH_TEST);
     //着色器程序初始化
     Shader cubeShader("shaders/Materials/cube.vs","shaders/Materials/cube.frag");
     Shader lampShader("shaders/Materials/lamp.vs","shaders/Materials/lamp.frag");

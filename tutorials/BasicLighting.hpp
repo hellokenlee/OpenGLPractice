@@ -15,6 +15,7 @@ void tutorial(){
     //创建窗口
     GLFWwindow *window=initWindow("BasicLighting",800,600);
     showEnviroment();
+    glEnable(GL_DEPTH_TEST);
     //着色器程序初始化
     Shader cubeShader("shaders/BasicLighting/cube.vs","shaders/BasicLighting/cube.frag");
     Shader lampShader("shaders/BasicLighting/lamp.vs","shaders/BasicLighting/lamp.frag");
@@ -73,6 +74,7 @@ void exercise1(){
     //创建窗口
     GLFWwindow *window=initWindow("BasicLighting",800,600);
     showEnviroment();
+    glEnable(GL_DEPTH_TEST);
     //着色器程序初始化
     Shader cubeShader("shaders/BasicLighting/cube.vs","shaders/BasicLighting/cube.frag");
     Shader lampShader("shaders/BasicLighting/lamp.vs","shaders/BasicLighting/lamp.frag");
@@ -138,6 +140,7 @@ void exercise3(){
     //创建窗口
     GLFWwindow *window=initWindow("BasicLighting",800,600);
     showEnviroment();
+    glEnable(GL_DEPTH_TEST);
     //着色器程序初始化
     Shader cubeShader("shaders/BasicLighting/cubeEx3.vs","shaders/BasicLighting/cubeEx3.frag");
     Shader lampShader("shaders/BasicLighting/lamp.vs","shaders/BasicLighting/lamp.frag");
@@ -193,6 +196,7 @@ void exercise4(){
     //创建窗口
     GLFWwindow *window=initWindow("BasicLighting",800,600);
     showEnviroment();
+    glEnable(GL_DEPTH_TEST);
     //着色器程序初始化
     Shader cubeShader("shaders/BasicLighting/cubeEx4.vs","shaders/BasicLighting/cubeEx4.frag");
     Shader lampShader("shaders/BasicLighting/lamp.vs","shaders/BasicLighting/lamp.frag");

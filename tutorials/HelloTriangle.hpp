@@ -23,7 +23,7 @@ const GLchar *vertexShaderSource=
     "void main()\n"
     "{\n"
     "gl_Position = vec4(position.x, position.y, position.z, 1.0);\n"
-    "}\0";
+    "}\n";
 //fragmentShader GLSL
 const GLchar *fragmentShaderSource=
     "#version 330 core\n"
@@ -33,7 +33,7 @@ const GLchar *fragmentShaderSource=
     "color=vec4(1.0f,0.5f,0.2f,1.0f);\n"
     "}\n";
 //教程实现:绘制两个三角形组成的一个矩形
-void turtorial(){
+void tutorial(){
     //初始化窗口
     GLFWwindow *window=initWindow("HelloTriangle",800,600,nullptr);
     showEnviroment();
@@ -80,7 +80,6 @@ void turtorial(){
         //使用Shader程序
         glUseProgram(shaderProgram);
         glBindVertexArray(VAO);
-        //glDrawArrays(GL_TRIANGLES,0,3);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
         //双缓冲置换
