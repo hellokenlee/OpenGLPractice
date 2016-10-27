@@ -2,7 +2,7 @@
 
 - - - 
 
-The result of each sections(updating...):
+Some results of each sections(updating...):
 
 
 09 Materials:
