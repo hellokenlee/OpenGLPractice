@@ -31,6 +31,7 @@
 #include "tutorials/BasicLighting.hpp"
 
 int main(){
-    BasicLighting::exercise4();
+    BasicLighting::tutorial();
     return 0;
 }
+

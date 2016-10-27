@@ -15,10 +15,9 @@ uniform mat4 projection;
 void main(){
 
 	gl_Position = projection * view * model * vec4(position,1.0f);
-
-	//Gouraund Shading
+	//	--Gouraund Shading--//
+	//计算在view space下的坐标
 	vec3 vPos=vec3(view * model * vec4(position,1.0f));
-	
 	vec3 lightPos=vec3(view*vec4(LightPos,1.0f));
 	//计算法线(view空间)
 	vec3 norm=normalize(mat3(transpose(inverse(view*model))) * normal);
