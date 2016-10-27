@@ -29,9 +29,10 @@
 #include "tutorials/Camera.hpp"
 #include "tutorials/Colors.hpp"
 #include "tutorials/BasicLighting.hpp"
+#include "tutorials/Materials.hpp"
 
 int main(){
-    BasicLighting::tutorial();
+    Materials::tutorial();
     return 0;
 }
 
