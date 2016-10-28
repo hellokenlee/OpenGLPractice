@@ -24,8 +24,8 @@ uniform mat4 projection;
 void main(){
 	gl_Position = projection * view * model * vec4(position,1.0f);
 	fragPos = vec3(view * model * vec4(position,1.0f));
-	vertexNormal = mat3(transpose(inverse(view*model))) * normal;
-	
+	//vertexNormal = mat3(transpose(inverse(view*model))) * normal;
+	vertexNormal = mat3(view*model) * normal;
 	light.position=vec3(view * vec4(vLight.position,1.0f));
 	light.ambient=vLight.ambient;
 	light.diffuse=vLight.diffuse;
