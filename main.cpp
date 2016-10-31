@@ -30,9 +30,10 @@
 #include "tutorials/Colors.hpp"
 #include "tutorials/BasicLighting.hpp"
 #include "tutorials/Materials.hpp"
+#include "tutorials/LightMaps.hpp"
 
 int main(){
-    Materials::tutorial();//最帅
+    LightMaps::tutorial();
     return 0;
 }
 

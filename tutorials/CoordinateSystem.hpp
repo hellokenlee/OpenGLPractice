@@ -1,6 +1,6 @@
 /*Copyright reserved by KenLee@2016 ken4000kl@gmail.com*/
-#ifndef COORDINATESYSTEM_HPP
-#define COORDINATESYSTEM_HPP
+#ifndef COORDINATE_SYSTEM_HPP
+#define COORDINATE_SYSTEM_HPP
 namespace CoordinateSystem{
 //窗口宽高
 const float ScreenHeight=600.0;

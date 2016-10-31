@@ -71,9 +71,9 @@ void tutorial(){
         ca.draw();
 
         lamp.shader->use();
-        lightColor.x = sin(glfwGetTime() * 2.0f);
-        lightColor.y = sin(glfwGetTime() * 0.7f);
-        lightColor.z = sin(glfwGetTime() * 1.3f);
+        lightColor.x = sin(glfwGetTime() * 2.0f * 0.3);
+        lightColor.y = sin(glfwGetTime() * 0.7f * 0.3);
+        lightColor.z = sin(glfwGetTime() * 1.3f * 0.3);
         glUniform3f(lampColorLoc,lightColor.x,lightColor.y,lightColor.z);
         lamp.draw();
 
