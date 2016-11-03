@@ -34,9 +34,8 @@
 
 
 int main(){
-    //LightMaps::tutorial();
-    Materials::tutorial();
 
+    LightMaps::exercise4();
     return 0;
 }
 

@@ -38,7 +38,7 @@ void main(){
 	vec3 viewDir = normalize(-fragPos);
 	vec3 reflectDir= reflect(-lightDir,norm);
 	float spec = pow(max(dot(viewDir,reflectDir), 0.0),material.shininess);
-	vec3 specular = light.specular * spec * vec3(texture(material.specular,texCoords));
+	vec3 specular = light.specular * spec * (vec3(1.0f)-vec3(texture(material.specular,texCoords)));//翻转颜色，白变黑黑变白。
 	//返回片元颜色
 	color = vec4((ambient+diffuse+specular),1.0f);
 }
