@@ -32,8 +32,11 @@
 #include "tutorials/Materials.hpp"
 #include "tutorials/LightMaps.hpp"
 
+
 int main(){
-    LightMaps::tutorial();
+    //LightMaps::tutorial();
+    Materials::tutorial();
+
     return 0;
 }
 
