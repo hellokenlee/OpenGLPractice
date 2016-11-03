@@ -33,7 +33,7 @@
 #include "tutorials/LightMaps.hpp"
 
 int main(){
-    LightMaps::tutorial();
+    LightMaps::exercise4();
     return 0;
 }
 

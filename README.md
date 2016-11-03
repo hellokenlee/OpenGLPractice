@@ -5,6 +5,10 @@
 Some results of each sections(updating...):
 
 
+10 LightMaps:
+
+![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/10.png)
+_ _ _
 09 Materials:
 
 ![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/09.png)
