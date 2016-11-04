@@ -49,12 +49,17 @@ void tutorial(){
     cube.setCamera(&CameraController::camera);
     cube.setShader(&cubeShader);
     cube.moveTo(cubePos);
-
+    /*
     Object lamp(cubeVertices,36,POSITIONS_NORMALS_TEXTURES,GL_TRIANGLES);
     lamp.setCamera(&CameraController::camera);
     lamp.setShader(&lampShader);
     lamp.moveTo(lampPos);
     lamp.scaleTo(0.4);
+    */
+    Object* lamp=cube.clone();
+    lamp->setShader(&lampShader);
+    lamp->moveTo(lampPos);
+    lamp->scaleTo(0.4);
     //绑定控制
     CameraController::bindControl(window);
     //关闭鼠标显示
@@ -79,7 +84,7 @@ void tutorial(){
 
         ca.draw();
 
-        lamp.draw();
+        lamp->draw();
 
         cube.shader->use();
         glActiveTexture(GL_TEXTURE0);

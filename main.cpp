@@ -31,9 +31,10 @@
 #include "tutorials/BasicLighting.hpp"
 #include "tutorials/Materials.hpp"
 #include "tutorials/LightMaps.hpp"
+#include "tutorials/LightCasters.hpp"
 
 int main(){
-    LightMaps::exercise4();
+    LightCasters::tutorial();
     return 0;
 }
 
