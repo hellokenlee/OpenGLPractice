@@ -33,8 +33,11 @@
 #include "tutorials/LightMaps.hpp"
 #include "tutorials/LightCasters.hpp"
 
+
 int main(){
+
     LightCasters::tutorial();
+
     return 0;
 }
 
