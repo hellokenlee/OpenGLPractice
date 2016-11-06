@@ -1,10 +1,15 @@
 #version 330 core
 struct Light
 {
-    vec3 direction;
+    vec3 position;
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
+    //衰减常数
+    float constant;
+    float linear;
+    float quadratic;
+
 };
 
 layout (location=0) in vec3 position;
@@ -27,10 +32,13 @@ void main(){
 	gl_Position = projection * view * model * vec4(position,1.0f);
 	fragPos = vec3(view * model * vec4(position,1.0f));
 	//vertexNormal = mat3(transpose(inverse(view*model))) * normal;
-	vertexNormal = mat3(view*model) * normal;
+	vertexNormal = mat3(view * model) * normal;
 	light.position=vec3(view * vec4(vLight.position,1.0f));
 	light.ambient=vLight.ambient;
 	light.diffuse=vLight.diffuse;
 	light.specular=vLight.specular;
+	light.constant=vLight.constant;
+	light.linear=vLight.linear;
+	light.quadratic=vLight.quadratic;
 	texCoords=texcoords;
 }

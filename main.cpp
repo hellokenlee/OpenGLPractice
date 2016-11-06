@@ -36,8 +36,7 @@
 
 int main(){
 
-    LightCasters::tutorial();
-
+    LightCasters::tutorialPointLight();
     return 0;
 }
 

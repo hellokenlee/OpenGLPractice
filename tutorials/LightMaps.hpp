@@ -39,7 +39,6 @@ void tutorial(){
     glUniform3f(lightSpecularLoc, specularColor.x,specularColor.y,specularColor.z);
     glUniform3f(lightAmbientLoc, ambientColor.x, ambientColor.y, ambientColor.z);
     glUniform3f(lightDiffuseLoc, diffuseColor.x, diffuseColor.y, diffuseColor.z);
-    glUniform3f(lightSpecularLoc, lightColor.x, lightColor.y, lightColor.z);
 
     lampShader.use();
     GLint lampColorLoc=glGetUniformLocation(lampShader.programID,"lampColor");
@@ -49,13 +48,7 @@ void tutorial(){
     cube.setCamera(&CameraController::camera);
     cube.setShader(&cubeShader);
     cube.moveTo(cubePos);
-    /*
-    Object lamp(cubeVertices,36,POSITIONS_NORMALS_TEXTURES,GL_TRIANGLES);
-    lamp.setCamera(&CameraController::camera);
-    lamp.setShader(&lampShader);
-    lamp.moveTo(lampPos);
-    lamp.scaleTo(0.4);
-    */
+
     Object* lamp=cube.clone();
     lamp->setShader(&lampShader);
     lamp->moveTo(lampPos);
