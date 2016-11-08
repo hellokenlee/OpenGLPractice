@@ -4,7 +4,14 @@
 
 Some results of each sections(updating...):
 
+11 LightCaster(Different kinds of light):
 
+![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/11-1.png)
+
+![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/11-2.png)
+
+![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/11-3.png)
+_ _ _
 10 LightMaps:
 
 ![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/10.png)
