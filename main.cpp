@@ -32,11 +32,11 @@
 #include "tutorials/Materials.hpp"
 #include "tutorials/LightMaps.hpp"
 #include "tutorials/LightCasters.hpp"
-
+#include "tutorials/MultipleLights.hpp"
 
 int main(){
 
-    LightCasters::tutorialPointLight();
+    MultipleLights::tutorial();
     return 0;
 }
 
