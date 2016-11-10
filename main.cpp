@@ -10,6 +10,7 @@
 #include <cstdlib>
 #include <cstdio>
 #include <iostream>
+#include <string>
 //Helper Classes
 #include "wmdge/FPSCounter.h"
 #include "wmdge/Shader.h"
@@ -35,7 +36,7 @@
 #include "tutorials/MultipleLights.hpp"
 
 int main(){
-
+    //LightCasters::tutorialPointLight();
     MultipleLights::tutorial();
     return 0;
 }

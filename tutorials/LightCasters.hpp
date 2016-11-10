@@ -124,6 +124,9 @@ void tutorialPointLight(){
     Object* cubes[10];
     for(int i=0;i<10;++i){
         cubes[i]=cubeMother.clone();
+        cubes[i]->model=glm::translate(glm::mat4(),cubePositions[i]);
+        GLfloat angle=20.0f*i;
+        cubes[i]->model=glm::rotate(cubes[i]->model,angle,glm::vec3(1.0f, 0.3f, 0.5f));
     }
 
     Object* lamp=cubeMother.clone();
@@ -162,9 +165,6 @@ void tutorialPointLight(){
         glActiveTexture(GL_TEXTURE1);
         tm->bindTexture(1);
         for(int i=0;i<10;++i){
-            cubes[i]->model=glm::translate(glm::mat4(),cubePositions[i]);
-            GLfloat angle=20.0f*i;
-            cubes[i]->model=glm::rotate(cubes[i]->model,angle,glm::vec3(1.0f, 0.3f, 0.5f));
             cubes[i]->draw();
         }
 
