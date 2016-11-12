@@ -1,8 +1,14 @@
 ###My Learning Experiences of Morden OpenGL###
 
-- - - 
+_ _ _
 
 Some results of each sections(updating...):
+---
+
+12 MultipleLights:
+
+![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/12.png)
+_ _ _
 
 11 LightCaster(Different kinds of light):
 
