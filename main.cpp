@@ -36,7 +36,6 @@
 #include "tutorials/MultipleLights.hpp"
 
 int main(){
-    //LightCasters::tutorialPointLight();
     MultipleLights::tutorial();
     return 0;
 }

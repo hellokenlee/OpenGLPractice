@@ -8,7 +8,7 @@ extern GLfloat cubeVertices[36*8];
 extern glm::vec3 cubePositions[10];
 //点光源位置前置声明
 extern glm::vec3 pointLightPositions[4];
-
+// 实现三种光源混合: 平行光，点光源，和手电筒
 void tutorial(){
     //创建窗口
     GLFWwindow *window=initWindow("MultipliesLights",800,600);
@@ -29,7 +29,7 @@ void tutorial(){
     glUniform3f(glGetUniformLocation(cubeShader.programID, "vDirLight.specular"), 0.5f, 0.5f, 0.5f);
     glUniform3f(glGetUniformLocation(cubeShader.programID, "vDirLight.ambient"), 0.05f, 0.05f, 0.05f);
     glUniform3f(glGetUniformLocation(cubeShader.programID, "vDirLight.diffuse"), 0.4f, 0.4f, 0.4f);
-    //
+    //设置聚光灯uniforms
     glUniform1f(glGetUniformLocation(cubeShader.programID, "fSpotLight.innerCutOff"), glm::cos(glm::radians(12.5f)));
     glUniform1f(glGetUniformLocation(cubeShader.programID, "fSpotLight.outerCutOff"), glm::cos(glm::radians(17.0f)));
     glUniform3f(glGetUniformLocation(cubeShader.programID, "fSpotLight.specular"), 1.0f, 1.0f, 1.0f);
