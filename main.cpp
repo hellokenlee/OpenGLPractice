@@ -19,6 +19,8 @@
 #include "wmdge/CameraController.h"
 #include "wmdge/CoordinateAxes.h"
 #include "wmdge/Object.h"
+#include "wmdge/Texture.h"
+#include "wmdge/Mesh.h"
 #include "wmdge/utils.hpp"
 //Tutorial and exercises
 #include "tutorials/Benchmark.hpp"
