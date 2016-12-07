@@ -36,9 +36,10 @@
 #include "tutorials/LightMaps.hpp"
 #include "tutorials/LightCasters.hpp"
 #include "tutorials/MultipleLights.hpp"
+#include "tutorials/GeometryShader.hpp"
 
 int main(){
-    MultipleLights::tutorial();
+    GeometyShader::tutorial();
     return 0;
 }
 

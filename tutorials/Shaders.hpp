@@ -79,6 +79,7 @@ void exercise1(){
         glClear(GL_COLOR_BUFFER_BIT);
         //
         shaderProgram.use();
+
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES,0,3);
         glBindVertexArray(0);
