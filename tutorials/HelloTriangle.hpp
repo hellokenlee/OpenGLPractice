@@ -10,6 +10,7 @@ GLfloat vertices[] = {
      0.5f, -0.5f, 0.0f,  // Bottom Right
     -0.5f, -0.5f, 0.0f,  // Bottom Left
     -0.5f,  0.5f, 0.0f   // Top Left
+
 };
 //绘制顶点顺序 for EBO
 GLuint indices[]={
@@ -80,7 +81,7 @@ void tutorial(){
         //使用Shader程序
         glUseProgram(shaderProgram);
         glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
         //双缓冲置换
         glfwSwapBuffers(window);

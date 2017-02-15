@@ -28,7 +28,7 @@ void tutorial(){
 
     Shader shaderProgram("shaders/GeometryShader/Shader.vs","shaders/GeometryShader/Shader.frag");
     GLuint geometryShader=glCreateShader(GL_GEOMETRY_SHADER);
-    glShaderSource(geometryShader,1,&gShaderCode,nullptr);
+//    glShaderSource(geometryShader,1,&gShaderCode,nullptr);
     glCompileShader(geometryShader);
 
     GLuint VAO,VBO;
