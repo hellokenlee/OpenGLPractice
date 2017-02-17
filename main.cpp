@@ -38,10 +38,12 @@
 #include "tutorials/LightMaps.hpp"
 #include "tutorials/LightCasters.hpp"
 #include "tutorials/MultipleLights.hpp"
+#include "tutorials/ModelLoading.hpp"
 #include "tutorials/GeometryShader.hpp"
 
 int main(){
-    GeometyShader::tutorial();
+
+    ModelLoading::modelTest();
     return 0;
 }
 

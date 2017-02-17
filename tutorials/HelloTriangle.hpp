@@ -10,6 +10,7 @@ GLfloat vertices[] = {
      0.5f, -0.5f, 0.0f,  // Bottom Right
     -0.5f, -0.5f, 0.0f,  // Bottom Left
     -0.5f,  0.5f, 0.0f   // Top Left
+
 };
 //绘制顶点顺序 for EBO
 GLuint indices[]={
