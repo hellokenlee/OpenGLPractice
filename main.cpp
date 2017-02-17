@@ -4,6 +4,10 @@
 #include <GL/glew.h>
 //GLFW
 #include <GLFW/glfw3.h>
+//ASSIMP
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 //FreeImage
 #include <FreeImage.h>
 //C++ Library
@@ -19,8 +23,6 @@
 #include "wmdge/CameraController.h"
 #include "wmdge/CoordinateAxes.h"
 #include "wmdge/Object.h"
-#include "wmdge/Texture.h"
-#include "wmdge/Mesh.h"
 #include "wmdge/utils.hpp"
 //Tutorial and exercises
 #include "tutorials/Benchmark.hpp"
