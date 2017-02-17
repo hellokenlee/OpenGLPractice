@@ -40,6 +40,7 @@
 #include "tutorials/GeometryShader.hpp"
 
 int main(){
+
     ModelLoading::modelTest();
     return 0;
 }
