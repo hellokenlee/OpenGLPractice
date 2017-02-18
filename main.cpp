@@ -23,6 +23,8 @@
 #include "wmdge/CameraController.h"
 #include "wmdge/CoordinateAxes.h"
 #include "wmdge/Object.h"
+#include "wmdge/Texture.h"
+#include "wmdge/Model.h"
 #include "wmdge/utils.hpp"
 //Tutorial and exercises
 #include "tutorials/Benchmark.hpp"
@@ -43,7 +45,8 @@
 
 int main(){
 
-    ModelLoading::modelTest();
+    ModelLoading::tutorial();
+
     return 0;
 }
 

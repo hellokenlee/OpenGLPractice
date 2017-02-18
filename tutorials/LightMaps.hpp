@@ -1,6 +1,8 @@
 /*Copyright reserved by KenLee@2016 ken4000kl@gmail.com*/
 #ifndef LIGHT_MAPS_HPP
 #define LIGHT_MAPS_HPP
+
+
 namespace LightMaps{
 //顶点信息前置声明
 extern GLfloat cubeVertices[36*8];
