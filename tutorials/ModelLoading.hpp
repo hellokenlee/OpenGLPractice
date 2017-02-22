@@ -4,8 +4,17 @@
 namespace ModelLoading{
 //顶点信息前置声明
 extern GLfloat cubeVertices[36*8];
+#define NR_POINT_LIGHTS 7
 //点灯源位置
-glm::vec3 lightPos(0.2f, 10.0f, 1.5f);
+glm::vec3 lightPos[NR_POINT_LIGHTS+10]={
+    glm::vec3(0.0f, 16.0f, 1.5f),
+    glm::vec3(-3.0f, 12.0f, 1.5f),
+    glm::vec3(3.0f, 12.0f, 1.5f),
+    glm::vec3(-2.0f, 8.0f, 1.5f),
+    glm::vec3(2.0f, 8.0f, 1.5f),
+    glm::vec3(-2.5f, 2.0f, 1.5f),
+    glm::vec3(2.5f, 2.0f, 1.5f),
+    };
 //光照颜色(光源颜色)
 glm::vec3 lightColor(1.0f,1.0f,1.0f);
 
@@ -52,27 +61,44 @@ void exercise1(){
     glEnable(GL_DEPTH_TEST);
     glfwSwapInterval(0);
 
-    //
+    //初始化点光源着色器
     Shader lampShader("shaders/ModelLoading/lamp.vs","shaders/ModelLoading/lamp.frag");
     lampShader.use();
     glUniform3f(glGetUniformLocation(lampShader.programID,"lampColor"),lightColor.x,lightColor.y,lightColor.z);
-    //
-    Object lamp(cubeVertices,36,POSITIONS_NORMALS_TEXTURES,GL_TRIANGLES);
-    lamp.setCamera(&CameraController::camera);
-    lamp.setShader(&lampShader);
-    lamp.scaleTo(0.1);
-    lamp.moveTo(lightPos);
+    //初始化点光源模型
+    Object cube(cubeVertices,36,POSITIONS_NORMALS_TEXTURES,GL_TRIANGLES);
+    cube.setCamera(&CameraController::camera);
+    cube.setShader(&lampShader);
+    cube.scaleTo(0.1);
+    Object* lamps[NR_POINT_LIGHTS];
+    for(int i=0;i<NR_POINT_LIGHTS;++i){
+        lamps[i]=cube.clone();
+        lamps[i]->moveTo(lightPos[i]);
+    }
     //着色器初始化
     Shader modelShader("shaders/ModelLoading/nanosuit2.vs","shaders/ModelLoading/nanosuit2.frag");
     //设置灯光参数
     modelShader.use();
-    glm::vec3 lightDiffuseColor = lightColor * glm::vec3(0.7f); // Decrease the influence
-    glm::vec3 lightAmbientColor = lightColor * glm::vec3(0.3f); // Low influence
-    glm::vec3 lightSpecularColor = lightColor * glm::vec3(1.0f); // Low influence
-    glUniform3f(glGetUniformLocation(modelShader.programID,"vLight.position"),lightPos.x,lightPos.y,lightPos.z);
-    glUniform3f(glGetUniformLocation(modelShader.programID,"vLight.ambient"),lightAmbientColor.x,lightAmbientColor.y,lightAmbientColor.z);
-    glUniform3f(glGetUniformLocation(modelShader.programID,"vLight.diffuse"),lightDiffuseColor.x,lightDiffuseColor.y,lightDiffuseColor.z);
-    glUniform3f(glGetUniformLocation(modelShader.programID,"vLight.specular"),lightSpecularColor.x,lightSpecularColor.y,lightSpecularColor.z);
+    glm::vec3 lightDiffuseColor = lightColor * glm::vec3(0.8f);
+    glm::vec3 lightAmbientColor = lightColor * glm::vec3(0.2f);
+    glm::vec3 lightSpecularColor = lightColor * glm::vec3(1.0f);
+    for(int i=0;i<NR_POINT_LIGHTS;++i){
+        char buffer[256];
+        sprintf(buffer,"vLight[%d].position",i);
+        glUniform3f(glGetUniformLocation(modelShader.programID,buffer),lightPos[i].x,lightPos[i].y,lightPos[i].z);
+        sprintf(buffer,"vLight[%d].ambient",i);
+        glUniform3f(glGetUniformLocation(modelShader.programID,buffer),lightAmbientColor.x,lightAmbientColor.y,lightAmbientColor.z);
+        sprintf(buffer,"vLight[%d].diffuse",i);
+        glUniform3f(glGetUniformLocation(modelShader.programID,buffer),lightDiffuseColor.x,lightDiffuseColor.y,lightDiffuseColor.z);
+        sprintf(buffer,"vLight[%d].specular",i);
+        glUniform3f(glGetUniformLocation(modelShader.programID,buffer),lightSpecularColor.x,lightSpecularColor.y,lightSpecularColor.z);
+        sprintf(buffer,"vLight[%d].constant",i);
+        glUniform1f(glGetUniformLocation(modelShader.programID,buffer),1.0);
+        sprintf(buffer,"vLight[%d].linear",i);
+        glUniform1f(glGetUniformLocation(modelShader.programID,buffer),0.09);
+        sprintf(buffer,"vLight[%d].quadratic",i);
+        glUniform1f(glGetUniformLocation(modelShader.programID,buffer),0.32);
+    }
     glUniform1f(glGetUniformLocation(modelShader.programID,"shininess"),32.0f);
     //模型初始化
     Model model("textures/nanosuit/nanosuit.obj");
@@ -86,6 +112,7 @@ void exercise1(){
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     //显示坐标轴
     CoordinateAxes ca(&CameraController::camera);
+    ca.showGrid(false);
     //绘制
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
@@ -93,7 +120,9 @@ void exercise1(){
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
         CameraController::update();
 
-        lamp.draw();
+        for(int i=0;i<NR_POINT_LIGHTS;++i){
+            lamps[i]->draw();
+        }
         ca.draw();
         model.draw();
 
