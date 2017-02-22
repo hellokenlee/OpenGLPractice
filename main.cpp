@@ -44,7 +44,7 @@
 #include "tutorials/GeometryShader.hpp"
 
 int main(){
-    ModelLoading::exercise1();
+    ModelLoading::tutorial();
     return 0;
 }
 

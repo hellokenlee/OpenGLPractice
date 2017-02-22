@@ -56,7 +56,7 @@ void tutorial(){
 }
 
 void exercise1(){
-    GLFWwindow *window=initWindow("ModelLoading-Ex2",800,600);
+    GLFWwindow *window=initWindow("ModelLoading-Ex1",800,600);
     showEnviroment();
     glEnable(GL_DEPTH_TEST);
     glfwSwapInterval(0);
@@ -69,7 +69,7 @@ void exercise1(){
     Object cube(cubeVertices,36,POSITIONS_NORMALS_TEXTURES,GL_TRIANGLES);
     cube.setCamera(&CameraController::camera);
     cube.setShader(&lampShader);
-    cube.scaleTo(0.1);
+    cube.scaleTo(0.05);
     Object* lamps[NR_POINT_LIGHTS];
     for(int i=0;i<NR_POINT_LIGHTS;++i){
         lamps[i]=cube.clone();
@@ -80,7 +80,7 @@ void exercise1(){
     //设置灯光参数
     modelShader.use();
     glm::vec3 lightDiffuseColor = lightColor * glm::vec3(0.8f);
-    glm::vec3 lightAmbientColor = lightColor * glm::vec3(0.2f);
+    glm::vec3 lightAmbientColor = lightColor * glm::vec3(0.4f);
     glm::vec3 lightSpecularColor = lightColor * glm::vec3(1.0f);
     for(int i=0;i<NR_POINT_LIGHTS;++i){
         char buffer[256];
@@ -121,7 +121,7 @@ void exercise1(){
         CameraController::update();
 
         for(int i=0;i<NR_POINT_LIGHTS;++i){
-            lamps[i]->draw();
+            //lamps[i]->draw();
         }
         ca.draw();
         model.draw();
