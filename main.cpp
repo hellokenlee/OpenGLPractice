@@ -26,6 +26,7 @@
 #include "wmdge/Texture.h"
 #include "wmdge/Model.h"
 #include "wmdge/utils.hpp"
+
 //Tutorial and exercises
 #include "tutorials/Benchmark.hpp"
 #include "tutorials/HelloTriangle.hpp"
@@ -42,9 +43,9 @@
 #include "tutorials/MultipleLights.hpp"
 #include "tutorials/ModelLoading.hpp"
 #include "tutorials/GeometryShader.hpp"
-
+#include "tutorials/DepthTest.hpp"
 int main(){
-    ModelLoading::tutorial();
+    DepthTest::tutorial();
     return 0;
 }
 

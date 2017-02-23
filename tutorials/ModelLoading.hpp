@@ -48,7 +48,6 @@ void tutorial(){
 
         ca.draw();
         model.draw();
-
         glfwSwapBuffers(window);
     }
     glfwDestroyWindow(window);
