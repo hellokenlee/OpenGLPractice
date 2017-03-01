@@ -13,14 +13,14 @@ void tutorial(){
     GLFWwindow* window=initWindow("DepthTest",800,600);
     // Set the required callback functions
     CameraController::bindControl(window);
-    CameraController::camera.moveto(glm::vec3(0,0,3));
+    CameraController::camera.moveto(glm::vec3(0,-0.4,3));
     // Options
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     // Setup some OpenGL options
     glEnable(GL_DEPTH_TEST);
     //glDepthFunc(GL_ALWAYS); // Set to always pass the depth test (same effect as glDisable(GL_DEPTH_TEST))
     // Setup and compile our shaders
-    Shader shader("shaders/DepthTest/scene1.vs", "shaders/DepthTest/scene1.frag");
+    Shader shader("shaders/DepthTest/scene1.vs", "shaders/DepthTest/zVisualize.frag");
     // Setup cube VAO
     Object cube(cubeVertices,36,POSITIONS_TEXTURES,GL_TRIANGLES);
     cube.setCamera(&CameraController::camera);
