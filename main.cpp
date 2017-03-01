@@ -44,10 +44,10 @@
 #include "tutorials/ModelLoading.hpp"
 #include "tutorials/GeometryShader.hpp"
 #include "tutorials/DepthTest.hpp"
-
+#include "tutorials/StencilTest.hpp"
 
 int main(){
-    DepthTest::tutorial();
+    StencilTest::tutorial();
     return 0;
 }
 
