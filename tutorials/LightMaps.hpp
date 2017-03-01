@@ -61,6 +61,7 @@ void tutorial(){
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     //显示坐标轴
     CoordinateAxes ca(&CameraController::camera);
+
     //ca.showGrid(false);
     //帧数计数器
     FPSCounter fc;

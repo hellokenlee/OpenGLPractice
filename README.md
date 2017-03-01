@@ -5,6 +5,13 @@ _ _ _
 Some results of each sections(updating...):
 ---
 
+13 Model Loading:
+
+![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/13-1.png)
+
+![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/13-2.png)
+_ _ _
+
 12 MultipleLights:
 
 ![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/12.png)
