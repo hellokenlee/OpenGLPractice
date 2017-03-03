@@ -20,7 +20,7 @@ void tutorial(){
     glEnable(GL_DEPTH_TEST);
     //glDepthFunc(GL_ALWAYS); // Set to always pass the depth test (same effect as glDisable(GL_DEPTH_TEST))
     // Setup and compile our shaders
-    Shader shader("shaders/DepthTest/scene1.vs", "shaders/DepthTest/zVisualize.frag");
+    Shader shader("shaders/DepthTest/scene1.vs", "shaders/DepthTest/scene1.frag");
     // Setup cube VAO
     Object cube(cubeVertices,36,POSITIONS_TEXTURES,GL_TRIANGLES);
     cube.setCamera(&CameraController::camera);
@@ -31,12 +31,14 @@ void tutorial(){
     plane.setShader(&shader);
     // Load textures
     TextureManager* tm=TextureManager::getManager();
-    if(!tm->loadTexture("textures/container2.png",0,GL_BGRA,GL_RGBA))
+    if(!tm->loadTexture("textures/cloth.jpg",0,GL_BGR,GL_RGB))
         return ;
     //显示坐标轴
     CoordinateAxes ca(&CameraController::camera);
     //
     tm->bindTexture(0);
+    shader.use();
+    glUniform1f(glGetUniformLocation(shader.programID,"texture1"),100);
     // Game loop
     while(!glfwWindowShouldClose(window)){
         //
@@ -45,7 +47,7 @@ void tutorial(){
         glClearColor(0.0f,0.0f,0.0f,1.0f);
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
         //
-        //ca.draw();
+        ca.draw();
 
         plane.draw();
 
@@ -53,7 +55,6 @@ void tutorial(){
         cube.draw();
         cube.moveTo(cubePositions[1]);
         cube.draw();
-
 
         // Swap the buffers
         glfwSwapBuffers(window);

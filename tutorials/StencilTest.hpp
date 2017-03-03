@@ -45,6 +45,7 @@ void tutorial(){
         //开启模板缓冲写，不然clear就没作用了。
         glStencilMask(0xFF);
         glClear(GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
+        //关闭模板缓冲写，绘制其他东西的时候保证模板没有被写入
         glStencilMask(0x00);
         glClearColor(0.0f,0.0f,0.0f,1.0f);
 
@@ -53,16 +54,18 @@ void tutorial(){
         plane.draw();
         ca.draw();
 
-        //绘制箱子
-        glStencilFunc(GL_ALWAYS, 1, 0xFF); //所有片段都要写入模板缓冲
-        glStencilMask(0xFF); // 设置模板缓冲为可写状态
+        //第一轮绘制箱子
+        //  设置模板缓冲为可写状态
+        glStencilMask(0xFF);
+        //  无论绘制了什么值的内容，通过模板测试(1可以为其他任意值，因为是GL_ALWAYS)
+        glStencilFunc(GL_ALWAYS, 1, 0xFF);
         cube.setShader(&shader);
         cube.scaleTo(1.0);
         cube.moveTo(cubePositions[0]);
         cube.draw();
         cube.moveTo(cubePositions[1]);
         cube.draw();
-        //描边
+        //第二轮绘制箱子，绘制出绿色边
         glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
         glStencilMask(0x00);
         cube.setShader(&edgeShader);
