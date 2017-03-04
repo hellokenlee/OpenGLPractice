@@ -47,7 +47,7 @@
 #include "tutorials/StencilTest.hpp"
 
 int main(){
-    StencilTest::tutorial();
+    StencilTest::exercise1();
     return 0;
 }
 
