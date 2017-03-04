@@ -13,7 +13,7 @@ void tutorial(){
     GLFWwindow* window=initWindow("DepthTest",800,600);
     // Set the required callback functions
     CameraController::bindControl(window);
-    CameraController::camera.moveto(glm::vec3(0,0,3));
+    CameraController::camera.moveto(glm::vec3(0,-0.4,3));
     // Options
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     // Setup some OpenGL options
@@ -31,12 +31,14 @@ void tutorial(){
     plane.setShader(&shader);
     // Load textures
     TextureManager* tm=TextureManager::getManager();
-    if(!tm->loadTexture("textures/container2.png",0,GL_BGRA,GL_RGBA))
+    if(!tm->loadTexture("textures/cloth.jpg",0,GL_BGR,GL_RGB))
         return ;
     //显示坐标轴
     CoordinateAxes ca(&CameraController::camera);
     //
     tm->bindTexture(0);
+    shader.use();
+    glUniform1f(glGetUniformLocation(shader.programID,"texture1"),100);
     // Game loop
     while(!glfwWindowShouldClose(window)){
         //
@@ -45,7 +47,7 @@ void tutorial(){
         glClearColor(0.0f,0.0f,0.0f,1.0f);
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
         //
-        //ca.draw();
+        ca.draw();
 
         plane.draw();
 
@@ -53,7 +55,6 @@ void tutorial(){
         cube.draw();
         cube.moveTo(cubePositions[1]);
         cube.draw();
-
 
         // Swap the buffers
         glfwSwapBuffers(window);
