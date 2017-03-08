@@ -27,7 +27,7 @@ void tutorial(){
     //着色器初始化
     Shader modelShader("shaders/ModelLoading/nanosuit.vs","shaders/ModelLoading/nanosuit.frag");
     //模型初始化
-    Model model("textures/nanosuit/nanosuit.obj");
+    Model model((GLchar*)"textures/nanosuit/nanosuit.obj");
     model.setShader(&modelShader);
     model.setCamera(&CameraController::camera);
     //绑定控制
@@ -100,7 +100,7 @@ void exercise1(){
     }
     glUniform1f(glGetUniformLocation(modelShader.programID,"shininess"),32.0f);
     //模型初始化
-    Model model("textures/nanosuit/nanosuit.obj");
+    Model model((GLchar*)"textures/nanosuit/nanosuit.obj");
     model.setShader(&modelShader);
     model.setCamera(&CameraController::camera);
     //绑定控制

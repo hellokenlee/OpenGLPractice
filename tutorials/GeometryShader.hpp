@@ -10,6 +10,7 @@ GLfloat vertices[]={
      0.5f,  0.5f // 0.0f,  1.0f, 0.0f, 0.0f,   // Top Right
 };
 GLchar* gShaderCode=
+(GLchar*)
 "#version 330 core\n"
 "layout (points) in;\n"
 "layout (line_strip, max_vertices=2) out;\n"

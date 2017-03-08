@@ -45,9 +45,10 @@
 #include "tutorials/GeometryShader.hpp"
 #include "tutorials/DepthTest.hpp"
 #include "tutorials/StencilTest.hpp"
+#include "tutorials/Blending.hpp"
 
 int main(){
-    StencilTest::exercise1();
+    Blending::tutorial();
     return 0;
 }
 
