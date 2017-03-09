@@ -15,6 +15,7 @@
 #include <cstdio>
 #include <iostream>
 #include <string>
+#include <map>
 //Helper Classes
 #include "wmdge/FPSCounter.h"
 #include "wmdge/Shader.h"
@@ -48,7 +49,7 @@
 #include "tutorials/Blending.hpp"
 
 int main(){
-    Blending::tutorial();
+    Blending::exercise1();
     return 0;
 }
 
