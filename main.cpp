@@ -47,9 +47,10 @@
 #include "tutorials/DepthTest.hpp"
 #include "tutorials/StencilTest.hpp"
 #include "tutorials/Blending.hpp"
+#include "tutorials/FaceCulling.hpp"
 
 int main(){
-    Blending::exercise1();
+    StencilTest::exercise2();
     return 0;
 }
 
