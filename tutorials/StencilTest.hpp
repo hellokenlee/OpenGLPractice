@@ -232,10 +232,10 @@ void exercise2(){
         glUniform3fv(glGetUniformLocation(pointerShader.programID,"endPos"),1,glm::value_ptr(endPos));
         pointer.draw();
         ca.draw();
-        /*
+
         plane.moveTo(glm::vec3(0.0,-0.1,0));
         plane.draw();
-        */
+
 
         /*
         //第一个箱子绘制
