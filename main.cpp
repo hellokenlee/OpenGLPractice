@@ -48,9 +48,10 @@
 #include "tutorials/StencilTest.hpp"
 #include "tutorials/Blending.hpp"
 #include "tutorials/FaceCulling.hpp"
+#include "tutorials/Framebuffers.hpp"
 
 int main(){
-    StencilTest::exercise2();
+    Framebuffers::tutorial();
     return 0;
 }
 
