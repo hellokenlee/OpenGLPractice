@@ -51,7 +51,8 @@
 #include "tutorials/Framebuffers.hpp"
 
 int main(){
-    Framebuffers::tutorial();
+
+    Framebuffers::exercise1();
     return 0;
 }
 

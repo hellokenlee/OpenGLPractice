@@ -31,14 +31,13 @@ void tutorial(){
     plane.setShader(&shader);
     // Load textures
     TextureManager* tm=TextureManager::getManager();
-    if(!tm->loadTexture("textures/cloth.jpg",0,GL_BGR,GL_RGB))
+    if(!tm->loadTexture("textures/container.jpg",0,GL_BGR,GL_RGB))
         return ;
+
     //显示坐标轴
     CoordinateAxes ca(&CameraController::camera);
     //
-    tm->bindTexture(0);
-    shader.use();
-    glUniform1f(glGetUniformLocation(shader.programID,"texture1"),100);
+
     // Game loop
     while(!glfwWindowShouldClose(window)){
         //
