@@ -276,6 +276,7 @@ void exercise2(){
     glfwTerminate();
 
 }
+
 GLfloat cubeVertices[6*6*5] = {
     // Positions          // Texture Coords
     -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,

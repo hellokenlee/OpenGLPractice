@@ -49,10 +49,12 @@
 #include "tutorials/Blending.hpp"
 #include "tutorials/FaceCulling.hpp"
 #include "tutorials/Framebuffers.hpp"
+#include "tutorials/Mirror.hpp"
+
 
 int main(){
 
-    Framebuffers::exercise1();
+    Mirror::exercise();
     return 0;
 }
 
