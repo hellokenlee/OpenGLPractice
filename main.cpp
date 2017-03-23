@@ -27,7 +27,6 @@
 #include "wmdge/Texture.h"
 #include "wmdge/Model.h"
 #include "wmdge/utils.hpp"
-
 //Tutorial and exercises
 #include "tutorials/Benchmark.hpp"
 #include "tutorials/HelloTriangle.hpp"
@@ -50,11 +49,12 @@
 #include "tutorials/FaceCulling.hpp"
 #include "tutorials/Framebuffers.hpp"
 #include "tutorials/Mirror.hpp"
-
+#include "tutorials/Cubemaps.hpp"
 
 int main(){
 
-    Mirror::exercise();
+    //Mirror::exercise();
+    Cubemapes::tutorial();
     return 0;
 }
 
