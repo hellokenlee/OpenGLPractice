@@ -3,7 +3,12 @@
 _ _ _
 
 Some results of each sections(updating...):
----
+---  
+
+Whims: A Mirror! 
+
+![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/w01.png)
+_ _ _
 
 13 Model Loading:
 
