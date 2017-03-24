@@ -51,8 +51,7 @@
 #include "tutorials/Framebuffers.hpp"
 
 int main(){
-
-    Framebuffers::exercise1();
+    ModelLoading::tutorial();
     return 0;
 }
 

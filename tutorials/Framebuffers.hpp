@@ -202,7 +202,7 @@ void exercise1(){
         glBindFramebuffer(GL_FRAMEBUFFER,framebuffer);
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-        CameraController::camera.rotate(CameraController::pitch,CameraController::yaw-180);
+        CameraController::camera.rotate(CameraController::pitch-180,CameraController::yaw);
         tm->bindTexture(0);
         cube.moveTo(cubePositions[0]);
         cube.draw();
