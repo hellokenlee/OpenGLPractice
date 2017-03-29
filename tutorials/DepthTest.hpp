@@ -37,7 +37,7 @@ void tutorial(){
     //显示坐标轴
     CoordinateAxes ca(&CameraController::camera);
     //
-
+    tm->bindTexture(0);
     // Game loop
     while(!glfwWindowShouldClose(window)){
         //

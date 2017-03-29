@@ -52,8 +52,6 @@
 #include "tutorials/Cubemaps.hpp"
 
 int main(){
-
-    //Mirror::exercise();
     Cubemapes::tutorial();
     return 0;
 }

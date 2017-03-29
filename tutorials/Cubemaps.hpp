@@ -5,16 +5,22 @@ namespace Cubemapes{
 
 extern GLfloat skyboxVertices[6*6*3];
 
+extern GLfloat cubeVertices[36*5];
+
+extern GLfloat cubeVerticesWithNormals[6*6*6];
+
 void tutorial(){
     // 初始化
     GLFWwindow* window=initWindow("Cubemaps",800,600);
     showEnviroment();
+    glfwSwapInterval(0);
     // 设置输入模式
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     // 绑定输入
     CameraController::bindControl(window);
     // 启用测试
     glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
     // 坐标系对象
     CoordinateAxes ca(&CameraController::camera);
     // 立方体纹理
@@ -40,11 +46,29 @@ void tutorial(){
     glBindTexture(GL_TEXTURE_CUBE_MAP,0);
     // 着色器
     Shader shader("shaders/Cubemaps/cubemap.vs","shaders/Cubemaps/cubemap.frag");
+    Shader boxShader("shaders/Cubemaps/scene.vs","shaders/Cubemaps/scene.frag");
+    Shader boxReflectShader("shaders/Cubemaps/scene_reflect.vs","shaders/Cubemaps/scene_reflect.frag");
+    Shader boxRefractShader("shaders/Cubemaps/scene_refract.vs","shaders/Cubemaps/scene_refract.frag");
     // 天空盒物体
     Object skybox(skyboxVertices,36,POSITIONS,GL_TRIANGLES);
     skybox.setCamera(&CameraController::camera);
     skybox.setShader(&shader);
-    skybox.scaleTo(10.0f);
+    // 盒子物体
+    //Object box(cubeVertices,36,POSITIONS_TEXTURES,GL_TRIANGLES);
+    // 物体采用反射贴图
+    Object box(cubeVerticesWithNormals, 36, POSITIONS_NORMALS, GL_TRIANGLES);
+    box.setCamera(&CameraController::camera);
+    //box.setShader(&boxShader);
+    box.setShader(&boxRefractShader);
+    //导入模型
+    Model model((GLchar*)"textures/nanosuit/nanosuit.obj");
+    model.setShader(&boxRefractShader);
+    model.setCamera(&CameraController::camera);
+
+    // 盒子纹理
+    tm->loadTexture("textures/container2.png",0,GL_BGRA,GL_RGBA);
+    // FPS计数器
+    FPSCounter fc;
     // 主循环
     while(!glfwWindowShouldClose(window)){
         // 邻询时间
@@ -56,17 +80,123 @@ void tutorial(){
         // 更新移动
         CameraController::update();
 
+        // 绘制天空盒
+//        glDepthMask(GL_FALSE);
+//        glBindTexture(GL_TEXTURE_CUBE_MAP,texID);
+//        skybox.draw();
+//        glDepthMask(GL_TRUE);
+
+        // 绘制箱子
+        tm->bindTexture(0);
+        //boxReflectShader.use();
+        boxRefractShader.use();
+        glUniform3f(glGetUniformLocation(boxReflectShader.programID,"camPosition"),CameraController::camera.cameraPos.x,CameraController::camera.cameraPos.y,CameraController::camera.cameraPos.z);
+        box.draw();
+        model.draw();
+        // 绘制坐标轴
+        //ca.draw();
+
+        // 优化前置深度测试，最后绘制天空盒。其优点在于，通过前置深度测试能使得屏幕上已经被绘制的像素区域天空盒的fragment会被抛弃。
+        // 因此天空盒的像素被抛弃的有2部分：1。不通过裁剪测试的，不在视锥体内的vertex；2。通过裁剪测试，但是被物体遮挡的fragment
         glBindTexture(GL_TEXTURE_CUBE_MAP,texID);
         skybox.draw();
 
-        ca.draw();
-
+        // 交换双缓冲
         glfwSwapBuffers(window);
+        fc.update();
     }
     glfwDestroyWindow(window);
     glfwTerminate();
 }
+GLfloat cubeVertices[6*6*5] = {
+    // Positions          // Texture Coords
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
 
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+};
+
+GLfloat cubeVerticesWithNormals[6*6*6] = {
+    // Positions          // Normals
+    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+     0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+     0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+
+    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+
+    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+
+     0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+
+    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+
+    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
+};
 GLfloat skyboxVertices[] = {
     // Positions
     -1.0f,  1.0f, -1.0f,

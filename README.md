@@ -3,8 +3,16 @@
 _ _ _
 
 Some results of each sections(updating...):
+
+
 ---  
 
+14 CubeMaps:
+
+![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/14-1.png)
+![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/14-2.png)
+_ _ _
+  
 Whims: A Mirror! 
 
 ![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/w01.png)
