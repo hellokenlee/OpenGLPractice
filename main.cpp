@@ -52,7 +52,7 @@
 #include "tutorials/Cubemaps.hpp"
 
 int main(){
-    Cubemapes::tutorial();
+    Cubemapes::exercise1();
     return 0;
 }
 
