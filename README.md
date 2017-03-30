@@ -11,6 +11,8 @@ Some results of each sections(updating...):
 
 ![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/14-1.png)
 ![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/14-2.png)
+![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/14-3.png)
+![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/14-4.png)
 _ _ _
   
 Whims: A Mirror! 
