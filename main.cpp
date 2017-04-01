@@ -50,9 +50,11 @@
 #include "tutorials/Framebuffers.hpp"
 #include "tutorials/Mirror.hpp"
 #include "tutorials/Cubemaps.hpp"
+#include "tutorials/AdvancedData.hpp"
+
 
 int main(){
-    Cubemapes::exercise1();
+    AdvancedData::tutorial();
     return 0;
 }
 
