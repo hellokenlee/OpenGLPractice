@@ -152,7 +152,6 @@ void exercise1(){
     Object skybox(skyboxVertices,36,POSITIONS,GL_TRIANGLES);
     skybox.setCamera(&CameraController::camera);
     skybox.setShader(&skyboxShader);
-
     //导入模型
         // 着色器
     Shader modelShader("shaders/Cubemaps/nanosuit_reflect.vs","shaders/Cubemaps/nanosuit_reflect.frag");
@@ -182,7 +181,7 @@ void exercise1(){
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D,0);
         // 绘制坐标轴
-        //ca.draw();
+        ca.draw();
 
         // 优化前置深度测试，最后绘制天空盒。其优点在于，通过前置深度测试能使得屏幕上已经被绘制的像素区域天空盒的fragment会被抛弃。
         // 因此天空盒的像素被抛弃的有2部分：1。不通过裁剪测试的，不在视锥体内的vertex；2。通过裁剪测试，但是被物体遮挡的fragment
