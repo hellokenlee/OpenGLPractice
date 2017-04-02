@@ -50,10 +50,11 @@
 #include "tutorials/Framebuffers.hpp"
 #include "tutorials/Mirror.hpp"
 #include "tutorials/Cubemaps.hpp"
+#include "tutorials/AdvancedData.hpp"
+#include "tutorials/AdvancedGLSL.hpp"
 
 int main(){
-    Colors::tutorial();
-    //Cubemapes::tutorial();
+    AdvancedGLSL::exercise();
     return 0;
 }
 
