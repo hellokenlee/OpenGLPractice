@@ -51,11 +51,11 @@
 #include "tutorials/Mirror.hpp"
 #include "tutorials/Cubemaps.hpp"
 #include "tutorials/AdvancedData.hpp"
-
+#include "tutorials/AdvancedGLSL.hpp"
 
 int main(){
-    AdvancedData::tutorial();
-    // test
+
+    AdvancedGLSL::exercise();
     return 0;
 }
 
