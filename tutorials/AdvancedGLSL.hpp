@@ -72,7 +72,6 @@ void exercise(){
     glEnable(GL_DEPTH_TEST);
     CoordinateAxes ca(&CameraController::camera);
     //
-    Camera* cam=&CameraController::camera;
     //
     Shader cubeShader("shaders/AdvancedGLSL/scene2.vs","shaders/AdvancedGLSL/scene2.frag");
     // 申请UBO
