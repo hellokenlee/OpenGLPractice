@@ -11,11 +11,13 @@ GLfloat vertices[]={
 };
 GLfloat points[] = {
     // Positon2D  //  Colors
-    -0.5f,  0.5f, 1.0f, 0.0f, 0.0f, // ����
-     0.5f,  0.5f, 0.0f, 1.0f, 0.0f, // ����
-     0.5f, -0.5f, 0.0f, 0.0f, 1.0f, // ����
-    -0.5f, -0.5f, 1.0f, 1.0f, 0.0f  // ����
+    -0.5f,  0.5f, 1.0f, 0.0f, 0.0f, //
+     0.5f,  0.5f, 0.0f, 1.0f, 0.0f, //
+     0.5f, -0.5f, 0.0f, 0.0f, 1.0f, //
+    -0.5f, -0.5f, 1.0f, 1.0f, 0.0f  //
 };
+
+// 教程：画4个点->出现四个房子
 void tutorial(){
     GLFWwindow *window=initWindow("GeometryShader",800,600);
     showEnviroment();
@@ -49,9 +51,88 @@ void tutorial(){
 
         glfwSwapBuffers(window);
     }
+    glfwDestroyWindow(window);
     glfwTerminate();
 }
 
+// 在几何着色器中把顶点向法向量方向平移，表现爆炸效果
+void exercise1(){
+    GLFWwindow *window=initWindow("GeometryShaderEx1",800,600);
+    showEnviroment();
 
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    CameraController::bindControl(window);
+
+    glEnable(GL_DEPTH_TEST);
+
+    Shader shader("shaders/GeometryShader/explosion.vs","shaders/GeometryShader/explosion.frag");
+    shader.addOptionalShader("shaders/GeometryShader/explosion.geom", GL_GEOMETRY_SHADER);
+
+    Model nanosuit("textures/nanosuit/nanosuit.obj");
+    nanosuit.setShader(&shader);
+    nanosuit.setCamera(&CameraController::camera);
+
+    //显示坐标轴
+    CoordinateAxes ca(&CameraController::camera);
+
+    while(!glfwWindowShouldClose(window)){
+        glfwPollEvents();
+        CameraController::update();
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        shader.use();
+        glUniform1f(glGetUniformLocation(shader.programID, "time"), glfwGetTime());
+        nanosuit.draw();
+        ca.draw();
+
+        glfwSwapBuffers(window);
+    }
+    glfwDestroyWindow(window);
+    glfwTerminate();
+}
+
+// 可视化法向量
+void exercise2(){
+    GLFWwindow *window=initWindow("GeometryShaderEx1",800,600);
+    showEnviroment();
+
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    CameraController::bindControl(window);
+
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+
+    Shader shader("shaders/GeometryShader/showNormals.vs","shaders/GeometryShader/showNormals.frag");
+    shader.addOptionalShader("shaders/GeometryShader/showNormals.geom", GL_GEOMETRY_SHADER);
+
+    Shader shader2("shaders/GeometryShader/nanosuit.vs","shaders/GeometryShader/nanosuit.frag");
+
+    Model nanosuit("textures/nanosuit/nanosuit.obj");
+    nanosuit.setShader(nullptr);
+    nanosuit.setCamera(&CameraController::camera);
+
+    //显示坐标轴
+    CoordinateAxes ca(&CameraController::camera);
+
+    while(!glfwWindowShouldClose(window)){
+        glfwPollEvents();
+        CameraController::update();
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        nanosuit.setShader(&shader2);
+        nanosuit.draw();
+
+        nanosuit.setShader(&shader);
+        nanosuit.draw();
+
+        ca.draw();
+
+        glfwSwapBuffers(window);
+    }
+    glfwDestroyWindow(window);
+    glfwTerminate();
+}
 };
 #endif  //  GEOMETRY_SHADER_HPP

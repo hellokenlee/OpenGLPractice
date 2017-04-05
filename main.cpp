@@ -54,7 +54,7 @@
 #include "tutorials/AdvancedGLSL.hpp"
 
 int main(){
-    GeometyShader::tutorial();
+    GeometyShader::exercise2();
     return 0;
 }
 
