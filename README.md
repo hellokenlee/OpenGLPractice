@@ -4,8 +4,15 @@ _ _ _
 
 Some results of each sections(updating...):
 
-
 ---  
+
+
+15 GeometryShader:
+
+![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/15-1.png)
+![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/15-2.gif)
+
+_ _ _
 
 14 CubeMaps:
 

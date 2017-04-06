@@ -60,7 +60,7 @@ void exercise1(){
     GLFWwindow *window=initWindow("GeometryShaderEx1",800,600);
     showEnviroment();
 
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     CameraController::bindControl(window);
 
     glEnable(GL_DEPTH_TEST);

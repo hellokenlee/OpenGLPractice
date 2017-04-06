@@ -42,7 +42,6 @@
 #include "tutorials/LightCasters.hpp"
 #include "tutorials/MultipleLights.hpp"
 #include "tutorials/ModelLoading.hpp"
-#include "tutorials/GeometryShader.hpp"
 #include "tutorials/DepthTest.hpp"
 #include "tutorials/StencilTest.hpp"
 #include "tutorials/Blending.hpp"
@@ -52,11 +51,14 @@
 #include "tutorials/Cubemaps.hpp"
 #include "tutorials/AdvancedData.hpp"
 #include "tutorials/AdvancedGLSL.hpp"
+#include "tutorials/GeometryShader.hpp"
 #include "tutorials/Instancing.hpp"
 
+
 int main(){
+    GeometyShader::exercise1();
     //Instancing::tutorial_without_instancing();
-    Instancing::tutorial_with_instancing_by_IA();
+    //Instancing::tutorial_with_instancing_by_IA();
     //Instancing::tutorial_with_instancing_by_UBO();
     return 0;
 }
