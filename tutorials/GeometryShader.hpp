@@ -68,7 +68,7 @@ void exercise1(){
     Shader shader("shaders/GeometryShader/explosion.vs","shaders/GeometryShader/explosion.frag");
     shader.addOptionalShader("shaders/GeometryShader/explosion.geom", GL_GEOMETRY_SHADER);
 
-    Model nanosuit("textures/nanosuit/nanosuit.obj");
+    Model nanosuit((GLchar*)"textures/nanosuit/nanosuit.obj");
     nanosuit.setShader(&shader);
     nanosuit.setCamera(&CameraController::camera);
 
@@ -108,7 +108,7 @@ void exercise2(){
 
     Shader shader2("shaders/GeometryShader/nanosuit.vs","shaders/GeometryShader/nanosuit.frag");
 
-    Model nanosuit("textures/nanosuit/nanosuit.obj");
+    Model nanosuit((GLchar*)"textures/nanosuit/nanosuit.obj");
     nanosuit.setShader(nullptr);
     nanosuit.setCamera(&CameraController::camera);
 

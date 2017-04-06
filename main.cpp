@@ -52,9 +52,12 @@
 #include "tutorials/Cubemaps.hpp"
 #include "tutorials/AdvancedData.hpp"
 #include "tutorials/AdvancedGLSL.hpp"
+#include "tutorials/Instancing.hpp"
 
 int main(){
-    GeometyShader::exercise2();
+    //Instancing::tutorial_without_instancing();
+    Instancing::tutorial_with_instancing_by_IA();
+    //Instancing::tutorial_with_instancing_by_UBO();
     return 0;
 }
 
