@@ -53,12 +53,12 @@
 #include "tutorials/AdvancedGLSL.hpp"
 #include "tutorials/GeometryShader.hpp"
 #include "tutorials/Instancing.hpp"
-
+#include "tutorials/AntiAliasing.hpp"
 
 int main(){
-    //Instancing::tutorial_without_instancing();
-    Instancing::tutorial_with_instancing_by_IA();
-    //Instancing::tutorial_with_instancing_by_UBO();
+
+	AntiAliasing::exercise();
+
     return 0;
 }
 
