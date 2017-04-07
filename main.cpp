@@ -53,10 +53,10 @@
 #include "tutorials/AdvancedGLSL.hpp"
 #include "tutorials/GeometryShader.hpp"
 #include "tutorials/Instancing.hpp"
-
+#include "tutorials/AntiAliasing.hpp"
 
 int main(){
-	
+	AntiAliasing::exercise();
     return 0;
 }
 
