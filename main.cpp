@@ -56,10 +56,9 @@
 
 
 int main(){
-    GeometyShader::exercise1();
-    //Instancing::tutorial_without_instancing();
-    //Instancing::tutorial_with_instancing_by_IA();
-    //Instancing::tutorial_with_instancing_by_UBO();
+    Instancing::tutorial_without_instancing();
+    Instancing::tutorial_with_instancing_by_IA();
+    Instancing::tutorial_with_instancing_by_UBO();
     return 0;
 }
 

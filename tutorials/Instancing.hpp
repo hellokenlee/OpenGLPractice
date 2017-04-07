@@ -7,6 +7,7 @@ namespace Instancing{
 void tutorial_without_instancing(){
     GLFWwindow *window = initWindow("Instancing", 800, 600);
     showEnviroment();
+    cout<<"Rock Num: "<<ROCK_AMOUNT<<" [without instancing]"<<endl;
     glfwSwapInterval(0);
 
     CameraController::bindControl(window);
@@ -33,7 +34,6 @@ void tutorial_without_instancing(){
     srand(glfwGetTime());
     GLfloat radius = 50.0f;
     GLfloat offset = 5.0f;
-    cout<<sizeof(modelMatrices)<<endl;
     for(int i = 0; i < ROCK_AMOUNT; ++i){
         glm::mat4 model;
         // 1. Translation: displace along circle with 'radius' in range [-offset, offset]
@@ -85,6 +85,7 @@ void tutorial_without_instancing(){
 void tutorial_with_instancing_by_IA(){
     GLFWwindow *window = initWindow("Instancing", 800, 600);
     showEnviroment();
+    cout<<"Rock Num: "<<ROCK_AMOUNT<<" [with instancing by instanced array]"<<endl;
     glfwSwapInterval(0);
 
     CameraController::bindControl(window);
@@ -188,6 +189,7 @@ void tutorial_with_instancing_by_IA(){
 void tutorial_with_instancing_by_UBO(){
     GLFWwindow *window = initWindow("Instancing", 800, 600);
     showEnviroment();
+    cout<<"Rock Num: "<<ROCK_AMOUNT<<" [with instancing by UBO]"<<endl;
     glfwSwapInterval(0);
 
     CameraController::bindControl(window);
