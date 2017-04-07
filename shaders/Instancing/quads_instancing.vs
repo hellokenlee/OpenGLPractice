@@ -9,7 +9,7 @@ uniform mat4 view;
 uniform mat4 projection;
 
 layout (std140) uniform UBO{
-	vec3 offsets[10000];
+	vec3 offsets[1000];
 };
 
 void main()

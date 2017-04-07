@@ -9,7 +9,7 @@ uniform mat4 view;
 uniform mat4 projection;
 
 layout (std140) uniform UBO{
-	mat4 models[10000];
+	mat4 models[1000];
 };
 
 void main()
