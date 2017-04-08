@@ -82,6 +82,7 @@ extern GLfloat screenVertices[6*5];
 // 使用FB自己创建离屏MSAA渲染
 void exercise(){
     GLFWwindow* window = initWindow("AA", 800, 600);
+    showEnviroment();
     // 设置输入模式
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     // 绑定输入
@@ -89,7 +90,6 @@ void exercise(){
     CameraController::moveSpeed = 0.5f;
     // 启用测试
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_MULTISAMPLE);
     // 着色器
     Shader cubeShader("shaders/AntiAliasing/object.vs", "shaders/AntiAliasing/object.frag");
     Shader screenShader("shaders/AntiAliasing/screen.vs", "shaders/AntiAliasing/screen.frag");
@@ -99,27 +99,26 @@ void exercise(){
     cube.setCamera(&CameraController::camera);
     Object screen(screenVertices,6,POSITIONS_TEXTURES,GL_TRIANGLES);
     screen.setShader(&screenShader);
-    screen.setCamera(&CameraController::camera);
     // 创建离屏缓冲
-    GLuint fbo;
-    glGenFramebuffers(1, &fbo);
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    GLuint MSAAfbo;
+    glGenFramebuffers(1, &MSAAfbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, MSAAfbo);
         // 创建多重采样纹理
-        GLuint tex;
-        glGenTextures(1, &tex);
-        glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, tex);
+        GLuint MSAAtex;
+        glGenTextures(1, &MSAAtex);
+        glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, MSAAtex);
             glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 1, GL_RGB, 800, 600, GL_TRUE);
         glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
         // 附加到FB上
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, tex, 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, MSAAtex, 0);
         // 生产Render Buffer Object
-        GLuint rbo;
-        glGenRenderbuffers(1, &rbo);
-        glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+        GLuint MSAArbo;
+        glGenRenderbuffers(1, &MSAArbo);
+        glBindRenderbuffer(GL_RENDERBUFFER, MSAArbo);
             glRenderbufferStorageMultisample(GL_RENDERBUFFER, 1, GL_DEPTH24_STENCIL8, 800, 600);
         glBindRenderbuffer(GL_RENDERBUFFER, 0);
         // 附加到FB上
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, MSAArbo);
         //错误检查
         if(glCheckFramebufferStatus(GL_FRAMEBUFFER)!=GL_FRAMEBUFFER_COMPLETE){
             cout<<"ERROR:: FRAMEBUFFER init faild!"<<endl;
@@ -127,31 +126,71 @@ void exercise(){
         }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+    //创建帧缓冲对象
+    GLuint fbo;
+    glGenFramebuffers(1,&fbo);
+    glBindFramebuffer(GL_FRAMEBUFFER,fbo);
+        //创建纹理缓冲附件对象
+        GLuint texColorBuffer;
+        glGenTextures(1,&texColorBuffer);
+        glBindTexture(GL_TEXTURE_2D,texColorBuffer);
+                        //种类       level  纹理格式  宽x高   边界  图片格式  数据格式    数据指针
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 800, 600, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+            glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+        glBindTexture(GL_TEXTURE_2D,0);
+        //附着到帧缓冲对象上
+        glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,GL_TEXTURE_2D,texColorBuffer,0);
+        //创建深度测试和模板测试缓冲附件，以便于GL在绘制该FB的时候可以进行深度测试和模板测试
+        GLuint renderBuffer;
+        glGenRenderbuffers(1,&renderBuffer);
+        glBindRenderbuffer(GL_RENDERBUFFER,renderBuffer);
+            //分配内存
+            glRenderbufferStorage(GL_RENDERBUFFER,GL_DEPTH24_STENCIL8,800,600);
+        glBindRenderbuffer(GL_RENDERBUFFER,0);
+        //附着到帧缓冲对象上
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, renderBuffer);
+        //错误检查
+        if(glCheckFramebufferStatus(GL_FRAMEBUFFER)!=GL_FRAMEBUFFER_COMPLETE){
+            cout<<"ERROR:: FRAMEBUFFER init faild!"<<endl;
+            return;
+        }
+    glBindFramebuffer(GL_FRAMEBUFFER,0);
+
     // 主循环
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
         CameraController::update();
 
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        glClearColor(0.11f, 0.11f, 0.11f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        cube.draw();
-
-
-        // 在FB上绘制
-        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        // 在MSAAFB上绘制
+        glBindFramebuffer(GL_FRAMEBUFFER, MSAAfbo);
+        glEnable(GL_DEPTH_TEST);
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         cube.draw();
 
-        // 转移结果到默认FBO
+        // 转移结果到中间
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, MSAAfbo);
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
+        glBlitFramebuffer(0, 0, 800, 600, 0, 0, 800, 600, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+        /*
         glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-        glBlitFramebuffer(0, 0, 400, 600, 0, 0, 400, 600, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-
+        glBlitFramebuffer(0, 0, 800, 600, 0, 0, 800, 600, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+        checkError();
+        */
+        // 在默认FB绘制
+        glBindFramebuffer(GL_FRAMEBUFFER,0);
+        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glDisable(GL_DEPTH_TEST);
+        glBindTexture(GL_TEXTURE_2D, texColorBuffer);
+        screen.draw();
 
         // 显示
         glfwSwapBuffers(window);
+
     }
     glfwDestroyWindow(window);
     glfwTerminate();
