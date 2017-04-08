@@ -82,7 +82,6 @@ extern GLfloat screenVertices[6*5];
 // 使用FB自己创建离屏MSAA渲染
 void exercise(){
     GLFWwindow* window = initWindow("AA", 800, 600);
-    glfwSwapInterval(0);
     // 设置输入模式
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     // 绑定输入
@@ -133,18 +132,23 @@ void exercise(){
         glfwPollEvents();
         CameraController::update();
 
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glClearColor(0.11f, 0.11f, 0.11f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        cube.draw();
+
 
         // 在FB上绘制
         glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         cube.draw();
 
         // 转移结果到默认FBO
         glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-        glBlitFramebuffer(0, 0, 800, 600, 0, 0, 800, 600, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-        checkError();
+        glBlitFramebuffer(0, 0, 400, 600, 0, 0, 400, 600, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
 
         // 显示
         glfwSwapBuffers(window);
