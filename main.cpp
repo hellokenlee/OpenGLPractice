@@ -57,7 +57,8 @@
 
 int main(){
 
-	AntiAliasing::exercise();
+	//AntiAliasing::exercise();
+	Instancing::tutorial_with_instancing_by_IA();
 
     return 0;
 }
