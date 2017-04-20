@@ -54,10 +54,8 @@
 #include "tutorials/GeometryShader.hpp"
 #include "tutorials/Instancing.hpp"
 #include "tutorials/AntiAliasing.hpp"
-
+#include "tutorials/Stella.hpp"
 int main(){
-
-	AntiAliasing::exercise();
-
+	Stella::tutorial();
     return 0;
 }
