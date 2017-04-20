@@ -29,7 +29,7 @@ void tutorial(){
     CameraController::bindControl(window);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     CameraController::camera.setPerspective(45.0f, 4.0f / 3.0f, 0.1f, 5000.0f);
-    CameraController::camera.moveto(glm::vec3(0.0f, 0.0f, 700.0f));
+    CameraController::camera.moveto(glm::vec3(0.0f, 0.0f, 1200.0f));
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);

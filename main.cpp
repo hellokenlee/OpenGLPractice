@@ -55,10 +55,10 @@
 #include "tutorials/Instancing.hpp"
 #include "tutorials/AntiAliasing.hpp"
 #include "tutorials/Stella.hpp"
-
+#include "tutorials/BlinnPhong.hpp"
 
 
 int main(){
-	Stella::tutorial();
+    BlinnPhong::tutorial();
     return 0;
 }

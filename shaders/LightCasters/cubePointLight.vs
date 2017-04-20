@@ -6,8 +6,7 @@ struct Light
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
-    //衰减常数
-    float constant;
+    float constant;    //衰减常数
     float linear;
     float quadratic;
 

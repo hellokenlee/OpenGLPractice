@@ -6,6 +6,14 @@ Some results of each sections(updating...):
 
 ---  
 
+16 Advanced Lighting:
+
+Pure Phong Shading:  
+![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/16-1.png)  
+Blinn-Phong Shading:  
+![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/16-2.png)  
+
+_ _ _
 
 Whims: Animation《Magic of Stella》's ending scene.
 
