@@ -7,6 +7,11 @@ Some results of each sections(updating...):
 ---  
 
 
+Whims: Animation《Magic of Stella》's ending scene.
+
+![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/w02.png)
+_ _ _
+
 15 GeometryShader:
 
 ![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/15-1.png)
