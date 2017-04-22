@@ -56,9 +56,9 @@
 #include "tutorials/AntiAliasing.hpp"
 #include "tutorials/Stella.hpp"
 #include "tutorials/BlinnPhong.hpp"
-
+#include "tutorials/GammaCorrection.hpp"
 
 int main(){
-    BlinnPhong::tutorial();
+    GammaCorrection::tutorial();
     return 0;
 }
