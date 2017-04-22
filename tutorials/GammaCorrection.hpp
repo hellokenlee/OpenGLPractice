@@ -15,9 +15,10 @@ GLfloat planeVertices[] = {
 };
 //
 glm::vec3 lightPos = glm::vec3(0.0, 0.0, 0.0);
-bool blinn = false;
+bool blinn = true;
 bool lock = false;
-GLfloat gamma = 2.2;
+bool gamma = true;
+int attenIndex = 1;
 //
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode){
     CameraController::keyCallback(window, key, scancode, action, mode);
@@ -35,16 +36,15 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
             glfwSetCursorPosCallback(window, CameraController::mouseCallback);
         }
     }
-    if(key == GLFW_KEY_UP && action == GLFW_PRESS){
-        //增加Gamma值
-        gamma += 0.1;
-        cout<<"Gamma Value: "<<gamma<<endl;
+    if(key == GLFW_KEY_G && action == GLFW_PRESS){
+        //开启/关闭 gamma矫正
+        gamma = !gamma;
+        cout<<"Gamma Correction : "<<(gamma?"ON":"OFF")<<endl;
     }
-
-    if(key == GLFW_KEY_DOWN && action == GLFW_PRESS){
-        //减少Gamma值
-        gamma -= 0.1;
-        cout<<"Gamma Value: "<<gamma<<endl;
+    if(key == GLFW_KEY_SPACE && action == GLFW_PRESS){
+        //
+        attenIndex = (attenIndex == 1 ? 2 : 1);
+        cout<<"Attenuation Function: "<<(attenIndex == 1 ? "Linear" : "Quadratic")<<endl;
     }
 }
 void tutorial(){
@@ -68,8 +68,13 @@ void tutorial(){
     plane.setShader(&shader);
 
     TextureManager* tm = TextureManager::getManager();
-    tm->loadTexture("textures/wood.jpg", 0, GL_BGR, GL_RGB);
+    tm->loadTexture("textures/wood.jpg", 0, GL_BGR, GL_SRGB);
+    tm->loadTexture("textures/wood.jpg", 1, GL_BGR, GL_RGB);
 
+
+    cout<<"Switched to "<<(blinn?"Blin Phong":"Pure Phong")<<" Mode"<<endl;
+    cout<<"Gamma Correction : "<<(gamma?"ON":"OFF")<<endl;
+    cout<<"Attenuation Function: "<<(attenIndex == 1 ? "Linear" : "Quadratic")<<endl;
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
         CameraController::update();
@@ -77,10 +82,19 @@ void tutorial(){
         glClearColor(0.1, 0.1, 0.1, 1.0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        tm->bindTexture(0);
+        if(gamma){
+            tm->bindTexture(0);
+        }else{
+            tm->bindTexture(1);
+        }
         shader.use();
         glUniform1i(glGetUniformLocation(shader.programID, "blinn"), blinn);
-        glUniform1f(glGetUniformLocation(shader.programID, "gamma"), gamma);
+        glUniform1i(glGetUniformLocation(shader.programID, "attenIndex"), attenIndex);
+        if(gamma){
+            glUniform1f(glGetUniformLocation(shader.programID, "gamma"), 2.2f);
+        }else{
+            glUniform1f(glGetUniformLocation(shader.programID, "gamma"), 1.0f);
+        }
         plane.draw();
 
         glfwSwapBuffers(window);

@@ -6,6 +6,16 @@ Some results of each sections(updating...):
 
 ---  
 
+
+17 Gamma Correction:  
+
+
+| Linear Attenuation, No Gamma Correction | Quadratic Attenuation, No Gamma Correction | Linear Attenuation, Gamma Correction | Quadratic Attenuation, Gamma Correction|
+| --- | --- | --- | --- |
+| ![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/17-LNG.png)   |![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/17-QNG.png)   | ![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/17-LG.png)   | ![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/17-QG.png)   |
+
+_ _ _
+
 16 Advanced Lighting:
 
 Pure Phong Shading:  

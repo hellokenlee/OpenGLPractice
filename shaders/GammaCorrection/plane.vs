@@ -6,6 +6,10 @@ struct Light
 	vec3 ambient;
 	vec3 diffuse;
 	vec3 specular;
+	//衰减常数
+	// float constant;
+	// float linear;
+	// float quadratic;
 };
 
 layout (location = 0) in vec3 vPosition;
@@ -31,6 +35,6 @@ void main(){
 
 	fLight.position = vec3(view * vec4(vLight.position, 1.0));
 	fLight.ambient = vec3(0.05); //vLight.ambient;
-	fLight.diffuse = vec3(0.0);
-	fLight.specular = vec3(0.5);	
+	fLight.diffuse = vec3(0.3);
+	fLight.specular = vec3(1.0);	
 }
