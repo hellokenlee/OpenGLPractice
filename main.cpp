@@ -57,8 +57,9 @@
 #include "tutorials/Stella.hpp"
 #include "tutorials/BlinnPhong.hpp"
 #include "tutorials/GammaCorrection.hpp"
+#include "tutorials/NormalMapping.hpp"
 
 int main(){
-    GammaCorrection::tutorial();
+    NormalMapping::tutorial();
     return 0;
 }

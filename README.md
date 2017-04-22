@@ -6,6 +6,15 @@ Some results of each sections(updating...):
 
 ---  
 
+18 Normal Mapping:  
+
+
+| Without Normal Mapping | With Normal Mapping |
+| --- | --- |
+| ![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/18-NNM.png)   |![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/18-NM.png)   | 
+
+_ _ _
+
 
 17 Gamma Correction:  
 
