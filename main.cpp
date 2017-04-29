@@ -58,8 +58,9 @@
 #include "tutorials/BlinnPhong.hpp"
 #include "tutorials/GammaCorrection.hpp"
 #include "tutorials/NormalMapping.hpp"
+#include "tutorials/ShadowMapping.hpp"
 
 int main(){
-    NormalMapping::tutorial();
+    ShadowMapping::tutorial();
     return 0;
 }

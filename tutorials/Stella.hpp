@@ -51,7 +51,7 @@ void tutorial(){
     float x, y, z, r, g, b, a;
     int c;
     glm::mat4 model;
-    for(int i = 0; i < SQUARES_NUM; ++i){
+    for(unsigned int i = 0; i < SQUARES_NUM; ++i){
         model = glm::mat4();
         //translation
         x = distributionUni(generator) * distributionUni(generator) * 1000.0f;
