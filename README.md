@@ -6,6 +6,17 @@ Some results of each sections(updating...):
 
 ---  
 
+
+19 Shadow Mapping:  
+
+
+Shadow and lighting with point light:
+![](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/19-1.png)
+
+Shadow and lighting with directional light: 
+![](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/19-2.png)
+_ _ _
+
 18 Normal Mapping:  
 
 

@@ -61,6 +61,6 @@
 #include "tutorials/ShadowMapping.hpp"
 
 int main(){
-    ShadowMapping::exercise1();
+    ShadowMapping::tutorial();
     return 0;
 }

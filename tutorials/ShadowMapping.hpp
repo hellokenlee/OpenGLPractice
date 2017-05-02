@@ -8,7 +8,7 @@ extern GLfloat screenVertices[6*5];
 extern GLfloat cubeVertices[6*6*8];
 extern GLfloat planeVertices[6*8];
 // 立方体位置
-glm::vec3 cubePositions[2] = {glm::vec3(0.0f, 1.5f, 3.0f), glm::vec3(2.0f, 0.0f, 1.0f)};
+glm::vec3 cubePositions[2] = {glm::vec3(0.0f, 1.5f, 1.0f), glm::vec3(2.0f, 0.0f, 1.0f)};
 // ShadowMap的解析度
 const GLuint SHADOW_MAP_WIDTH = 2048;
 const GLuint SHADOW_MAP_HEIGHT = 2048;
