@@ -59,8 +59,9 @@
 #include "tutorials/GammaCorrection.hpp"
 #include "tutorials/NormalMapping.hpp"
 #include "tutorials/ShadowMapping.hpp"
+#include "tutorials/PointShadows.hpp"
 
 int main(){
-    ShadowMapping::tutorial();
+    PointShadows::tutorial();
     return 0;
 }
