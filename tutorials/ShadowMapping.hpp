@@ -8,7 +8,7 @@ extern GLfloat screenVertices[6*5];
 extern GLfloat cubeVertices[6*6*8];
 extern GLfloat planeVertices[6*8];
 // 立方体位置
-glm::vec3 cubePositions[2] = {glm::vec3(0.0f, 1.5f, 1.0f), glm::vec3(2.0f, 0.0f, 1.0f)};
+glm::vec3 cubePositions[2] = {glm::vec3(0.0f, 1.5f, 0.0f), glm::vec3(2.0f, 0.0f, 1.0f)};
 // ShadowMap的解析度
 const GLuint SHADOW_MAP_WIDTH = 2048;
 const GLuint SHADOW_MAP_HEIGHT = 2048;
@@ -55,7 +55,7 @@ void tutorial(){
     // 平行光的投影矩阵(正交)
     glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 1.0f, 7.5f);
     // 平行光的视角矩阵
-    glm::mat4 lightView = glm::lookAt(lightPosition, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::mat4 lightView = glm::lookAt(lightPosition, glm::vec3(0.0f), glm::vec3(0.0f, -1.0f, 0.0f));
     glm::mat4 lightSpaceMatrix = lightProjection * lightView;
     // 计算ShadowMap的着色器
     Shader depthMapShader("shaders/ShadowMapping/light.vs", "shaders/ShadowMapping/light.frag");

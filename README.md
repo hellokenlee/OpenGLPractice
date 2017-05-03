@@ -7,6 +7,15 @@ Some results of each sections(updating...):
 ---  
 
 
+20 Omnidirectional Shadow Maps
+
+
+
+Shadow from a point light at (0, 0, 0): 
+![](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/20-1.png)
+
+_ _ _
+
 19 Shadow Mapping:  
 
 

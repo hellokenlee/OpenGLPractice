@@ -5,11 +5,12 @@ namespace PointShadows{
 
 // 前置顶点声明
 extern GLfloat cubeVertices[6*6*8];
+extern GLfloat screenVertices[6*5];
 // 光源位置
 glm::vec3 lightPosition = glm::vec3(0.0f, 0.0f, 0.0f);
 // ShadowMap的解析度
-const GLuint SHADOW_MAP_WIDTH = 2048;
-const GLuint SHADOW_MAP_HEIGHT = 2048;
+const GLuint SHADOW_MAP_WIDTH = 512;
+const GLuint SHADOW_MAP_HEIGHT = 512;
 
 void tutorial(){
     GLFWwindow *window = initWindow("ShadowMapping", 800, 600);
@@ -46,7 +47,7 @@ void tutorial(){
     cubes[4]->model = glm::translate(cubes[4]->model, glm::vec3(-1.0f, 2.0f, -3.0f));
     cubes[4]->model = glm::rotate(cubes[4]->model, glm::radians(60.0f), glm::normalize(glm::vec3(1.0, 0.0, 1.0)));
     cubes[4]->model = glm::scale(cubes[4]->model, glm::vec3(1.5f));
-    cubes[5]->model = glm::scale(cubes[5]->model, glm::vec3(10.0f));
+    cubes[5]->model = glm::scale(cubes[5]->model, glm::vec3(20.0f));
     // 贴图
     TextureManager *tm = TextureManager::getManager();
     if(!tm->loadTexture("textures/wood.jpg", 0, GL_BGR,GL_RGB))
@@ -67,8 +68,8 @@ void tutorial(){
     // 生成ShadowMap的FBO, 绑定纹理
     GLuint depthMapFBO;
     glGenFramebuffers(1, &depthMapFBO);
-        glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthCubeMap, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+        glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthCubeMap, 0);
         glDrawBuffer(GL_NONE);
         glReadBuffer(GL_NONE);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -79,21 +80,23 @@ void tutorial(){
     glm::mat4 lightProjection = glm::perspective(glm::radians(90.0f), aspect, near, far);
     // 因为有6个面，所以需要6个view矩阵
     glm::mat4 lightViews[6];
-    lightViews[0] = glm::lookAt(lightPosition, lightPosition + glm::vec3( 1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)); // 朝右
-    lightViews[1] = glm::lookAt(lightPosition, lightPosition + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)); // 朝左
-    lightViews[2] = glm::lookAt(lightPosition, lightPosition + glm::vec3( 0.0f, 1.0f, 0.0f), glm::vec3(0.0f,  0.0f, 1.0f)); // 朝上
-    lightViews[3] = glm::lookAt(lightPosition, lightPosition + glm::vec3( 0.0f,-1.0f, 0.0f), glm::vec3(0.0f,  0.0f,-1.0f)); // 朝下
-    lightViews[4] = glm::lookAt(lightPosition, lightPosition + glm::vec3( 0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f)); // 朝前
-    lightViews[5] = glm::lookAt(lightPosition, lightPosition + glm::vec3( 0.0f, 0.0f,-1.0f), glm::vec3(0.0f, -1.0f, 0.0f)); // 朝后
+    lightViews[0] = glm::lookAt(lightPosition, lightPosition + glm::vec3( 1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f,  0.0f)); // 朝右
+    lightViews[1] = glm::lookAt(lightPosition, lightPosition + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f,  0.0f)); // 朝左
+    lightViews[2] = glm::lookAt(lightPosition, lightPosition + glm::vec3( 0.0f, 1.0f, 0.0f), glm::vec3(0.0f,  0.0f,  1.0f)); // 朝上
+    lightViews[3] = glm::lookAt(lightPosition, lightPosition + glm::vec3( 0.0f,-1.0f, 0.0f), glm::vec3(0.0f,  0.0f, -1.0f)); // 朝下
+    lightViews[4] = glm::lookAt(lightPosition, lightPosition + glm::vec3( 0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f,  0.0f)); // 朝前
+    lightViews[5] = glm::lookAt(lightPosition, lightPosition + glm::vec3( 0.0f, 0.0f,-1.0f), glm::vec3(0.0f, -1.0f,  0.0f)); // 朝后
     glm::mat4 lightSpaceMatrices[6];
     for(int i = 0; i < 6; ++i){
         lightSpaceMatrices[i] = lightProjection * lightViews[i];
     }
+    //
+    FPSCounter fc;
     // 主循环
     char lightSpaceMatricesUniformName[64];
     while(!glfwWindowShouldClose(window)){
+        // 处理按键
         glfwPollEvents();
-
         CameraController::update();
         // 第一次渲染，生成全方位ShadowMap
         glViewport(0, 0, SHADOW_MAP_WIDTH, SHADOW_MAP_HEIGHT);
@@ -138,13 +141,12 @@ void tutorial(){
             cubes[5]->draw();
             ca.draw();
         glfwSwapBuffers(window);
+        fc.update();
     }
 
     glfwDestroyWindow(window);
     glfwTerminate();
 }
-
-
 
 GLfloat cubeVertices[6*6*8] = {
     // Back face
