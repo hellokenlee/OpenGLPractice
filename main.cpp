@@ -60,8 +60,9 @@
 #include "tutorials/NormalMapping.hpp"
 #include "tutorials/ShadowMapping.hpp"
 #include "tutorials/PointShadows.hpp"
+#include "tutorials/ParallaxMapping.hpp"
 
 int main(){
-    PointShadows::tutorial();
+    ParallaxMapping::tutorial();
     return 0;
 }

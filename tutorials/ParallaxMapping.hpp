@@ -1,11 +1,7 @@
 /*Copyright reserved by KenLee@2017 ken4000kl@gmail.com*/
-#ifndef NORMAL_MAPPING_HPP
-#define NORMAL_MAPPING_HPP
-namespace NormalMapping{
-//GLM
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#ifndef PARALLAX_MAPPING_HPP
+#define PARALLAX_MAPPING_HPP
+namespace ParallaxMapping{
 
 glm::vec3 lightPos = glm::vec3(2.0, 2.0, 1.0);
 
@@ -20,7 +16,8 @@ GLfloat planeVertices[] = {
     -1.0f, -1.0f,  0.0f,  0.0f, 1.0f
 };
 bool lock = false;
-bool normalMap = false;
+bool normalMap = true;
+bool parallaxMap = true;
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode){
     CameraController::keyCallback(window, key, scancode, action, mode);
     if(key == GLFW_KEY_L && action == GLFW_PRESS){
@@ -39,28 +36,36 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
         normalMap = !normalMap;
         cout<<"Normal Mapping : "<<(normalMap ? "ON" : "OFF")<<endl;
     }
+    if(key == GLFW_KEY_P && action == GLFW_PRESS){
+        //开启/关闭 视差贴图
+        parallaxMap = !parallaxMap;
+        cout<<"Parallax Mapping : "<<(parallaxMap ? "ON" : "OFF")<<endl;
+    }
 }
+// 实现视差贴图
 void tutorial(){
-
-    GLFWwindow *window = initWindow("NormalMapping2", 800, 600, keyCallback, CameraController::mouseCallback);
+    GLFWwindow *window = initWindow("ParallaxMapping", 800, 600, keyCallback, CameraController::mouseCallback);
     showEnviroment();
+    glfwSwapInterval(0);
 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    CameraController::camera.moveto(glm::vec3(0.0f, 0.0f, 10.0f));
     glEnable(GL_DEPTH_TEST);
 
-    Shader shader("shaders/NormalMapping/brick_wall2.vs", "shaders/NormalMapping/brick_wall2.frag");
+    CoordinateAxes ca(&CameraController::camera);
+    Camera *cam = &CameraController::camera;
+    cam->moveto(glm::vec3(0.0f, 0.0f, 10.0f));
+
+    Shader shader("shaders/ParallaxMapping/wall_spm.vs", "shaders/ParallaxMapping/wall_spm.frag");
     shader.use();
     glUniform3f(glGetUniformLocation(shader.programID, "vLight.position"), lightPos.x, lightPos.y, lightPos.z);
     glUniform1i(glGetUniformLocation(shader.programID, "texture_diffuse1"), 0);
     glUniform1i(glGetUniformLocation(shader.programID, "texture_normal1"), 1);
-
-    CoordinateAxes ca(&CameraController::camera);
-
+    glUniform1i(glGetUniformLocation(shader.programID, "texture_depth1"), 2);
+    glUniform1f(glGetUniformLocation(shader.programID, "heightScale"), 0.2);
 
     Object wall(planeVertices, 6, POSITIONS_TEXTURES, GL_TRIANGLES);
     wall.scaleTo(5.0f);
-    wall.model = glm::rotate(wall.model, glm::radians(-40.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    //wall.model = glm::rotate(wall.model, glm::radians(-40.0f), glm::vec3(1.0f, 0.0f, 0.0f));
     wall.setCamera(&CameraController::camera);
     wall.setShader(&shader);
 
@@ -93,6 +98,7 @@ void tutorial(){
 
         TBN[i * 3 + 2] = normal;
     }
+
     // 绑定TBN
     GLuint TBN_IA_VBO;
     glGenBuffers(1, &TBN_IA_VBO);
@@ -113,12 +119,15 @@ void tutorial(){
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     TextureManager* tm = TextureManager::getManager();
-    tm->loadTexture("textures/brickwall.jpg", 0, GL_BGR, GL_SRGB);
-    tm->loadTexture("textures/brickwall_normal.jpg", 1, GL_BGR, GL_RGB);
 
-    Camera *cam = &CameraController::camera;
+    tm->loadTexture("textures/bricks2.jpg", 0, GL_BGR, GL_SRGB);
+    tm->loadTexture("textures/bricks2_normal.jpg", 1, GL_BGR, GL_RGB);
+    tm->loadTexture("textures/bricks2_disp.jpg", 2, GL_BGR, GL_RGB);
 
-    cout<<"Normal Mapping : "<<(normalMap ? "ON" : "OFF")<<endl;
+//    tm->loadTexture("textures/wood.png", 0, GL_BGRA, GL_SRGB);
+//    tm->loadTexture("textures/toy_box_normal.png", 1, GL_BGRA, GL_RGBA);
+//    tm->loadTexture("textures/toy_box_disp.png", 2, GL_BGRA, GL_RGBA);
+    FPSCounter fc;
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
         CameraController::update();
@@ -130,19 +139,20 @@ void tutorial(){
         tm->bindTexture(0);
         glActiveTexture(GL_TEXTURE1);
         tm->bindTexture(1);
-        shader.use();
-        glUniform1i(glGetUniformLocation(shader.programID, "normalMap"), normalMap);
+        glActiveTexture(GL_TEXTURE2);
+        tm->bindTexture(2);
         glUniform3f(glGetUniformLocation(shader.programID, "viewPosition"), cam->cameraPos.x, cam->cameraPos.y, cam->cameraPos.z);
-        wall.scaleTo(5.0f);
-        wall.model = glm::rotate(wall.model, glm::radians((GLfloat)(glfwGetTime() * -10.0)), glm::vec3(1.0f, 0.0f, 0.0f));
+        glUniform1i(glGetUniformLocation(shader.programID, "doNormalMapping"), normalMap);
+        glUniform1i(glGetUniformLocation(shader.programID, "doParallaxMapping"), parallaxMap);
         wall.draw();
 
         glfwSwapBuffers(window);
-
+        fc.update();
     }
 
     glfwDestroyWindow(window);
     glfwTerminate();
 }
+
 };
-#endif
+#endif // PARALLAX_MAPPING_HPP
