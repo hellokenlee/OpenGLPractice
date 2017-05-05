@@ -120,13 +120,13 @@ void tutorial(){
 
     TextureManager* tm = TextureManager::getManager();
 
-    tm->loadTexture("textures/bricks2.jpg", 0, GL_BGR, GL_SRGB);
-    tm->loadTexture("textures/bricks2_normal.jpg", 1, GL_BGR, GL_RGB);
-    tm->loadTexture("textures/bricks2_disp.jpg", 2, GL_BGR, GL_RGB);
+//    tm->loadTexture("textures/bricks2.jpg", 0, GL_BGR, GL_SRGB);
+//    tm->loadTexture("textures/bricks2_normal.jpg", 1, GL_BGR, GL_RGB);
+//    tm->loadTexture("textures/bricks2_disp.jpg", 2, GL_BGR, GL_RGB);
 
-//    tm->loadTexture("textures/wood.png", 0, GL_BGRA, GL_SRGB);
-//    tm->loadTexture("textures/toy_box_normal.png", 1, GL_BGRA, GL_RGBA);
-//    tm->loadTexture("textures/toy_box_disp.png", 2, GL_BGRA, GL_RGBA);
+    tm->loadTexture("textures/wood.png", 0, GL_BGRA, GL_SRGB);
+    tm->loadTexture("textures/toy_box_normal.png", 1, GL_BGRA, GL_RGBA);
+    tm->loadTexture("textures/toy_box_disp.png", 2, GL_BGRA, GL_RGBA);
     FPSCounter fc;
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
