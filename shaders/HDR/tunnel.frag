@@ -15,7 +15,7 @@ vec3 calcLighting(vec3 lightPosition, vec3 lightColor){
 	// 计算观察向量
 	vec3 viewDir = normalize(fViewPosition - fPosition);
 	// 环境光照
-	vec3 ambient = 0.001 * lightColor;
+	vec3 ambient = vec3(0.05) * normalize(lightColor);
 	// 漫反射
 	vec3 norm = normalize(fNormal);
 	vec3 lightDir = normalize(lightPosition - fPosition);
@@ -25,8 +25,8 @@ vec3 calcLighting(vec3 lightPosition, vec3 lightColor){
 	float spec = 0.0;
 	// Blinn-Phong
 	vec3 halfwayDir = normalize(lightDir + viewDir);
-	spec = pow(max(dot(norm, halfwayDir), 0.0), 64.0);
-	vec3 specular = spec * lightColor;
+	spec = pow(max(dot(norm, halfwayDir), 0.0), 32.0);
+	vec3 specular = 0.0 * spec * lightColor;
 	// 计算衰减
 	float distance = length(lightPosition - fPosition);
 	float attenuation = 1.0 / (distance);
@@ -41,6 +41,4 @@ void main(){
 	}
 	// 
 	color = vec4(lighting * originColor, 1.0);
-	// Gamma
-	color.rgb = pow(color.rgb, vec3(1.0 / 2.2));
 }

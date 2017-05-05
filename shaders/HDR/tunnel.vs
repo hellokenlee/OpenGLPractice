@@ -14,8 +14,8 @@ out vec3 fPosition;
 
 void main(){
 	gl_Position = projection * view * model * vec4(vPosition, 1.0);
-
 	fTexCoord = vTexCoord;
-	fNormal = transpose(inverse(mat3(model))) * vNormal;
+	// 翻转法线，我们看里面
+	fNormal = -transpose(inverse(mat3(model))) * vNormal;
 	fPosition = vec3(model * vec4(vPosition, 1.0));
 }

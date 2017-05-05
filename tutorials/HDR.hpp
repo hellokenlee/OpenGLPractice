@@ -7,17 +7,27 @@ extern GLfloat screenVertices[6*5];
 extern GLfloat cubeVertices[6*6*8];
 glm::vec3 lightPositions[] = {glm::vec3(0.0f, 0.0f, 49.5f), glm::vec3(-1.4f, -1.9f, 9.0f), glm::vec3(0.0f, -1.8f, 4.0f), glm::vec3(0.8f, -1.7f, 6.0f)};
 glm::vec3 lightColors[] = {glm::vec3(200.0f, 200.0f, 200.0f), glm::vec3(0.1f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.2f), glm::vec3(0.0f, 0.1f, 0.0f)};
+bool doToneMapping = false;
+void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode){
+    CameraController::keyCallback(window, key, scancode, action, mode);
+    if(key == GLFW_KEY_M && action == GLFW_PRESS){
+        //开启/关闭 色调映射
+        doToneMapping = !doToneMapping;
+        cout<<"Tone Mapping : "<<(doToneMapping ? "ON" : "OFF")<<endl;
+    }
+}
+
 void tutorial(){
-    GLFWwindow *window = initWindow("ParallaxMapping", 800, 600);
+    GLFWwindow *window = initWindow("HDR", 800, 600, keyCallback, CameraController::mouseCallback);
     showEnviroment();
     glfwSwapInterval(0);
 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    CameraController::bindControl(window);
     glEnable(GL_DEPTH_TEST);
 
     CoordinateAxes ca(&CameraController::camera);
     Camera *cam = &CameraController::camera;
+
 
     FPSCounter fc;
     // 生成HDR纹理附件
@@ -46,13 +56,17 @@ void tutorial(){
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     // 着色器
     Shader tunnelShader("shaders/HDR/tunnel.vs", "shaders/HDR/tunnel.frag");
-
+    Shader screenShader("shaders/HDR/screen.vs", "shaders/HDR/screen.frag");
     // 隧道物体
     Object tunnel(cubeVertices, 36, POSITIONS_NORMALS_TEXTURES, GL_TRIANGLES);
     tunnel.setCamera(cam);
     tunnel.setShader(&tunnelShader);
     tunnel.model = glm::translate(tunnel.model, glm::vec3(0.0, 0.0, 25.0));
     tunnel.model = glm::scale(tunnel.model, glm::vec3(5.0, 5.0, 55.0));
+    //
+    Object screen(screenVertices, 6, POSITIONS_TEXTURES, GL_TRIANGLES);
+    screen.setCamera(cam);
+    screen.setShader(&screenShader);
 
     // 纹理
     TextureManager* tm = TextureManager::getManager();
@@ -64,9 +78,13 @@ void tutorial(){
         glfwPollEvents();
         CameraController::update();
 
+
+
+        glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
+        glEnable(GL_DEPTH_TEST);
         glClearColor(0.1, 0.1, 0.1, 1.0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+        tunnel.setShader(&tunnelShader);
         tunnelShader.use();
         for(int i = 0; i < 4; ++i){
             sprintf(uniformNameBuffer, "lightPositions[%d]", i);
@@ -77,7 +95,16 @@ void tutorial(){
         glUniform3fv(glGetUniformLocation(tunnelShader.programID, "fViewPosition"), 1, glm::value_ptr(cam->cameraPos));
         tm->bindTexture(0);
         tunnel.draw();
-        //ca.draw();
+
+        //
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glDisable(GL_DEPTH_TEST);
+        glClearColor(0.1, 0.1, 0.1, 1.0);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glBindTexture(GL_TEXTURE_2D, hdrTexture);
+        screenShader.use();
+        glUniform1i(glGetUniformLocation(screenShader.programID, "toLDR"), doToneMapping);
+        screen.draw();
 
         glfwSwapBuffers(window);
         fc.update();
