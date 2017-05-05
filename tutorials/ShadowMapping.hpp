@@ -45,7 +45,7 @@ void tutorial(){
     // 生成ShadowMap的FBO, 绑定纹理
     GLuint depthMapFBO;
     glGenFramebuffers(1, &depthMapFBO);
-        glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+    glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
                                GL_TEXTURE_2D, depthMap, 0);
         glDrawBuffer(GL_NONE);
@@ -183,11 +183,13 @@ void exercise1(){
     // 生成ShadowMap的FBO, 绑定纹理
     GLuint depthMapFBO;
     glGenFramebuffers(1, &depthMapFBO);
-        glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+    glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
                                GL_TEXTURE_2D, depthMap, 0);
         glDrawBuffer(GL_NONE);
         glReadBuffer(GL_NONE);
+        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+            cout << "Framebuffer not complete!" << endl;
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     // 平行光的投影矩阵(正交)

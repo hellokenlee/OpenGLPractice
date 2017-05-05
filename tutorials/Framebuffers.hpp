@@ -138,7 +138,7 @@ void exercise1(){
 
     //创建帧缓冲对象
     GLuint framebuffer;
-    glGenFramebuffers(1,&framebuffer);
+    glGenFramebuffers(1, &framebuffer);
     glBindFramebuffer(GL_FRAMEBUFFER,framebuffer);
         //创建纹理缓冲附件对象
         GLuint texColorBuffer;
@@ -148,13 +148,13 @@ void exercise1(){
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 800, 600, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
             glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-        glBindTexture(GL_TEXTURE_2D,0);
+        glBindTexture(GL_TEXTURE_2D, 0);
         //附着到帧缓冲对象上
         glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,GL_TEXTURE_2D,texColorBuffer,0);
         //创建深度测试和模板测试缓冲附件，以便于GL在绘制该FB的时候可以进行深度测试和模板测试
         GLuint renderBuffer;
-        glGenRenderbuffers(1,&renderBuffer);
-        glBindRenderbuffer(GL_RENDERBUFFER,renderBuffer);
+        glGenRenderbuffers(1, &renderBuffer);
+        glBindRenderbuffer(GL_RENDERBUFFER, renderBuffer);
             //分配内存
             glRenderbufferStorage(GL_RENDERBUFFER,GL_DEPTH24_STENCIL8,800,600);
         glBindRenderbuffer(GL_RENDERBUFFER,0);

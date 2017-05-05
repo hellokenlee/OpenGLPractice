@@ -61,8 +61,9 @@
 #include "tutorials/ShadowMapping.hpp"
 #include "tutorials/PointShadows.hpp"
 #include "tutorials/ParallaxMapping.hpp"
+#include "tutorials/HDR.hpp"
 
 int main(){
-    ParallaxMapping::tutorial();
+    HDR::tutorial();
     return 0;
 }
