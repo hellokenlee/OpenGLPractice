@@ -2,16 +2,15 @@
 
 in vec2 fTexCoord;
 
-uniform sampler2D texture;
+uniform sampler2D texture1;
 uniform bool toLDR;
+uniform float exposure;
 
 out vec4 color;
 
-const float exposure = 0.1;
-
 void main(){
 
-	vec3 hdrColor = texture(texture, fTexCoord).rgb;
+	vec3 hdrColor = texture(texture1, fTexCoord).rgb;
 	// Reinhard tone mapping
 	vec3 mapped = hdrColor;
 	if(toLDR)

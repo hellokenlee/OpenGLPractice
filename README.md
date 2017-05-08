@@ -6,6 +6,24 @@ Some results of each sections(updating...):
 
 ---  
 
+23 Bloom:  
+
+
+| Without Bloom | With Bloom |
+| --- | --- |
+| ![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/23-1.png)   |![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/23-2.png)   | 
+
+_ _ _
+
+22 HDR:  
+
+
+| Without HDR | With HDR |
+| --- | --- |
+| ![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/22-1.png)   |![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/22-2.png)   | 
+
+_ _ _
+
 
 21 Parallax Mapping
 

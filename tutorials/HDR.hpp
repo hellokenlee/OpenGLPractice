@@ -8,12 +8,21 @@ extern GLfloat cubeVertices[6*6*8];
 glm::vec3 lightPositions[] = {glm::vec3(0.0f, 0.0f, 49.5f), glm::vec3(-1.4f, -1.9f, 9.0f), glm::vec3(0.0f, -1.8f, 4.0f), glm::vec3(0.8f, -1.7f, 6.0f)};
 glm::vec3 lightColors[] = {glm::vec3(200.0f, 200.0f, 200.0f), glm::vec3(0.1f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.2f), glm::vec3(0.0f, 0.1f, 0.0f)};
 bool doToneMapping = false;
+GLfloat exposure = 0.05;
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode){
     CameraController::keyCallback(window, key, scancode, action, mode);
     if(key == GLFW_KEY_M && action == GLFW_PRESS){
         //开启/关闭 色调映射
         doToneMapping = !doToneMapping;
         cout<<"Tone Mapping : "<<(doToneMapping ? "ON" : "OFF")<<endl;
+    }
+    if(key == GLFW_KEY_UP && action == GLFW_PRESS){
+        exposure += 0.05;
+        cout<<"Exposure: "<<exposure<<endl;
+    }
+    if(key == GLFW_KEY_DOWN && action == GLFW_PRESS){
+        exposure -= 0.05;
+        cout<<"Exposure: "<<exposure<<endl;
     }
 }
 
@@ -38,18 +47,11 @@ void tutorial(){
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glBindTexture(GL_TEXTURE_2D, 0);
-    // 生成RBO
-    GLuint hdrRBO;
-    glGenRenderbuffers(1, &hdrRBO);
-    glBindRenderbuffer(GL_RENDERBUFFER, hdrRBO);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 800, 600);
-    glBindRenderbuffer(GL_RENDERBUFFER, 0);
     // 生成FBO, 附着纹理附件
     GLuint hdrFBO;
     glGenFramebuffers(1, &hdrFBO);
     glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, hdrTexture, 0);
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, hdrRBO);
         // 检查
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
             cout << "Framebuffer not complete!" << endl;
@@ -104,10 +106,11 @@ void tutorial(){
         glBindTexture(GL_TEXTURE_2D, hdrTexture);
         screenShader.use();
         glUniform1i(glGetUniformLocation(screenShader.programID, "toLDR"), doToneMapping);
+        glUniform1f(glGetUniformLocation(screenShader.programID, "exposure"), exposure);
         screen.draw();
 
         glfwSwapBuffers(window);
-        fc.update();
+        //fc.update();
     }
 
     glfwDestroyWindow(window);

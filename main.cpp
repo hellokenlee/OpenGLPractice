@@ -62,8 +62,9 @@
 #include "tutorials/PointShadows.hpp"
 #include "tutorials/ParallaxMapping.hpp"
 #include "tutorials/HDR.hpp"
+#include "tutorials/Bloom.hpp"
 
 int main(){
-    HDR::tutorial();
+    Bloom::tutorial();
     return 0;
 }
