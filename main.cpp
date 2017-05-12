@@ -63,8 +63,9 @@
 #include "tutorials/ParallaxMapping.hpp"
 #include "tutorials/HDR.hpp"
 #include "tutorials/Bloom.hpp"
+#include "tutorials/PBR.hpp"
 
 int main(){
-    Bloom::tutorial();
+    PBR::tutorial();
     return 0;
 }
