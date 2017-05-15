@@ -26,6 +26,7 @@
 #include "wmdge/Object.h"
 #include "wmdge/Texture.h"
 #include "wmdge/Model.h"
+#include "wmdge/Geometry.h"
 #include "wmdge/utils.hpp"
 //Tutorial and exercises
 #include "tutorials/Benchmark.hpp"

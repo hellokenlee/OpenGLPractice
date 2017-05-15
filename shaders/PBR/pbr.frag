@@ -23,7 +23,7 @@ in VS_OUT{
 // Uniform
 uniform Light lights[4];
 uniform Material material;
-uniform viewPos;
+uniform vec3 viewPos;
 // 片元颜色
 out vec4 color;
 // π
@@ -33,7 +33,7 @@ const float PI = 3.14159265359;
 //		latex公式: NDF_{GGX TR}(n, h, \alpha) = \frac{\alpha^2}{\pi((n \cdot h)^2 (\alpha^2 - 1) + 1)^2}
 // 
 float DistributionGGX(vec3 N, vec3 H, float roughness){
-	float a = roughness * roughness
+	float a = roughness * roughness;
 	float a2 = a * a;
 	float NdotH = max(dot(N, H), 0.0);
 	float NdotH2 = NdotH * NdotH;
@@ -75,8 +75,8 @@ float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness){
 }
 
 void main(){
-	vec3 N = noramlize(fs_in.worldNormal);
-	vec3 V = noramlize(fs_in.viewPos - fs_in.worldPos);
+	vec3 N = normalize(fs_in.worldNormal);
+	vec3 V = normalize(fs_in.viewPos - fs_in.worldPos);
 
 	vec3 F0 = vec3(0.04);
 	F0 = mix(F0, material.albedo, material.metallic);
@@ -86,8 +86,8 @@ void main(){
 	// 迭代计算光照
 	for(int i = 0; i < 4; ++i){
 		// 预计算
-		vec3 L = noramlize(lights[i].worldPos - fs_in.worldPos);// 光照方向
-		vec3 H = noramlize(V + L);
+		vec3 L = normalize(lights[i].worldPos - fs_in.worldPos);// 光照方向
+		vec3 H = normalize(V + L);
 		float distance = length(lights[i].worldPos - fs_in.worldPos);
 		float attenuation = 1.0 / (distance * distance);
 		vec3 radiance = lights[i].color * attenuation;
