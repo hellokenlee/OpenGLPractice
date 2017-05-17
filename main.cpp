@@ -67,6 +67,7 @@
 #include "tutorials/PBR.hpp"
 
 int main(){
-    PBR::tutorial();
+    PBR::exercise1();
+//    NormalMapping::exercise();
     return 0;
 }

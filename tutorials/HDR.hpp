@@ -80,8 +80,6 @@ void tutorial(){
         glfwPollEvents();
         CameraController::update();
 
-
-
         glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
         glEnable(GL_DEPTH_TEST);
         glClearColor(0.1, 0.1, 0.1, 1.0);
@@ -97,7 +95,6 @@ void tutorial(){
         glUniform3fv(glGetUniformLocation(tunnelShader.programID, "fViewPosition"), 1, glm::value_ptr(cam->cameraPos));
         tm->bindTexture(0);
         tunnel.draw();
-
         //
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glDisable(GL_DEPTH_TEST);

@@ -75,12 +75,17 @@ float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness){
 }
 
 void main(){
+	// 材质定义
+	vec3 albedo = material.albedo;
+	float metallic =material.metallic;
+	float roughness = material.roughness;
+	float ao = material.ao;
+	// 向量
 	vec3 N = normalize(fs_in.worldNormal);
-	vec3 V = normalize(fs_in.viewPos - fs_in.worldPos);
-
+	vec3 V = normalize(viewPos - fs_in.worldPos);
+	// 90°反射率
 	vec3 F0 = vec3(0.04);
-	F0 = mix(F0, material.albedo, material.metallic);
-
+	F0 = mix(F0, albedo, metallic);
 	// 出射量
 	vec3 Lo = vec3(0.0);
 	// 迭代计算光照
@@ -92,13 +97,13 @@ void main(){
 		float attenuation = 1.0 / (distance * distance);
 		vec3 radiance = lights[i].color * attenuation;
 		// 计算Cook-Torrance BRDF
-		float NDF = DistributionGGX(N, H, material.roughness);
-		float G = GeometrySmith(N, V, L, material.roughness);
+		float NDF = DistributionGGX(N, H, roughness);
+		float G = GeometrySmith(N, V, L, roughness);
 		vec3 F = FresnelSchlick(max(dot(H, V), 0.0), F0);
 
-		vec3 kS = F:
+		vec3 kS = F;
 		vec3 kD = vec3(1.0) - kS;
-		kD *= 1.0 - material.metallic;
+		kD *= 1.0 - metallic;
 
 		vec3 nominator = NDF * G * F;//分子
 		float denominator = 4 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.001;//分母，  防止分母为0, 加上0.0001
@@ -109,8 +114,9 @@ void main(){
 		Lo += (kD * albedo / PI + specular) * radiance * NdotL;
 	}
 	// 计算环境光
-	vec3 ambient = vec3(0.03) * material.albedo * material.ao;
+	vec3 ambient = vec3(0.03) * albedo * ao;
 	vec3 _color = ambient + Lo;
+	//_color = Lo;
 	// HDR && gamma矫正
 	_color = _color / (_color + vec3(1.0));
 	_color = pow(_color, vec3(1.0 / 2.2));

@@ -19,6 +19,17 @@ GLfloat planeVertices[] = {
     -1.0f,  1.0f,  0.0f,  0.0f, 0.0f,
     -1.0f, -1.0f,  0.0f,  0.0f, 1.0f
 };
+GLfloat planeVertices2[] = {
+    // Positions         // TexCoords
+     1.0f, -1.0f,  0.0f,  1.0f, 1.0f,  //0
+     1.0f,  1.0f,  0.0f,  1.0f, 0.0f,  //1
+    -1.0f,  1.0f,  0.0f,  0.0f, 0.0f,  //2
+    -1.0f, -1.0f,  0.0f,  0.0f, 1.0f   //3
+};
+GLuint planeIndices[] = {
+    0, 3, 1,
+    1, 2, 3
+};
 bool lock = false;
 bool normalMap = false;
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode){
