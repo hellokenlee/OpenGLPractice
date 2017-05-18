@@ -6,6 +6,17 @@ Some results of each sections(updating...):
 
 ---  
 
+23 PBR:  
+
+
+![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/24-1.png)  
+![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/24-2.png)  
+![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/24-3.png)  
+![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/24-4.png)  
+![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/24-5.png)  
+
+_ _ _
+
 23 Bloom:  
 
 

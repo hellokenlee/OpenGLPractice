@@ -102,7 +102,7 @@ void exercise1(){
     Shader showTBNShader("shaders/PBR/showTBN.vs", "shaders/PBR/showTBN.frag");
     showTBNShader.addOptionalShader("shaders/PBR/showTBN.geom", GL_GEOMETRY_SHADER);
 
-    Object *sphere = Geometry::icoSphere(2);
+    Object *sphere = Geometry::icoSphere(3);
     sphere->setCamera(cam);
 
     TextureManager* tm = TextureManager::getManager();
@@ -197,7 +197,7 @@ void exercise2(){
     tm->loadTexture("textures/sphere/rustediron2_ao.png", 4, GL_BGRA, GL_RGBA);
 
     char uniformNameBuffer[128];
-    int rowNum = 7, colNum = 7;
+    int rowNum = 1, colNum = 1;
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
         CameraController::update();
