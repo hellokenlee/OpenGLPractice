@@ -68,6 +68,5 @@
 
 int main(){
     PBR::exercise2();
-//    NormalMapping::exercise();
     return 0;
 }

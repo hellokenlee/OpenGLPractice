@@ -83,7 +83,7 @@ void tutorial(){
     glfwTerminate();
 }
 
-// 使用 Cook-Torrance BRDF 渲染， 添加了纹理
+// 纹理PBR， 预计算TBN矩阵，手动传入
 void exercise1(){
     GLFWwindow *window = initWindow("PBR", 800, 600);
     showEnviroment();
@@ -168,7 +168,7 @@ void exercise1(){
     glfwTerminate();
 }
 
-// 使用 Cook-Torrance BRDF 渲染， 添加了纹理
+// 纹理PBR， 在片段着色器中计算TBN矩阵
 void exercise2(){
     GLFWwindow *window = initWindow("PBR", 800, 600);
     showEnviroment();
