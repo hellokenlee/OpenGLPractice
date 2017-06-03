@@ -28,6 +28,7 @@
 #include "wmdge/Model.h"
 #include "wmdge/Geometry.h"
 #include "wmdge/utils.hpp"
+#define YES
 //Tutorial and exercises
 #include "tutorials/Benchmark.hpp"
 #include "tutorials/HelloTriangle.hpp"
@@ -65,8 +66,9 @@
 #include "tutorials/HDR.hpp"
 #include "tutorials/Bloom.hpp"
 #include "tutorials/PBR.hpp"
+#include "tutorials/DeferredShading.hpp"
 
 int main(){
-    PBR::exercise2();
+    DeferredShading::tutorial();
     return 0;
 }

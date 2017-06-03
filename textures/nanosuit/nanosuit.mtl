@@ -35,6 +35,7 @@ Ni 1.000000
 d 1.000000
 illum 2
 map_Kd glass_dif.png
+map_Ks glass_ddn.png
 map_Bump glass_ddn.png
 
 
