@@ -26,6 +26,8 @@ glm::vec3 objPositions[9] = {
     glm::vec3( 0.0,  -3.0,  3.0),
     glm::vec3( 3.0,  -3.0,  3.0)
 };
+
+// deferred shading 实现
 void tutorial(){
     // 环境初始化
     GLFWwindow *window = initWindow("DeferredShading", 800, 600);
@@ -146,6 +148,10 @@ void tutorial(){
     glfwTerminate();
 }
 
+// forward shading 对比测试
+void exercise1(){
+
+}
 
 };
 #endif

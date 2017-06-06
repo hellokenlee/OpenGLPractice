@@ -27,7 +27,7 @@ void main(){
 	// 计算光照
 	vec3 _color = fragAlbedo * 0.1; // 环境光照
 	vec3 viewDir = normalize(viewPos - fragPos);
-	for(int i = 0; i < 10; ++i){
+	for(int i = 0; i < LIGHTS_NUM; ++i){
 		vec3 lightDir = normalize(lights[i].position - fragPos);
 		// 漫反射
 		vec3 diffuse = max(dot(fragNormal, lightDir), 0.0) * fragAlbedo * lights[i].color;
