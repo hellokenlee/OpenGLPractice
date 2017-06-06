@@ -160,7 +160,6 @@ void exercise1(){
             }
         }
 
-
         glfwSwapBuffers(window);
         fc.update();
     }
