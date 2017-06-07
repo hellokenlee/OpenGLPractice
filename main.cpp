@@ -67,8 +67,9 @@
 #include "tutorials/Bloom.hpp"
 #include "tutorials/PBR.hpp"
 #include "tutorials/DeferredShading.hpp"
+#include "tutorials/SSAO.hpp"
 
 int main(){
-    DeferredShading::tutorial();
+    SSAO::tutorial();
     return 0;
 }

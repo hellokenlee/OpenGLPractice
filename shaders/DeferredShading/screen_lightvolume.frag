@@ -1,6 +1,6 @@
 #version 330 core
 
-#define LIGHTS_NUM 128
+#define LIGHTS_NUM 32
 
 struct Light{
 	vec3 position;
@@ -33,19 +33,17 @@ void main(){
 	vec3 _color = fragAlbedo * 0.1; // 环境光照
 	vec3 viewDir = normalize(viewPos - fragPos);
 	for(int i = 0; i < LIGHTS_NUM; ++i){
+		vec3 lightDir = normalize(lights[i].position - fragPos);
+		// 漫反射
+		vec3 diffuse = max(dot(fragNormal, lightDir), 0.0) * fragAlbedo * lights[i].color;
+		// 镜面反射
+		vec3 halfwayDir = normalize(lightDir + viewDir);
+		float spec = pow(max(dot(fragNormal, halfwayDir), 0.0), 16.0);
+		vec3 specular = vec3(Specular) * spec * lights[i].color;
+		// 衰减
 		float dist = length(lights[i].position - fragPos);
-		//if(dist < lights[i].radius){
-			vec3 lightDir = normalize(lights[i].position - fragPos);
-			// 漫反射
-			vec3 diffuse = max(dot(fragNormal, lightDir), 0.0) * fragAlbedo * lights[i].color;
-			// 镜面反射
-			vec3 halfwayDir = normalize(lightDir + viewDir);
-			float spec = pow(max(dot(fragNormal, halfwayDir), 0.0), 16.0);
-			vec3 specular = vec3(Specular) * spec * lights[i].color;
-			// 衰减
-			float attenuation = 1.0 / (attenConstant + (attenLinear * dist) + (attenQuadratic * dist * dist));
-			_color += attenuation * (diffuse + specular);
-		//}
+		float attenuation = 1.0 / (attenConstant + (attenLinear * dist) + (attenQuadratic * dist * dist));
+		_color += attenuation * (diffuse + specular);
 	}
 	color = vec4(_color, 1.0);
 }
