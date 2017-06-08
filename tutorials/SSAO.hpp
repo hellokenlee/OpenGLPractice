@@ -2,7 +2,7 @@
 #ifndef SSAO_HPP
 #define SSAO_HPP
 namespace SSAO{
-
+const unsigned int SAMPLES_NUM = 64;
 extern GLfloat cubeVertices[6*6*8];
 GLfloat screenVertices[6*5]={
     // Positions         // TexCoords
@@ -14,6 +14,10 @@ GLfloat screenVertices[6*5]={
      1.0f, -1.0f, 0.0f,  1.0f, 0.0f,
      1.0f,  1.0f, 0.0f,  1.0f, 1.0f
 };
+float lerp(float a, float b, float f){
+    return a + f * (b - a);
+}
+
 void tutorial(){
     // 环境初始化
     GLFWwindow *window = initWindow("DeferredShading", 800, 600);
@@ -35,6 +39,8 @@ void tutorial(){
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, 800, 600, 0, GL_RGB, GL_FLOAT, nullptr);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);// 防止边缘Sample重采样
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, gPosition, 0);
         glGenTextures(1, &gNormal);
         glBindTexture(GL_TEXTURE_2D, gNormal);
@@ -83,6 +89,43 @@ void tutorial(){
     nanoMan.modelMat = glm::translate(nanoMan.modelMat, glm::vec3(0.0f, 0.0f, 5.0));
     nanoMan.modelMat = glm::rotate(nanoMan.modelMat, glm::radians(-90.0f), glm::vec3(1.0, 0.0, 0.0));
     nanoMan.modelMat = glm::scale(nanoMan.modelMat, glm::vec3(0.5f));
+    // 准备SSAO采样器
+    // 初始化半球kernel
+    uniform_real_distribution<float> randomFloats(0.0, 1.0);
+    default_random_engine generator;
+    vector<glm::vec3> ssaoKernel;
+    for(unsigned int i = 0; i < SAMPLES_NUM; ++i){
+        glm::vec3 sample(
+            randomFloats(generator) * 2.0 -1.0,
+            randomFloats(generator) * 2.0 -1.0,
+            randomFloats(generator)
+        );
+        sample = glm::normalize(sample);
+        sample *= randomFloats(generator);
+        float scale = (float)i / (float)SAMPLES_NUM;
+        scale= lerp(0.1f, 1.0f, scale * scale);
+        sample *= scale;
+        ssaoKernel.push_back(sample);
+    }
+    // 随机旋转kernel
+    vector<glm:vec3> ssaoNoise;
+    for(unsigned int i = 0; i < 16; ++i){
+        glm::vec3 noise(
+            randomFloats(generator) * 2.0 - 1.0,
+            randomFloats(generator) * 2.0 - 1.0,
+            0.0f
+        );
+        ssaoNoise.push_back(noise);
+    }
+    // 生成一个4x4的旋转纹理
+    GLuint noiseTexture;
+    glGenTextures(1, &noiseTexture);
+    glBindTexture(GL_TEXTURE_2D, noiseTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, 4, 4, 0, GL_RGB, GL_FLOAT, &ssaoNoise[0]);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     // 主循环
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
@@ -117,6 +160,7 @@ void tutorial(){
     glfwDestroyWindow(window);
     glfwTerminate();
 }
+
 GLfloat cubeVertices[6*6*8] = {
     // back face
     -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
