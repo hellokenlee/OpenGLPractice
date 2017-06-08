@@ -25,6 +25,8 @@ void tutorial(){
     showEnviroment();
     glfwSwapInterval(0);
 
+    ControlPanel panel(window);
+
     CameraController::bindControl(window);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glEnable(GL_DEPTH_TEST);
@@ -38,12 +40,15 @@ void tutorial(){
     Shader sphereShader("shaders/PBR/sphere.vs", "shaders/PBR/sphere.frag");
     Shader normalShader("shaders/PBR/showNormals.vs", "shaders/PBR/showNormals.frag");
     normalShader.addOptionalShader("shaders/PBR/showNormals.geom", GL_GEOMETRY_SHADER);
-    Object *sphere = Geometry::icoSphere(3);
+    Object *sphere = Geometry::icoSphere(2);
     sphere->setShader(&pbrShader);
     sphere->setCamera(cam);
 
     char uniformNameBuffer[128];
     int rowNum = 7, colNum = 7;
+
+
+
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
         CameraController::update();
@@ -52,7 +57,6 @@ void tutorial(){
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         //ca.draw();
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         pbrShader.use();
         // 写入光源信息
         for(int i = 0; i < 4; ++i){
@@ -67,6 +71,7 @@ void tutorial(){
         glUniform3f(glGetUniformLocation(pbrShader.programID, "material.albedo"), 0.5f, 0.0f, 0.0f);
         glUniform1f(glGetUniformLocation(pbrShader.programID, "material.ao"), 1.0f);
         // 按位置写入材质，位置信息
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         for(int r = 0; r < rowNum; ++r){
             glUniform1f(glGetUniformLocation(pbrShader.programID, "material.metallic"), float(r) / float(rowNum));
             for(int c = 0; c < colNum; ++c){
@@ -75,9 +80,12 @@ void tutorial(){
                 sphere->draw();
             }
         }
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        //
+        panel.draw();
 
+        double mouse_x, mouse_y;
         glfwSwapBuffers(window);
-        fc.update();
     }
     glfwDestroyWindow(window);
     glfwTerminate();

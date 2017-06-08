@@ -28,7 +28,7 @@
 #include "wmdge/Model.h"
 #include "wmdge/Geometry.h"
 #include "wmdge/utils.hpp"
-#define YES
+#include "wmdge/ControlPanel.h"
 //Tutorial and exercises
 #include "tutorials/Benchmark.hpp"
 #include "tutorials/HelloTriangle.hpp"
@@ -70,6 +70,7 @@
 #include "tutorials/SSAO.hpp"
 
 int main(){
+//    PBR::tutorial();
     SSAO::tutorial();
     return 0;
 }

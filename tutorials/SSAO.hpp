@@ -72,10 +72,9 @@ void tutorial(){
     // 着色器们
     Shader objShader("shaders/SSAO/object.vert", "shaders/SSAO/object.frag");
     Shader screenShader("shaders/SSAO/screen.vert", "shaders/SSAO/screen.frag");
+    Shader ssaoShader("shaders/SSAO/ssao.vert", "shaders/SSAO/ssao.frag");
     // 屏幕
     Object screen(screenVertices, 6, POSITIONS_TEXTURES, GL_TRIANGLES);
-    screen.setShader(&screenShader);
-    screen.setCamera(cam);
     // 房间物体
     Object room(cubeVertices, 36, POSITIONS_NORMALS_TEXTURES, GL_TRIANGLES);
     room.setShader(&objShader);
@@ -108,7 +107,7 @@ void tutorial(){
         ssaoKernel.push_back(sample);
     }
     // 随机旋转kernel
-    vector<glm:vec3> ssaoNoise;
+    vector<glm::vec3> ssaoNoise;
     for(unsigned int i = 0; i < 16; ++i){
         glm::vec3 noise(
             randomFloats(generator) * 2.0 - 1.0,
@@ -126,6 +125,21 @@ void tutorial(){
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    // SSAO FBO
+    unsigned int ssaoFBO;
+    glGenFramebuffers(1, &ssaoFBO);
+    glBindFramebuffer(GL_FRAMEBUFFER, ssaoFBO);
+        unsigned int ssaoColorBuffer;
+        glGenTextures(1, &ssaoColorBuffer);
+        glBindTexture(GL_TEXTURE_2D, ssaoColorBuffer);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 800, 600, 0, GL_RGB, GL_FLOAT, NULL);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, ssaoColorBuffer, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    //
+    ControlPanel panel(window);
+    char uniformName[128];
     // 主循环
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
@@ -138,6 +152,25 @@ void tutorial(){
         room.draw();
         glUniform1f(glGetUniformLocation(objShader.programID, "inverseNormal"),  1.0f);
         nanoMan.draw();
+        // Deferred Shading : SSAO Pass
+        glBindFramebuffer(GL_FRAMEBUFFER, ssaoFBO);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, gPosition);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, gNormal);
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D, noiseTexture);
+        ssaoShader.use();
+        glUniform1i(glGetUniformLocation(ssaoShader.programID, "gPosition"), 0);
+        glUniform1i(glGetUniformLocation(ssaoShader.programID, "gNormal"), 1);
+        glUniform1i(glGetUniformLocation(ssaoShader.programID, "texNoise"), 2);
+        glUniformMatrix4fv(glGetUniformLocation(ssaoShader.programID, "projection"), 1, GL_FALSE, cam->getProjectionMatrixVal());
+        for(int i = 0; i < SAMPLES_NUM; ++i){
+            sprintf(uniformName, "samples[%d]", i);
+            glUniform3fv(glGetUniformLocation(ssaoShader.programID, uniformName), 1, glm::value_ptr(ssaoKernel[i]));
+        }
+        screen.draw();
         // Deferred Shading : Lighting Pass
         // 绑定纹理
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -148,12 +181,17 @@ void tutorial(){
         glBindTexture(GL_TEXTURE_2D, gNormal);
         glActiveTexture(GL_TEXTURE2);
         glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
+        glActiveTexture(GL_TEXTURE3);
+        glBindTexture(GL_TEXTURE_2D, ssaoColorBuffer);
          // 把gBuffer中的纹理写入shader
         screenShader.use();
         glUniform1i(glGetUniformLocation(screenShader.programID, "gPosition"), 0);
         glUniform1i(glGetUniformLocation(screenShader.programID, "gNormal"), 1);
         glUniform1i(glGetUniformLocation(screenShader.programID, "gAlbedoSpec"), 2);
+        glUniform1i(glGetUniformLocation(screenShader.programID, "ssao"), 3);
         screen.draw();
+        //
+        panel.draw();
         // Buffer swap
         glfwSwapBuffers(window);
     }
