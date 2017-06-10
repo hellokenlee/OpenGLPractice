@@ -20,6 +20,6 @@ void main(){
 	gl_Position = projection * view * model * vec4(position,1.0);
 
 	vs_out.texCoord = texCoord;
-	vs_out.position = vec3(model * vec4(position, 1.0));
-	vs_out.normal = inverseNormal * transpose(inverse(mat3(model))) * normal;
+	vs_out.position = vec3(view * model * vec4(position, 1.0));
+	vs_out.normal = inverseNormal * transpose(inverse(mat3(view * model))) * normal;
 }

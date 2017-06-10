@@ -83,8 +83,6 @@ void tutorial(){
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         //
         panel.draw();
-
-        double mouse_x, mouse_y;
         glfwSwapBuffers(window);
     }
     glfwDestroyWindow(window);

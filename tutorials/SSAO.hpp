@@ -2,8 +2,11 @@
 #ifndef SSAO_HPP
 #define SSAO_HPP
 namespace SSAO{
+
 const unsigned int SAMPLES_NUM = 64;
+
 extern GLfloat cubeVertices[6*6*8];
+
 GLfloat screenVertices[6*5]={
     // Positions         // TexCoords
     -1.0f,  1.0f, 0.0f,  0.0f, 1.0f,
@@ -14,13 +17,26 @@ GLfloat screenVertices[6*5]={
      1.0f, -1.0f, 0.0f,  1.0f, 0.0f,
      1.0f,  1.0f, 0.0f,  1.0f, 1.0f
 };
+
 float lerp(float a, float b, float f){
     return a + f * (b - a);
 }
 
+// SSAO 实现
+// Q1： 为什么会产生Banding？
+//       因为样本数过少，导致样本不足以覆盖整个半球域。所以相邻的几个像素计算采样后得到的结果是一样的。
+// Q2： 随机旋转向量ssaoNoise的意义？
+//       在采样数量不变的情况下，为了解决Q1的问题，方法就是相邻像素采取不一样的采样。
+//       在不增加uniform的情况下，我们可以对kernel绕(切线空间下的)z轴进行旋转，进而改变取样。
+//       由因为kernel的采样是建立在切线空间坐标系下的，因此很不容易地想到把切线空间的切线基更换，就相当于把kernel旋转了
+// Q3： 为什么会随机旋转之后会产生花纹？
+//       因为随机旋转的texture太小，比如说4x4，通过repeat采样后，(0,0)的采样和(5,5)的采样是一样的。
+//       这个时候如果(0,0)的分布和(5,5)的分布相同，那么就会出现花纹。
+//       不妨使用一个屏幕大小的随机旋转向量。
+
 void tutorial(){
     // 环境初始化
-    GLFWwindow *window = initWindow("DeferredShading", 800, 600);
+    GLFWwindow *window = initWindow("SSAO", 800, 600);
     showEnviroment();
     glfwSwapInterval(0);
     CameraController::bindControl(window);
@@ -120,7 +136,7 @@ void tutorial(){
     GLuint noiseTexture;
     glGenTextures(1, &noiseTexture);
     glBindTexture(GL_TEXTURE_2D, noiseTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, 4, 4, 0, GL_RGB, GL_FLOAT, &ssaoNoise[0]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, 4, 4, 0, GL_RGB, GL_FLOAT, &ssaoNoise[0]);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -136,6 +152,10 @@ void tutorial(){
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, ssaoColorBuffer, 0);
+        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE){
+            cout<<"Framebuffer not complete!"<<endl;
+            exit(-1);
+        }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     //
     ControlPanel panel(window);
@@ -166,14 +186,15 @@ void tutorial(){
         glUniform1i(glGetUniformLocation(ssaoShader.programID, "gNormal"), 1);
         glUniform1i(glGetUniformLocation(ssaoShader.programID, "texNoise"), 2);
         glUniformMatrix4fv(glGetUniformLocation(ssaoShader.programID, "projection"), 1, GL_FALSE, cam->getProjectionMatrixVal());
-        for(int i = 0; i < SAMPLES_NUM; ++i){
+        for(unsigned int i = 0; i < SAMPLES_NUM; ++i){
             sprintf(uniformName, "samples[%d]", i);
-            glUniform3fv(glGetUniformLocation(ssaoShader.programID, uniformName), 1, glm::value_ptr(ssaoKernel[i]));
+            glUniform3f(glGetUniformLocation(ssaoShader.programID, uniformName), ssaoKernel[i].x, ssaoKernel[i].y, ssaoKernel[i].z);
         }
         screen.draw();
         // Deferred Shading : Lighting Pass
         // 绑定纹理
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glClearColor(0.1, 0.1, 0.1, 1.0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, gPosition);

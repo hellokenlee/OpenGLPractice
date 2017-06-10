@@ -70,7 +70,6 @@
 #include "tutorials/SSAO.hpp"
 
 int main(){
-//    PBR::tutorial();
     SSAO::tutorial();
     return 0;
 }
