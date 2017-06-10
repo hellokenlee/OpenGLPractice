@@ -70,6 +70,6 @@
 #include "tutorials/SSAO.hpp"
 
 int main(){
-    DeferredShading::tutorial();
+    SSAO::tutorial();
     return 0;
 }

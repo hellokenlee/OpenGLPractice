@@ -1,6 +1,7 @@
 /*Copyright reserved by KenLee@2017 ken4000kl@gmail.com*/
 #ifndef SSAO_HPP
 #define SSAO_HPP
+#include <unistd.h>
 namespace SSAO{
 
 const unsigned int SAMPLES_NUM = 64;
@@ -51,13 +52,15 @@ void tutorial(){
     glEnable(GL_CULL_FACE);
     CoordinateAxes ca(&CameraController::camera);
     Camera *cam = &CameraController::camera;
+    FPSCounter fc;
+    /*
     cam->moveto(glm::vec3(-0.78, 0.78, 5.95));
     CameraController::pitch = -9.05;
     CameraController::yaw = -42.45;
     cam->rotate(-9.05, -42.45);
     glfwSetCursorPosCallback(window, nullptr);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-    FPSCounter fc;
+    */
     // 准备G缓冲
     GLuint gBuffer;
     glGenFramebuffers(1, &gBuffer);
