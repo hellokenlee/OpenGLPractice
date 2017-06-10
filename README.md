@@ -43,11 +43,11 @@ _ _ _
 24 PBR:  
 
 
-![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/24-1.png)  
-![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/24-2.png)  
-![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/24-3.png)  
-![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/24-4.png)  
-![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/24-5.png)  
+![image](textures/demo/24-1.png)  
+![image](textures/demo/24-2.png)  
+![image](textures/demo/24-3.png)  
+![image](textures/demo/24-4.png)  
+![image](textures/demo/24-5.png)  
 
 _ _ _
 
@@ -56,7 +56,7 @@ _ _ _
 
 | Without Bloom | With Bloom |
 | --- | --- |
-| ![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/23-1.png)   |![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/23-2.png)   | 
+| ![image](textures/demo/23-1.png)   |![image](textures/demo/23-2.png)   | 
 
 _ _ _
 
@@ -65,7 +65,7 @@ _ _ _
 
 | Without HDR | With HDR |
 | --- | --- |
-| ![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/22-1.png)   |![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/22-2.png)   | 
+| ![image](textures/demo/22-1.png)   |![image](textures/demo/22-2.png)   | 
 
 _ _ _
 
@@ -74,8 +74,8 @@ _ _ _
 
 | Only Diffuse | Diffuse + Normal Mapping | Diffuse + Normal + Parallax Mapping |
 | --- | --- | --- |
-| ![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/21-1.png)   | ![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/21-2.png)   | ![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/21-3.png)  
-| ![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/21-4.png)   | ![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/21-5.png)   | ![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/21-6.png)  
+| ![image](textures/demo/21-1.png)   | ![image](textures/demo/21-2.png)   | ![image](textures/demo/21-3.png)  
+| ![image](textures/demo/21-4.png)   | ![image](textures/demo/21-5.png)   | ![image](textures/demo/21-6.png)  
 
 _ _ _
 
@@ -84,7 +84,7 @@ _ _ _
 
 
 Shadow from a point light at (0, 0, 0): 
-![](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/20-1.png)
+![](textures/demo/20-1.png)
 
 _ _ _
 
@@ -92,10 +92,10 @@ _ _ _
 
 
 Shadow and lighting with point light:
-![](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/19-1.png)
+![](textures/demo/19-1.png)
 
 Shadow and lighting with directional light: 
-![](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/19-2.png)
+![](textures/demo/19-2.png)
 _ _ _
 
 18 Normal Mapping:  
@@ -103,7 +103,7 @@ _ _ _
 
 | Without Normal Mapping | With Normal Mapping |
 | --- | --- |
-| ![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/18-NNM.png)   |![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/18-NM.png)   | 
+| ![image](textures/demo/18-NNM.png)   |![image](textures/demo/18-NM.png)   | 
 
 _ _ _
 
@@ -113,101 +113,101 @@ _ _ _
 
 | Linear Attenuation, No Gamma Correction | Quadratic Attenuation, No Gamma Correction | Linear Attenuation, Gamma Correction | Quadratic Attenuation, Gamma Correction|
 | --- | --- | --- | --- |
-| ![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/17-LNG.png)   |![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/17-QNG.png)   | ![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/17-LG.png)   | ![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/17-QG.png)   |
+| ![image](textures/demo/17-LNG.png)   |![image](textures/demo/17-QNG.png)   | ![image](textures/demo/17-LG.png)   | ![image](textures/demo/17-QG.png)   |
 
 _ _ _
 
 16 Advanced Lighting:
 
 Pure Phong Shading:  
-![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/16-1.png)  
+![image](textures/demo/16-1.png)  
 Blinn-Phong Shading:  
-![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/16-2.png)  
+![image](textures/demo/16-2.png)  
 
 _ _ _
 
 Whims: Animation《Magic of Stella》's ending scene.
 
-![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/w02.png)
+![image](textures/demo/w02.png)
 _ _ _
 
 15 GeometryShader:
 
-![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/15-1.png)
-![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/15-2.gif)
+![image](textures/demo/15-1.png)
+![image](textures/demo/15-2.gif)
 
 _ _ _
 
 14 CubeMaps:
 
-![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/14-1.png)
-![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/14-2.png)
-![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/14-3.png)
-![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/14-4.png)
+![image](textures/demo/14-1.png)
+![image](textures/demo/14-2.png)
+![image](textures/demo/14-3.png)
+![image](textures/demo/14-4.png)
 _ _ _
   
 Whims: A Mirror! 
 
-![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/w01.png)
+![image](textures/demo/w01.png)
 _ _ _
 
 13 Model Loading:
 
-![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/13-1.png)
+![image](textures/demo/13-1.png)
 
-![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/13-2.png)
+![image](textures/demo/13-2.png)
 _ _ _
 
 12 MultipleLights:
 
-![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/12.png)
+![image](textures/demo/12.png)
 _ _ _
 
 11 LightCaster(Different kinds of light):
 
-![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/11-1.png)
+![image](textures/demo/11-1.png)
 
-![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/11-2.png)
+![image](textures/demo/11-2.png)
 
-![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/11-3.png)
+![image](textures/demo/11-3.png)
 _ _ _
 10 LightMaps:
 
-![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/10.png)
+![image](textures/demo/10.png)
 _ _ _
 09 Materials:
 
-![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/09.png)
+![image](textures/demo/09.png)
 _ _ _
 08 BasicLighting
 
-![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/08.png)
+![image](textures/demo/08.png)
 _ _ _
 07 Colors
 
-![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/07.png)
+![image](textures/demo/07.png)
 _ _ _
 06 Camera
 
-![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/06.gif)
+![image](textures/demo/06.gif)
 _ _ _
 05 CoordinateSystem
 
-![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/05.gif)
+![image](textures/demo/05.gif)
 _ _ _
 04 Transformations
 
-![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/04.gif)
+![image](textures/demo/04.gif)
 _ _ _
 03 Textures
 
-![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/03.png)
+![image](textures/demo/03.png)
 _ _ _
 02 Shaders
 
-![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/02.gif)
+![image](textures/demo/02.gif)
 _ _ _
 01 HelloTriangle
 
-![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/01.png)
+![image](textures/demo/01.png)
 _ _ _
