@@ -19,7 +19,10 @@ GLfloat screenVertices[6*5]={
      1.0f,  1.0f, 0.0f,  1.0f, 1.0f
 };
 
-
+// Back to Front
+//  0  1  2
+//  3  4  5
+//  6  7  8
 glm::vec3 objPositions[9] = {
     glm::vec3(-3.0,  -3.0, -3.0),
     glm::vec3( 0.0,  -3.0, -3.0),

@@ -6,7 +6,41 @@ Some results of each sections(updating...):
 
 ---  
 
-23 PBR:  
+26 SSAO:  
+
+| WITH SSAO | WITHOUT SSAO |
+| --- | --- |
+| ![](textures/demo/26-6.png)  | ![](textures/demo/26-7.png)  |
+
+
+| Not Random Rotation | Not Range Check | Not Blur | Full SSAO | With Diffuse |
+| --- | --- | --- | --- | --- |
+| ![](textures/demo/26-3.png)  | ![](textures/demo/26-4.png)  | ![](textures/demo/26-2.png)  | ![](textures/demo/26-5.png)  | ![](textures/demo/26-1.png)  |
+
+_ _ _
+
+25 Deferred Shading:  
+
+![](textures/demo/25-1.png)
+
+G-Buffer Viewing
+
+| ![](textures/demo/25-Pos.png)  | ![](textures/demo/25-Nor.png) |
+| --- | --- |
+|  ![](textures/demo/25-Dif.png)  |  ![](textures/demo/25-Spec.png) |
+
+In my nVidia GT650m with 128 point lights in the scene.
+
+Models were drawed from back to front.
+
+Forward shading is not stable, since fragment shaders were call differ from view position.
+
+| Deferred Shaidng | Forward Shading |
+| --- | --- |
+|  stable at 19ms/frame  |  27 ~ 37ms/frame |
+_ _ _
+
+24 PBR:  
 
 
 ![image](https://github.com/hellokenlee/OpenGLPractice/raw/master/textures/demo/24-1.png)  

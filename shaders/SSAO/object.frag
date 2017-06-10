@@ -10,8 +10,8 @@ in VS_OUT{
 	vec3 normal;
 } fs_in;
 
-// uniform sampler2D texture_diffuse1;
-// uniform sampler2D texture_specular1;
+uniform sampler2D texture_diffuse1;
+uniform sampler2D texture_specular1;
 
 void main(){
 	// 均为世界坐标系下
@@ -20,9 +20,9 @@ void main(){
 	// 法向量
 	gNormal = normalize(fs_in.normal);
 	// 漫反射
-	//gAlbedoSpec.rgb = texture(texture_diffuse1, fs_in.texCoord).rgb;
-	gAlbedoSpec.rgb = vec3(0.95);
-	gAlbedoSpec.a = 1.0;
+	gAlbedoSpec.rgb = texture(texture_diffuse1, fs_in.texCoord).rgb;
+	//gAlbedoSpec.rgb = vec3(0.95);
+	//gAlbedoSpec.a = 1.0;
 	// 镜面反射
-	//gAlbedoSpec.a = texture(texture_specular1, fs_in.texCoord).r;
+	gAlbedoSpec.a = texture(texture_specular1, fs_in.texCoord).r;
 }
