@@ -29,6 +29,7 @@
 #include "wmdge/Geometry.h"
 #include "wmdge/utils.hpp"
 #include "wmdge/ControlPanel.h"
+#include "wmdge/CurveCollection.h"
 //Tutorial and exercises
 #include "tutorials/Benchmark.hpp"
 #include "tutorials/HelloTriangle.hpp"
@@ -69,7 +70,47 @@
 #include "tutorials/DeferredShading.hpp"
 #include "tutorials/SSAO.hpp"
 
+void test(){
+    // 环境初始化
+    GLFWwindow *window = initWindow("Yarn_level_Cloth", 800, 600);
+    showEnviroment();
+    //glfwSwapInterval(0);
+    CameraController::bindControl(window);
+    CoordinateAxes ca(&CameraController::camera);
+    Camera *cam = &CameraController::camera;
+    ControlPanel panel(window);
+    FPSCounter fc;
+    //
+    Union *bcc = CurveCollection::genFromBBCFile("textures/Yarn-level Cloth Models/tea_cozy.bcc");
+    bcc->isShareModel= true;
+    cout<<bcc->objList.size()<<endl;
+    //
+    Shader whiteShader("shaders/Share/Color.vert", "shaders/Share/Color.frag");
+    //
+    while(!glfwWindowShouldClose(window)){
+        glfwPollEvents();
+        CameraController::update();
+
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        ca.draw();
+
+        panel.draw();
+
+        whiteShader.use();
+        glUniformMatrix4fv(glGetUniformLocation(whiteShader.programID, "view"), 1, GL_FALSE, cam->getViewMatrixVal());
+        glUniformMatrix4fv(glGetUniformLocation(whiteShader.programID, "projection"), 1, GL_FALSE, cam->getProjectionMatrixVal());
+        glUniformMatrix4fv(glGetUniformLocation(whiteShader.programID, "model"), 1, GL_FALSE, glm::value_ptr(glm::mat4()));
+        bcc->draw(&whiteShader);
+        glfwSwapBuffers(window);
+    }
+    glfwDestroyWindow(window);
+    glfwTerminate();
+}
+
 int main(){
-    SSAO::tutorial();
+    //SSAO::tutorial();
+    test();
     return 0;
 }
