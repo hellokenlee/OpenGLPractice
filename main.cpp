@@ -71,10 +71,10 @@
 #include "tutorials/SSAO.hpp"
 
 void test(){
-    // ª∑æ≥≥ı ºªØ
+    // ÂàùÂßãÂåñ
     GLFWwindow *window = initWindow("Yarn_level_Cloth", 800, 600);
     showEnviroment();
-    //glfwSwapInterval(0);
+    glfwSwapInterval(0);
     CameraController::bindControl(window);
     CoordinateAxes ca(&CameraController::camera);
     Camera *cam = &CameraController::camera;
@@ -110,7 +110,8 @@ void test(){
 }
 
 int main(){
-    //SSAO::tutorial();
-    test();
+
+    SSAO::tutorial();
+    //test();
     return 0;
 }
