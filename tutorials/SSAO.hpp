@@ -23,7 +23,7 @@ float lerp(float a, float b, float f){
     return a + f * (b - a);
 }
 glm::vec3 lightPos = glm::vec3(2.0, 4.0, -2.0);
-glm::vec3 lightColor = glm::vec3(0.2, 0.2, 0.2);
+glm::vec3 lightColor = glm::vec3(0.5, 0.5, 0.5);
 // SSAO 实现
 // Q1： 为什么会产生Banding？
 //       因为样本数过少，导致样本不足以覆盖整个半球域。所以相邻的几个像素计算采样后得到的结果是一样的。

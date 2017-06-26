@@ -46,6 +46,7 @@ void tutorial(){
     glEnable(GL_DEPTH_TEST);
     CoordinateAxes ca(&CameraController::camera);
     Camera *cam = &CameraController::camera;
+    ControlPanel panel(window);
     FPSCounter fc;
     cout<<"Lights Num: "<<NR_LIGHTS<<endl;
     // 准备G缓冲
@@ -180,6 +181,8 @@ void tutorial(){
             glUniform3f(glGetUniformLocation(lightShader.programID, "objColor"), lightColors[i].x, lightColors[i].y, lightColors[i].z);
             light->draw();
         }
+        //
+        panel.draw();
         // 双缓冲交换
         glfwSwapBuffers(window);
         fc.update();
@@ -199,6 +202,7 @@ void exercise1(){
     glEnable(GL_DEPTH_TEST);
     CoordinateAxes ca(&CameraController::camera);
     Camera *cam = &CameraController::camera;
+    ControlPanel panel(window);
     FPSCounter fc;
     //
     vector<glm::vec3> lightPositions;
@@ -250,11 +254,13 @@ void exercise1(){
         glfwSwapBuffers(window);
         fc.update();
     }
+    //
+    panel.draw();
     glfwDestroyWindow(window);
     glfwTerminate();
 }
 
-// deferred shading 对比测试 // NR_LIGHTS = 128, GT650M 下19ms/frame
+// 实现light volume
 void exercise2(){
     // 环境初始化
     GLFWwindow *window = initWindow("DeferredShading", 800, 600);
