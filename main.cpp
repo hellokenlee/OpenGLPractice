@@ -74,6 +74,6 @@
 
 int main(){
     //YarnLevelCloth::test();
-    SSAO::tutorial();
+    ShadowMapping::exercise2();
     return 0;
 }

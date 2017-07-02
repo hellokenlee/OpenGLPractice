@@ -16,6 +16,7 @@ out vec4 color;
 
 
 float shadowCalculation(vec4 fragPositionLightSpace, vec3 normal, vec3 lightDir){
+
 	// 透视除法
 	vec3 projCoords = fragPositionLightSpace.xyz / fragPositionLightSpace.w;
 	// 转换到[0,1]
@@ -47,7 +48,7 @@ void main(){
 	vec3 normal = normalize(fs_in.normal);
 	vec3 lightColor = vec3(1.0, 1.0, 1.0);
 	// 环境光照
-	vec3 ambient = 0.15 * originColor;//???
+	vec3 ambient = 0.2 * originColor;//???
 	// 漫反射
 	vec3 lightDir = normalize(lightPosition - fs_in.fragPosition);
 	float diff = max(dot(lightDir, normal), 0.0);
@@ -61,5 +62,6 @@ void main(){
     float shadow = shadowCalculation(fs_in.fragPositionLightSpace, normal, lightDir);
     // 返回最终颜色
     vec3 _color = (ambient + (1.0 - shadow) * (diffuse + specular)) * originColor;
+    //_color = originColor;
     color = vec4(_color, 1.0);
 }
