@@ -1,7 +1,10 @@
 /*Copyright reserved by KenLee@2017 ken4000kl@gmail.com*/
 #ifndef SSAO_HPP
 #define SSAO_HPP
+
 #include <unistd.h>
+#include <random>
+
 namespace SSAO{
 
 const unsigned int SAMPLES_NUM = 64;

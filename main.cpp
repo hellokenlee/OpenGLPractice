@@ -1,4 +1,76 @@
-/*Copyright reserved by KenLee@2016 ken4000kl@gmail.com*/
+#define GLEW_STATIC
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+// 三角形顶点
+GLfloat vertices[] = {
+     0.0f,  0.5f, 0.0f,
+     0.5f, -0.5f, 0.0f,
+    -0.5f, -0.5f, 0.0f
+};
+// 顶点着色器
+const char*vsSource =
+    "layout (location = 0) in vec3 pos;\n"
+    "void main(){\n"
+    "   gl_Position = vec4(pos.x, pos.y, pos.z, 1.0f);\n"
+    "}\n";
+// 像素着色器
+const char*fsSource =
+    "out vec4 color;\n"
+    "void main(){\n"
+    "   color = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+    "}\n";
+
+int main(){
+    // 初始化
+    glfwInit();
+    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+    // 创建窗口
+    GLFWwindow *window = glfwCreateWindow(800, 600, "T", nullptr, nullptr);
+    glfwMakeContextCurrent(window);
+    // 获取当前窗口大小，设置GLVIewport
+    int width, height;
+    glfwGetFramebufferSize(window, &width, &height);
+    glViewport(0, 0, width, height);
+    //
+    glewExperimental = true;
+    glewInit();
+    // 申请缓存(可简单理解为申请显存)
+    GLuint vbo, vao;
+    glGenBuffers(1, &vbo);
+    glGenVertexArrays(1, &vao);
+    // 写入顶点数据
+    glBindVertexArray(vao);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+    glEnableVertexAttribArray(0);
+    // 编译两个Shader
+    GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vertexShader, 1 ,&vsSource,nullptr);
+    glCompileShader(vertexShader);
+    //创建fragmentShader
+    GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fragmentShader,1,&fsSource,nullptr);
+    glCompileShader(fragmentShader);
+    //创建ShaderProgram
+    GLuint shaderProgram = glCreateProgram();
+    glAttachShader(shaderProgram, vertexShader);
+    glAttachShader(shaderProgram, fragmentShader);
+    glLinkProgram(shaderProgram);
+    // 主循环
+    while(!glfwWindowShouldClose(window)){
+        glfwPollEvents();
+        glClearColor(1.0, 0.1, 0.1, 1.0);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glUseProgram(shaderProgram);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glfwSwapBuffers(window);
+    }
+    return 0;
+}
+
+
+/*
 //GLEW
 #define GLEW_STATIC
 #include <GL/glew.h>
@@ -57,7 +129,7 @@
 #include "tutorials/GeometryShader.hpp"
 #include "tutorials/Instancing.hpp"
 #include "tutorials/AntiAliasing.hpp"
-#include "tutorials/Stella.hpp"
+//#include "tutorials/Stella.hpp"
 #include "tutorials/BlinnPhong.hpp"
 #include "tutorials/GammaCorrection.hpp"
 #include "tutorials/NormalMapping.hpp"
@@ -69,48 +141,4 @@
 #include "tutorials/PBR.hpp"
 #include "tutorials/DeferredShading.hpp"
 #include "tutorials/SSAO.hpp"
-
-void test(){
-    // 环境初始化
-    GLFWwindow *window = initWindow("Yarn_level_Cloth", 800, 600);
-    showEnviroment();
-    //glfwSwapInterval(0);
-    CameraController::bindControl(window);
-    CoordinateAxes ca(&CameraController::camera);
-    Camera *cam = &CameraController::camera;
-    ControlPanel panel(window);
-    FPSCounter fc;
-    //
-    Union *bcc = CurveCollection::genFromBBCFile("textures/Yarn-level Cloth Models/tea_cozy.bcc");
-    bcc->isShareModel= true;
-    cout<<bcc->objList.size()<<endl;
-    //
-    Shader whiteShader("shaders/Share/Color.vert", "shaders/Share/Color.frag");
-    //
-    while(!glfwWindowShouldClose(window)){
-        glfwPollEvents();
-        CameraController::update();
-
-        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        ca.draw();
-
-        panel.draw();
-
-        whiteShader.use();
-        glUniformMatrix4fv(glGetUniformLocation(whiteShader.programID, "view"), 1, GL_FALSE, cam->getViewMatrixVal());
-        glUniformMatrix4fv(glGetUniformLocation(whiteShader.programID, "projection"), 1, GL_FALSE, cam->getProjectionMatrixVal());
-        glUniformMatrix4fv(glGetUniformLocation(whiteShader.programID, "model"), 1, GL_FALSE, glm::value_ptr(glm::mat4()));
-        bcc->draw(&whiteShader);
-        glfwSwapBuffers(window);
-    }
-    glfwDestroyWindow(window);
-    glfwTerminate();
-}
-
-int main(){
-    //SSAO::tutorial();
-    test();
-    return 0;
-}
+*/

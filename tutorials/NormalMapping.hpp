@@ -3,9 +3,9 @@
 #define NORMAL_MAPPING_HPP
 namespace NormalMapping{
 //GLM
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include "../wmdge/glm/glm.hpp"
+#include "../wmdge/glm/gtc/matrix_transform.hpp"
+#include "../wmdge/glm/gtc/type_ptr.hpp"
 
 glm::vec3 lightPos = glm::vec3(2.0, 2.0, 1.0);
 
