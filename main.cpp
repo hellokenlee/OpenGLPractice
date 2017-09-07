@@ -73,7 +73,6 @@
 
 
 int main(){
-    //YarnLevelCloth::test();
-    ShadowMapping::exercise2();
+    HelloTriangle::tutorial();
     return 0;
 }
