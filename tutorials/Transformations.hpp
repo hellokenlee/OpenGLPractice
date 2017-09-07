@@ -2,9 +2,9 @@
 #ifndef TRANSFORMATIONS_HPP
 #define TRANSFORMATIONS_HPP
 //GL Math Library
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include "../wmdge/glm/glm.hpp"
+#include "../wmdge/glm/gtc/matrix_transform.hpp"
+#include "../wmdge/glm/gtc/type_ptr.hpp"
 
 namespace Transformations{
 GLfloat vertices[] = {
