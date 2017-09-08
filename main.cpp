@@ -72,7 +72,7 @@
 
 
 int main(){
-    Mirror::exercise();
+    YarnLevelCloth::testCatmullRomSpline();
     return 0;
 }
 
