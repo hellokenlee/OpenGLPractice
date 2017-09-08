@@ -1,10 +1,12 @@
 /*Copyright reserved by KenLee@2017 ken4000kl@gmail.com*/
 #ifndef STELLA_HPP
 #define STELLA_HPP
-namespace Stella{
+
+#include <limits>
 #include <random>
 #include <iostream>
-using namespace std;
+
+namespace Stella{
 
 extern GLfloat squareVertices[6 * 5];
 
