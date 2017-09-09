@@ -29,6 +29,7 @@
 #include "wmdge/utils.hpp"
 #include "wmdge/ControlPanel.h"
 #include "wmdge/CurveCollection.h"
+#include "wmdge/Curve.h"
 //Tutorial and exercises
 #include "tutorials/Benchmark.hpp"
 #include "tutorials/HelloTriangle.hpp"
@@ -72,7 +73,8 @@
 
 
 int main(){
-    YarnLevelCloth::testCatmullRomSpline();
+    YarnLevelCloth::test();
+    //YarnLevelCloth::testCatmullRomSpline();
     return 0;
 }
 
