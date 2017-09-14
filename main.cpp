@@ -73,6 +73,7 @@
 
 
 int main(){
+    //cout<<(9 >> 1)<<endl;
     YarnLevelCloth::test();
     //YarnLevelCloth::testCatmullRomSpline();
     return 0;
