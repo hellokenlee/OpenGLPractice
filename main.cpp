@@ -73,9 +73,7 @@
 
 
 int main(){
-    //cout<<(9 >> 1)<<endl;
-    YarnLevelCloth::test();
-    //YarnLevelCloth::testCatmullRomSpline();
+    SSAO::tutorial();
     return 0;
 }
 
