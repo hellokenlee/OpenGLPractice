@@ -1,21 +1,21 @@
-//GLEW
+// GLEW
 #define GLEW_STATIC
 #include <GL/glew.h>
-//GLFW
+// GLFW
 #include <GLFW/glfw3.h>
-//ASSIMP
+// ASSIMP
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
-//FreeImage
+// FreeImage
 #include <FreeImage.h>
-//C++ Library
+// C++ Library
 #include <cstdlib>
 #include <cstdio>
 #include <iostream>
 #include <string>
 #include <map>
-//Helper Classes
+// WMD Engine
 #include "wmdge/FPSCounter.h"
 #include "wmdge/Shader.h"
 #include "wmdge/TextureManager.h"
@@ -30,7 +30,7 @@
 #include "wmdge/ControlPanel.h"
 #include "wmdge/CurveCollection.h"
 #include "wmdge/Curve.h"
-//Tutorial and exercises
+// Tutorial
 #include "tutorials/Benchmark.hpp"
 #include "tutorials/HelloTriangle.hpp"
 #include "tutorials/Shaders.hpp"
@@ -50,14 +50,12 @@
 #include "tutorials/Blending.hpp"
 #include "tutorials/FaceCulling.hpp"
 #include "tutorials/Framebuffers.hpp"
-#include "tutorials/Mirror.hpp"
 #include "tutorials/Cubemaps.hpp"
 #include "tutorials/AdvancedData.hpp"
 #include "tutorials/AdvancedGLSL.hpp"
 #include "tutorials/GeometryShader.hpp"
 #include "tutorials/Instancing.hpp"
 #include "tutorials/AntiAliasing.hpp"
-#include "tutorials/Stella.hpp"
 #include "tutorials/BlinnPhong.hpp"
 #include "tutorials/GammaCorrection.hpp"
 #include "tutorials/NormalMapping.hpp"
@@ -69,11 +67,15 @@
 #include "tutorials/PBR.hpp"
 #include "tutorials/DeferredShading.hpp"
 #include "tutorials/SSAO.hpp"
+// Whims
+#include "tutorials/Mirror.hpp"
+#include "tutorials/Stella.hpp"
 #include "tutorials/YarnLevelCloth.hpp"
 
 
+
 int main(){
-    SSAO::tutorial();
+    YarnLevelCloth::_main();
     return 0;
 }
 
