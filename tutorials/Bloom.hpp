@@ -31,7 +31,9 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
 }
 // 实现泛光
 void tutorial(){
-    GLFWwindow *window = initWindow("Bloom", 800, 600, keyCallback, CameraController::mouseCallback);
+    GLFWwindow *window = initWindow("Bloom", 800, 600);
+    glfwSetKeyCallback(window, keyCallback);
+    glfwSetCursorPosCallback(window, CameraController::mouseCallback);
     showEnviroment();
     glfwSwapInterval(0);
 

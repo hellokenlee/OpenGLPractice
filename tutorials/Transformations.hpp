@@ -25,7 +25,7 @@ void tutorial(){
     //trans=glm::rotate(trans,90.0f,glm::vec3(0.0,0.0,1.0));
     //trans=glm::scale(trans,glm::vec3(0.5,0.5,0.5));
     //创建窗口
-    GLFWwindow *window=initWindow("Transformation",800,600,nullptr);
+    GLFWwindow *window=initWindow("Transformation", 800, 600);
     showEnviroment();
     //创建Shader
     Shader shaderProgram("shaders/Transformations/shader.vs","shaders/Transformations/shader.frag");
@@ -90,7 +90,7 @@ void exercise1(){
     //
     FPSCounter fc;
     //创建窗口
-    GLFWwindow *window=initWindow("Transformation-EX1",800,600,nullptr);
+    GLFWwindow *window=initWindow("Transformation-EX1", 800, 600);
     showEnviroment();
     //创建Shader
     Shader shaderProgram("shaders/Transformations/shader.vs","shaders/Transformations/shader.frag");
@@ -151,7 +151,7 @@ void exercise1(){
 void exercise2(){
     FPSCounter fc;
     //创建窗口
-    GLFWwindow *window=initWindow("Transformation-EX2",800,600,nullptr);
+    GLFWwindow *window=initWindow("Transformation-EX2", 800, 600);
     showEnviroment();
     //创建Shader
     Shader shaderProgram("shaders/Transformations/shader.vs","shaders/Transformations/shader.frag");

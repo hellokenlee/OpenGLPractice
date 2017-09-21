@@ -13,7 +13,7 @@ extern glm::vec3 cubePositions[10];
 void tutorial(){
     FPSCounter fc;
     //窗口初始化
-    GLFWwindow *window=initWindow("CoordinateSystem",ScreenWidth,ScreenHeight,nullptr);
+    GLFWwindow *window=initWindow("CoordinateSystem", ScreenWidth, ScreenHeight);
     //关闭垂直同步
     glfwSwapInterval(0);
     glEnable(GL_DEPTH_TEST);

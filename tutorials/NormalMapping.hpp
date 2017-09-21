@@ -53,7 +53,9 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
 }
 void tutorial(){
 
-    GLFWwindow *window = initWindow("NormalMapping2", 800, 600, keyCallback, CameraController::mouseCallback);
+    GLFWwindow *window = initWindow("NormalMapping2", 800, 600);
+    glfwSetKeyCallback(window, keyCallback);
+    glfwSetCursorPosCallback(window, CameraController::mouseCallback);
     showEnviroment();
 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);

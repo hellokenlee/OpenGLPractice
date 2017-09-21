@@ -48,7 +48,9 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
     }
 }
 void tutorial(){
-    GLFWwindow *window = initWindow("GammaCorrection", 800, 600, keyCallback, CameraController::mouseCallback);
+    GLFWwindow *window = initWindow("GammaCorrection", 800, 600);
+    glfwSetKeyCallback(window, keyCallback);
+    glfwSetCursorPosCallback(window, CameraController::mouseCallback);
     showEnviroment();
 
     CameraController::camera.moveto(glm::vec3(0.0f, 1.0f, 3.0f));

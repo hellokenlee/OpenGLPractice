@@ -39,7 +39,10 @@ GLfloat lastFrame = 0.0f;  	// Time of last frame
 //教程实现： 实现一个FPS视角摄像机
 void tutorial(){
     //窗口初始化
-    GLFWwindow *window=initWindow("Camera",ScreenWidth,ScreenHeight,key_callback,mouse_callback);
+    GLFWwindow *window=initWindow("Camera", ScreenWidth, ScreenHeight);
+    //绑定按键回调函数
+    glfwSetKeyCallback(window, key_callback);
+    glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetScrollCallback(window,scroll_callback);
     //关闭垂直同步
     glfwSwapInterval(0);
@@ -151,7 +154,7 @@ void doMovementEx1(){
 }
 void exercise1(){
     //窗口初始化
-    GLFWwindow *window=initWindow("Camera-EX1",ScreenWidth,ScreenHeight,key_callback,mouse_callback);
+    GLFWwindow *window=initWindow("Camera-EX1", ScreenWidth, ScreenHeight);
     glfwSetScrollCallback(window,scroll_callback);
     //关闭垂直同步
     glfwSwapInterval(0);

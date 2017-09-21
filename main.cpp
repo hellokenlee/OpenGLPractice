@@ -31,7 +31,6 @@
 #include "wmdge/CurveCollection.h"
 #include "wmdge/Curve.h"
 // Tutorial
-#include "tutorials/Benchmark.hpp"
 #include "tutorials/HelloTriangle.hpp"
 #include "tutorials/Shaders.hpp"
 #include "tutorials/Textures.hpp"
@@ -68,14 +67,16 @@
 #include "tutorials/DeferredShading.hpp"
 #include "tutorials/SSAO.hpp"
 // Whims
+#include "tutorials/Benchmark.hpp"
 #include "tutorials/Mirror.hpp"
 #include "tutorials/Stella.hpp"
 #include "tutorials/YarnLevelCloth.hpp"
-
+#include "tutorials/TessellationShader.hpp"
 
 
 int main(){
-    YarnLevelCloth::_main();
+    //YarnLevelCloth::_main();
+    TessellationShader::_main();
     return 0;
 }
 

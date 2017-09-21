@@ -36,7 +36,7 @@ const GLchar *fragmentShaderSource=
 //教程实现:绘制两个三角形组成的一个矩形
 void tutorial(){
     //初始化窗口
-    GLFWwindow *window=initWindow("HelloTriangle",800,600,nullptr);
+    GLFWwindow *window=initWindow("HelloTriangle",800,600);
     showEnviroment();
     //创建VBO 申请显存访问
     GLuint VBO;
@@ -105,7 +105,7 @@ GLfloat verticesEx1[] = {
 };
 void exercies1(){
     //初始化窗口
-    GLFWwindow *window=initWindow("HelloTriangle-EX1",800,600,nullptr);
+    GLFWwindow *window = initWindow("HelloTriangle-EX1",800,600);
     showEnviroment();
     //创建VBO 申请显存访问
     GLuint VBO;
@@ -173,7 +173,7 @@ GLfloat verticesEx2_2[]={
 };
 void exercise2(){
     //初始化窗口
-    GLFWwindow *window=initWindow("HelloTriangle-EX2",800,600,nullptr);
+    GLFWwindow *window=initWindow("HelloTriangle-EX2", 800, 600);
     showEnviroment();
     //创建VBO数组
     GLuint VBO[2];
@@ -243,7 +243,7 @@ const GLchar *fragmentShaderSourceEx3=
     "}\n";
 void exercies3(){
     //初始化窗口
-    GLFWwindow *window=initWindow("HelloTriangle-EX3",800,600,nullptr);
+    GLFWwindow *window=initWindow("HelloTriangle-EX3", 800, 600);
     showEnviroment();
     //创建VBO数组
     GLuint VBO[2];

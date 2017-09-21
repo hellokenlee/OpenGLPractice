@@ -20,7 +20,7 @@ GLfloat vertices[]={
 //教程实现:绘制一个彩色三角
 void tutorial(){
     //初始化窗口
-    GLFWwindow *window=initWindow("Shaders",800,600,nullptr);
+    GLFWwindow *window=initWindow("Shaders", 800, 600);
     showEnviroment();
     //创建ShaderProgram
     Shader shaderProgram("shaders/Shaders/shader.vs","shaders/Shaders/shader.frag");
@@ -58,7 +58,7 @@ void tutorial(){
 
 //练习1：在shader上另三角形倒转
 void exercise1(){
-    GLFWwindow *window=initWindow("Shader-EX1",800,600,nullptr);
+    GLFWwindow *window=initWindow("Shader-EX1", 800, 600);
     showEnviroment();
     Shader shaderProgram("shaders/Shaders/shaderEx1.vs","shaders/Shaders/shader.frag");
     GLuint VAO,VBO;
@@ -100,7 +100,7 @@ void exercise2(){
     GLfloat offset=0.4;
     GLint offsetLocation;
     //初始化
-    GLFWwindow *window=initWindow("Shader-EX2",800,600,nullptr);
+    GLFWwindow *window=initWindow("Shader-EX2", 800, 600);
     //关闭垂直同步
     glfwSwapInterval(0);
     showEnviroment();
@@ -150,7 +150,7 @@ void exercise2(){
 //A: 因为3个定点的z坐标都为0，因此RGB的B值一直为0，又因为左下角的顶点在第三象限，因此x,y值都小于0，所以r,g值都小于0，直接被当做0处理。
 void exercise3(){
     //初始化
-    GLFWwindow *window=initWindow("Shader-EX3",800,600,nullptr);
+    GLFWwindow *window=initWindow("Shader-EX3", 800, 600);
     showEnviroment();
     Shader shaderProgram("shaders/Shaders/shaderEx3.vs","shaders/Shaders/shader.frag");
     GLuint VAO,VBO;

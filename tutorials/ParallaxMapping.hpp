@@ -44,7 +44,9 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
 }
 // 实现视差贴图
 void tutorial(){
-    GLFWwindow *window = initWindow("ParallaxMapping", 800, 600, keyCallback, CameraController::mouseCallback);
+    GLFWwindow *window = initWindow("ParallaxMapping", 800, 600);
+    glfwSetKeyCallback(window, keyCallback);
+    glfwSetCursorPosCallback(window, CameraController::mouseCallback);
     showEnviroment();
     glfwSwapInterval(0);
 
