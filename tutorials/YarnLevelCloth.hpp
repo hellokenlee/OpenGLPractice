@@ -9,7 +9,7 @@ namespace YarnLevelCloth {
 // 模拟织线级别的衣物
 void _main() {
     // 初始化
-    GLFWwindow *window = initWindow("Yarn_level_Cloth", 800, 600);
+    GLFWwindow *window = initWindow("Yarn_level_Cloth", 800, 600,3 ,3);
     showEnviroment();
     glfwSwapInterval(0);
     CameraController::bindControl(window);
