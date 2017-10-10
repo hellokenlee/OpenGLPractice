@@ -18,7 +18,7 @@ void _main() {
     ControlPanel panel(window);
     FPSCounter fc;
     // 初始化一个曲线集合
-    Union *bcc = CurveCollection::genFromBBCFile("textures/Yarn-level Cloth Models/tea_cozy.bcc");
+    Union *bcc = CurveCollection::genFromBBCFile("textures/Yarn-level Cloth Models/openwork_trellis_pattern.bcc");
     bcc->isShareModel= true;
     // 简单着色器
     Shader whiteShader("shaders/Share/Color.vert", "shaders/Share/Color.frag");

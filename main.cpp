@@ -75,8 +75,8 @@
 
 
 int main(){
-    //YarnLevelCloth::_main();
-    TessellationShader::_main();
+    YarnLevelCloth::_main();
+    //TessellationShader::_main();
     return 0;
 }
 

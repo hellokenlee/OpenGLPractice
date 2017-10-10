@@ -236,7 +236,6 @@ void test(){
     FPSCounter fc;
     //窗口初始化
     GLFWwindow *window=initWindow("Test",800,600);
-    //glfwSetScrollCallback(window,scroll_callback);
     //关闭垂直同步
     glfwSwapInterval(0);
     //启用深度测试

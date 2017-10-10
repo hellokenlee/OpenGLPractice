@@ -13,7 +13,7 @@ glm::vec3 cubePositions[2]={glm::vec3(-1.0f, 0.01f, -1.0f),glm::vec3(2.0f, 0.01f
 glm::vec3 mirrorPosition=glm::vec3(0.0f,0.6f,-5.0f);
 glm::vec3 mirrorNormal=glm::vec3(0.0f,0.0f,1.0f);
 //突发奇想想做个镜子
-void exercise(){
+void _main(){
     // Init GLFW
     GLFWwindow* window=initWindow("Mirror",800,600);
     showEnviroment();
