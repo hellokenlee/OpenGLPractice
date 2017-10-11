@@ -21,8 +21,9 @@ const glm::vec3 COLORS[] = {
     glm::vec3(0.890, 0.458, 0.772),
     glm::vec3(0.486, 0.878, 0.529)
 };
+
 //
-void tutorial(){
+void _main() {
     GLFWwindow *window = initWindow("Stella!", 800, 600);
     showEnviroment();
     cout<<"Stella! SQUARES_NUM: "<<SQUARES_NUM<<endl;

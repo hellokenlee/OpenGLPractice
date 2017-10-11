@@ -17,6 +17,8 @@
 #include <array>
 #include <map>
 // WMD Engine
+#define CHECK_GL_ERROR
+#include "wmdge/utils.hpp"
 #include "wmdge/FPSCounter.h"
 #include "wmdge/Shader.h"
 #include "wmdge/TextureManager.h"
@@ -27,7 +29,6 @@
 #include "wmdge/Texture.h"
 #include "wmdge/Model.h"
 #include "wmdge/Geometry.h"
-#include "wmdge/utils.hpp"
 #include "wmdge/ControlPanel.h"
 #include "wmdge/CurveCollection.h"
 #include "wmdge/Curve.h"
@@ -78,7 +79,6 @@
 int main(){
     //YarnLevelCloth::_main();
     TessellationShader::_main();
-
     return 0;
 }
 
