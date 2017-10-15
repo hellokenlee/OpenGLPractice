@@ -5,7 +5,7 @@
 namespace TessellationShader {
 
 GLfloat vertices[] = {
-     0.5f,  0.5f, 0.0f,  // Top Right
+     0.0f,  0.5f, 0.0f,  // Top
      0.5f, -0.5f, 0.0f,  // Bottom Right
     -0.5f, -0.5f, 0.0f,  // Bottom Left
 };
@@ -14,12 +14,14 @@ void _main() {
     // 初始化
     GLFWwindow *window = initWindow("TessellationShader", 800, 600, 4, 0);
     showEnviroment();
-    int maxPatchNum;
+    // 输出最大支持的细分Patch
+    int maxPatchNum, maxVerticesNum;
     glGetIntegerv(GL_PATCH_VERTICES, &maxPatchNum);
-    cout<<"Maximun Tessellation Patch Supported: "<<maxPatchNum<<endl<<endl;
-    int maxVertexAttrbs;
-    glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &maxVertexAttrbs);
-    cout<<maxVertexAttrbs<<endl;
+    glGetIntegerv(GL_MAX_PATCH_VERTICES, &maxVerticesNum);
+    cout<<"Maximun Tessellation Patches Supported: "<<maxPatchNum<<endl;
+    cout<<"Maximun Vertices in Each Patch Supported: "<<maxVerticesNum<<endl<<endl;
+    // 设定每一个Patch中有多少个顶点，假设是三角形，所有每个Patch用3个顶点
+    glPatchParameteri(GL_PATCH_VERTICES, 3);
     // 控制绑定
     CameraController::bindControl(window);
     Camera *cam = &CameraController::camera;
