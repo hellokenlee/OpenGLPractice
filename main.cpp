@@ -61,13 +61,12 @@
 #include "whims/Stella.hpp"
 #include "whims/YarnLevelCloth.hpp"
 #include "whims/TessellationShader.hpp"
-
+#include "whims/PNTriangle.hpp"
 
 int main(){
     //YarnLevelCloth::_main();
-    //checkError();
-    TessellationShader::_main();
-
+    //TessellationShader::_main();
+    PNTriangle::_main();
     return 0;
 }
 

@@ -41,5 +41,12 @@ void _main() {
     glfwTerminate();
 }
 
+
+
+void singleYarn() {
+
+
+}
+
 };
 #endif // YARN_LEVEL_CLOTH_HPP
