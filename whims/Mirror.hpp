@@ -1,19 +1,25 @@
 /*Copyright reserved by KenLee@2016 ken4000kl@gmail.com*/
 #ifndef MIRROR_HPP
 #define MIRROR_HPP
-namespace Mirror{
-//顶点信息前置声明
+
+using namespace std;
+
+namespace Mirror {
+
+// 顶点信息前置声明
 extern GLfloat cubeVertices[36*5];
 extern GLfloat planeVertices[6*5];
 extern GLfloat mirrorVertices[6*5];
 
-//箱子位置
-glm::vec3 cubePositions[2]={glm::vec3(-1.0f, 0.01f, -1.0f),glm::vec3(2.0f, 0.01f, 0.0f)};
+// 箱子位置
+glm::vec3 cubePositions[2] = {glm::vec3(-1.0f, 0.01f, -1.0f), glm::vec3(2.0f, 0.01f, 0.0f)};
+// 镜子位置
+glm::vec3 mirrorPosition = glm::vec3(0.0f, 0.6f, -5.0f);
+// 镜子法向量
+glm::vec3 mirrorNormal = glm::vec3(0.0f, 0.0f, 1.0f);
 
-glm::vec3 mirrorPosition=glm::vec3(0.0f,0.6f,-5.0f);
-glm::vec3 mirrorNormal=glm::vec3(0.0f,0.0f,1.0f);
 //突发奇想想做个镜子
-void _main(){
+void _main() {
     // Init GLFW
     GLFWwindow* window=initWindow("Mirror",800,600);
     showEnviroment();
@@ -25,30 +31,30 @@ void _main(){
     // Setup some OpenGL options
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_STENCIL_TEST);
-    //模板测试失败时：保持现有模板值；模板测试成功但深度测试失败：保持现有模板值；两个都成功： 替换成测试的参考值。
+    // 模板测试失败时：保持现有模板值；模板测试成功但深度测试失败：保持现有模板值；两个都成功： 替换成测试的参考值。
     glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-    // Setup and compile our shaders
+    // 初始化着色器
     Shader shader("shaders/Mirror/scene.vs", "shaders/Mirror/scene.frag");
     Shader mirrorShader("shaders/Mirror/scene_mirrored.vs", "shaders/Mirror/scene_mirrored.frag");
+    // 写入镜子的顶点信息
     mirrorShader.use();
     glUniform3f(glGetUniformLocation(mirrorShader.programID,"mirror_position"),mirrorPosition.x,mirrorPosition.y,mirrorPosition.z);
     glUniform3f(glGetUniformLocation(mirrorShader.programID,"mirror_normal"),mirrorNormal.x,mirrorNormal.y,mirrorNormal.z);
-    // Setup cube VAO
+    // 初始化方块物体
     Object cube(cubeVertices,36,POSITIONS_TEXTURES,GL_TRIANGLES);
     cube.setCamera(&CameraController::camera);
     cube.setShader(&shader);
-    // Setup plane VAO
+    // 初始化地板物体
     Object plane(planeVertices,6,POSITIONS_TEXTURES,GL_TRIANGLES);
     plane.setCamera(&CameraController::camera);
     plane.setShader(&shader);
-
-    //
+    // 初始化镜子物体
     Object mirror(mirrorVertices,6,POSITIONS_TEXTURES,GL_TRIANGLES);
     mirror.setCamera(&CameraController::camera);
     mirror.setShader(&shader);
     mirror.moveTo(mirrorPosition);
     FPSCounter fc;
-    // Load textures
+    // 读入纹理
     TextureManager* tm=TextureManager::getManager();
     if(!tm->loadTexture("textures/container2.png",0,GL_BGRA,GL_RGBA))
         return ;
@@ -56,8 +62,9 @@ void _main(){
         return ;
     if(!tm->loadTexture("textures/container2_specular.png",2,GL_BGRA,GL_RGBA))
         return ;
-    // Show axies
+    // 显示坐标轴
     CoordinateAxes ca(&CameraController::camera);
+    // 主循环
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
         CameraController::update();
@@ -66,7 +73,6 @@ void _main(){
         glClear(GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
         glStencilMask(0x00);
         glClearColor(0.0f,0.0f,0.0f,1.0f);
-
         //第一次绘制，绘制正常世界
             //关闭模板缓冲写
         glStencilMask(0x00);
@@ -81,7 +87,6 @@ void _main(){
         tm->bindTexture(1);
         plane.setShader(&shader);
         plane.draw();
-
         //绘制镜子
             //开启模板缓冲写,另镜子中的模板缓冲为全1
         glStencilMask(0xFF);

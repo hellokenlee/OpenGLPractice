@@ -2,8 +2,6 @@
 #ifndef YARN_LEVEL_CLOTH_HPP
 #define YARN_LEVEL_CLOTH_HPP
 
-#include <math.h>
-
 namespace YarnLevelCloth {
 
 // 模拟织线级别的衣物

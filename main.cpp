@@ -18,20 +18,7 @@
 #include <map>
 // WMD Engine
 #define CHECK_GL_ERROR
-#include "wmdge/utils.hpp"
-#include "wmdge/FPSCounter.h"
-#include "wmdge/Shader.h"
-#include "wmdge/TextureManager.h"
-#include "wmdge/Camera.h"
-#include "wmdge/CameraController.h"
-#include "wmdge/CoordinateAxes.h"
-#include "wmdge/Object.h"
-#include "wmdge/Texture.h"
-#include "wmdge/Model.h"
-#include "wmdge/Geometry.h"
-#include "wmdge/ControlPanel.h"
-#include "wmdge/CurveCollection.h"
-#include "wmdge/Curve.h"
+#include "wmdge/wmdge.h"
 // Tutorial
 #include "tutorials/HelloTriangle.hpp"
 #include "tutorials/Shaders.hpp"
@@ -69,16 +56,18 @@
 #include "tutorials/DeferredShading.hpp"
 #include "tutorials/SSAO.hpp"
 // Whims
-#include "tutorials/Benchmark.hpp"
-#include "tutorials/Mirror.hpp"
-#include "tutorials/Stella.hpp"
-#include "tutorials/YarnLevelCloth.hpp"
-#include "tutorials/TessellationShader.hpp"
+#include "whims/Benchmark.hpp"
+#include "whims/Mirror.hpp"
+#include "whims/Stella.hpp"
+#include "whims/YarnLevelCloth.hpp"
+#include "whims/TessellationShader.hpp"
 
 
 int main(){
     //YarnLevelCloth::_main();
+    //checkError();
     TessellationShader::_main();
+
     return 0;
 }
 

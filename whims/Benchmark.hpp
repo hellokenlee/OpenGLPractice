@@ -3,12 +3,10 @@
 #define BENCHMARK_HPP
 
 #define MAX_VERTICES_NUM 100000
-//GLM
-#include "../wmdge/glm/glm.hpp"
-#include "../wmdge/glm/gtc/matrix_transform.hpp"
-#include "../wmdge/glm/gtc/type_ptr.hpp"
-namespace Benchmark{
 
+using namespace std;
+
+namespace Benchmark{
 
 GLfloat vertices[MAX_VERTICES_NUM];
 int vNums;
