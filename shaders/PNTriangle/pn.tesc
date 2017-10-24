@@ -52,13 +52,13 @@ void calcPositions() {
 	// 生成边上的中间点
 		// edge300上的两个点
 	patch_TES_in.position_B021 = patch_TES_in.position_B030 + (edgeB300 / 3.0);
-	patch_TES_in.position_B012 = patch_TES_in.position_B030 + (edgeB300 * 2 / 3.0);
+	patch_TES_in.position_B012 = patch_TES_in.position_B030 + (edgeB300 * 2.0 / 3.0);
 		// edge030上的两个点
 	patch_TES_in.position_B102 = patch_TES_in.position_B003 + (edgeB030 / 3.0);
-	patch_TES_in.position_B201 = patch_TES_in.position_B003 + (edgeB030 * 2 / 3.0);
+	patch_TES_in.position_B201 = patch_TES_in.position_B003 + (edgeB030 * 2.0 / 3.0);
 		// edge003上的两个点
 	patch_TES_in.position_B210 = patch_TES_in.position_B300 + (edgeB003 / 3.0);
-	patch_TES_in.position_B120 = patch_TES_in.position_B300 + (edgeB003 * 2 / 3.0);
+	patch_TES_in.position_B120 = patch_TES_in.position_B300 + (edgeB003 * 2.0 / 3.0);
 	// 把其投影到最近的三角顶点及其法线定义的平面上
 	patch_TES_in.position_B021 =  projection2Plane(patch_TES_in.position_B021,
 													patch_TES_in.position_B030,

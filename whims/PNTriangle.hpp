@@ -37,17 +37,20 @@ void _main() {
     Shader shader("shaders/PNTriangle/pn.vert", "shaders/PNTriangle/pn.frag");
     shader.addOptionalShader("shaders/PNTriangle/pn.tesc", GL_TESS_CONTROL_SHADER);
     shader.addOptionalShader("shaders/PNTriangle/pn.tese", GL_TESS_EVALUATION_SHADER);
-    Shader shader2("shaders/Share/Color.vert", "shaders/Share/Color.frag");
+
+    Shader shader2("shaders/GeometryShader/showNormals.vs", "shaders/GeometryShader/showNormals.frag");
+    shader2.addOptionalShader("shaders/GeometryShader/showNormals.geom", GL_GEOMETRY_SHADER);
+
+    Shader shader3("shaders/Share/Color.vert", "shaders/Share/Color.frag");
     // 模型
     Object triangle(vertices, 3, POSITIONS_NORMALS, GL_TRIANGLES);
     triangle.scaleTo(2.0f);
     triangle.setCamera(cam);
     triangle.setDrawMode(GL_PATCHES);
 
-    Model monkey("textures/untitled.obj");
+    Model monkey("textures/monkey2.obj");
     monkey.setCamera(cam);
-    //monkey.setShader(&shader2);
-    monkey.setDrawMode(GL_PATCHES);
+    //monkey.setDrawMode(GL_PATCHES);
 
     // 主循环
     while(!glfwWindowShouldClose(window)) {
@@ -59,13 +62,18 @@ void _main() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         //
         //ca.draw();
+        //*Debug Showing Normals
         panel.draw();
-        //
+        monkey.setShader(&shader2);
+        monkey.draw();
+        monkey.setShader(&shader3);
+        monkey.draw();
+        //*/
+        /*
         shader.use();
         glUniformMatrix4fv(glGetUniformLocation(shader.programID, "model"), 1, GL_FALSE, glm::value_ptr(triangle.model));
         glUniformMatrix4fv(glGetUniformLocation(shader.programID, "view"), 1, GL_FALSE, cam->getViewMatrixVal());
         glUniformMatrix4fv(glGetUniformLocation(shader.programID, "projection"), 1, GL_FALSE, cam->getProjectionMatrixVal());
-        //triangle.draw();
         monkey.draw();
         //*/
         glfwSwapBuffers(window);

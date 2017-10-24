@@ -64,9 +64,9 @@
 #include "whims/PNTriangle.hpp"
 
 int main(){
-    //YarnLevelCloth::_main();
+    YarnLevelCloth::singleYarn();
     //TessellationShader::_main();
-    PNTriangle::_main();
+    //PNTriangle::_main();
     return 0;
 }
 
