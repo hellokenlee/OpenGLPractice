@@ -44,14 +44,23 @@ void _main() {
 vector<glm::vec3> vertices = {
     glm::vec3(-3.0f, 1.0f, 0.0f),
     glm::vec3( 3.0f, 1.0f, 0.0f),
+    glm::vec3(-3.0f, 2.0f, 0.0f),
+    glm::vec3( 3.0f, 2.0f, 0.0f),
+
     glm::vec3(-3.0f, 3.0f, 0.0f),
     glm::vec3( 3.0f, 3.0f, 0.0f),
+    glm::vec3(-3.0f, 4.0f, 0.0f),
+    glm::vec3( 3.0f, 4.0f, 0.0f),
+
     glm::vec3(-3.0f, 5.0f, 0.0f),
     glm::vec3( 3.0f, 5.0f, 0.0f),
+    glm::vec3(-3.0f, 6.0f, 0.0f),
+    glm::vec3( 3.0f, 6.0f, 0.0f),
+
     glm::vec3(-3.0f, 7.0f, 0.0f),
     glm::vec3( 3.0f, 7.0f, 0.0f),
-    glm::vec3(-3.0f, 9.0f, 0.0f),
-    glm::vec3( 3.0f, 9.0f, 0.0f)
+    glm::vec3(-3.0f, 8.0f, 0.0f),
+    glm::vec3( 3.0f, 8.0f, 0.0f)
 };
 
 GLfloat tessLevelOuter0_uniform = 1;
@@ -86,9 +95,9 @@ void singleYarn() {
     cout<<"Maximun Vertices in Each Patch Supported: "<<maxPatchVerticesNum<<endl<<endl;
     // 设定每一个Patch中有多少个顶点，假设是三角形，所有每个Patch用3个顶点
     ///!!!
-    glPatchParameteri(GL_PATCH_VERTICES, 2);
+    glPatchParameteri(GL_PATCH_VERTICES, 4);
     glGetIntegerv(GL_PATCH_VERTICES, &patchVerticesNum);
-    cout<<"Vertices in Each Patch has been Setted to: "<<patchVerticesNum<<endl;
+    cout<<"Vertices in Each Patch has been Setted to: "<<patchVerticesNum<<endl<<endl;
     // 着色器
     Shader pointShader("shaders/Share/Color.vert", "shaders/Share/Color.frag");
     //
