@@ -65,8 +65,6 @@
 
 int main(){
     YarnLevelCloth::singleYarn();
-    //TessellationShader::_main();
-    //PNTriangle::_main();
     return 0;
 }
 

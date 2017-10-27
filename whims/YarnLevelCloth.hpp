@@ -2,6 +2,8 @@
 #ifndef YARN_LEVEL_CLOTH_HPP
 #define YARN_LEVEL_CLOTH_HPP
 
+#include <cmath>
+
 namespace YarnLevelCloth {
 
 // 模拟织线级别的衣物
@@ -41,41 +43,29 @@ void _main() {
     glfwTerminate();
 }
 
-vector<glm::vec3> vertices = {
-    glm::vec3(-3.0f, 1.0f, 0.0f),
-    glm::vec3( 3.0f, 1.0f, 0.0f),
-    glm::vec3(-3.0f, 2.0f, 0.0f),
-    glm::vec3( 3.0f, 2.0f, 0.0f),
-
-    glm::vec3(-3.0f, 3.0f, 0.0f),
-    glm::vec3( 3.0f, 3.0f, 0.0f),
-    glm::vec3(-3.0f, 4.0f, 0.0f),
-    glm::vec3( 3.0f, 4.0f, 0.0f),
-
-    glm::vec3(-3.0f, 5.0f, 0.0f),
-    glm::vec3( 3.0f, 5.0f, 0.0f),
-    glm::vec3(-3.0f, 6.0f, 0.0f),
-    glm::vec3( 3.0f, 6.0f, 0.0f),
-
-    glm::vec3(-3.0f, 7.0f, 0.0f),
-    glm::vec3( 3.0f, 7.0f, 0.0f),
-    glm::vec3(-3.0f, 8.0f, 0.0f),
-    glm::vec3( 3.0f, 8.0f, 0.0f)
+vector<glm::vec3> yarnCenter = {
+    glm::vec3(0.0f, 3.0f,  0.0f),
+    glm::vec3(0.0f, 3.0f,  2.0f),
+    glm::vec3(0.0f, 3.0f,  4.0f),
+    glm::vec3(0.0f, 3.0f,  6.0f)
 };
 
-GLfloat tessLevelOuter0_uniform = 1;
+const GLfloat R_ply = 1.0f;
+const GLfloat alpha = 1.0f;
+glm::vec3 N_yarn = glm::vec3(0.0, 1.0, 0.0);
+glm::vec3 B_yarn = glm::vec3(1.0, 0.0, 0.0);
 
-// 重写回调
-void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode){
-    CameraController::keyCallback(window, key, scancode, action, mode);
-    if(key == GLFW_KEY_EQUAL && action == GLFW_PRESS) {
-        ++tessLevelOuter0_uniform;
-        cout<<"gl_TessLevelOuter[0] = "<<tessLevelOuter0_uniform<<endl;
+vector<glm::vec3> calcPlyCenter(vector<glm::vec3> yarnCenter, GLfloat theta_Ply) {
+    vector<glm::vec3> plyCenter(yarnCenter);
+    // 通过z轴反求出 极坐标角度 theta。(`c_i(\theta).z = \altha \theta / 2\pi`)
+    for(int i = 0; i < yarnCenter.size(); ++i) {
+        GLfloat theta = (2.0 * glm::pi<float>() * yarnCenter[i].z) / alpha;
+        theta = theta * 2.0 * glm::pi<float>() / 360.0f;
+        plyCenter[i] = 0.5f * R_ply * ((cos(theta_Ply + theta) * N_yarn) + (sin(theta_Ply + theta) * B_yarn));
+        plyCenter[i].z = yarnCenter[i].z;
+        //printf("(%f, %f, %f), theta = %f\n", plyCenter[i].x, plyCenter[i].y, plyCenter[i].z, theta);
     }
-    if(key == GLFW_KEY_MINUS && action == GLFW_PRESS) {
-        --tessLevelOuter0_uniform;
-        cout<<"gl_TessLevelOuter[0] = "<<tessLevelOuter0_uniform<<endl;
-    }
+    return plyCenter;
 }
 //
 void singleYarn() {
@@ -83,10 +73,9 @@ void singleYarn() {
     GLFWwindow *window = initWindow("TessellationShader", 800, 600, 4, 0);
     showEnviroment();
     glEnable(GL_PROGRAM_POINT_SIZE);
-    glPointSize(4.0);
+    //glPointSize(4.0);
     CameraController::bindControl(window);
     Camera *cam = &CameraController::camera;
-    glfwSetKeyCallback(window, keyCallback);
     CoordinateAxes ca(cam);
     ControlPanel panel(window);
     // 输出最大支持的细分Patch
@@ -95,18 +84,19 @@ void singleYarn() {
     cout<<"Maximun Vertices in Each Patch Supported: "<<maxPatchVerticesNum<<endl<<endl;
     // 设定每一个Patch中有多少个顶点，假设是三角形，所有每个Patch用3个顶点
     ///!!!
-    glPatchParameteri(GL_PATCH_VERTICES, 4);
+    glPatchParameteri(GL_PATCH_VERTICES, 2);
     glGetIntegerv(GL_PATCH_VERTICES, &patchVerticesNum);
     cout<<"Vertices in Each Patch has been Setted to: "<<patchVerticesNum<<endl<<endl;
     // 着色器
-    Shader pointShader("shaders/Share/Color.vert", "shaders/Share/Color.frag");
+    Shader shader("shaders/YarnLevelCloth/color.vert", "shaders/YarnLevelCloth/color.frag");
     //
-    Shader shader("shaders/YarnLevelCloth/yarn.vert", "shaders/YarnLevelCloth/yarn.frag");
-    shader.addOptionalShader("shaders/YarnLevelCloth/yarn.tesc", GL_TESS_CONTROL_SHADER);
-    shader.addOptionalShader("shaders/YarnLevelCloth/yarn.tese", GL_TESS_EVALUATION_SHADER);
+    yarnCenter = Curve::CRChain(yarnCenter, 100);
+    vector<glm::vec3> plyCenter = calcPlyCenter(yarnCenter, 1.0f * 2.0f * glm::pi<float>() / 3.0f);
     //
-    Object *yarn = new Object(&vertices[0].x, vertices.size(), POSITIONS, GL_LINES);
+    Object *yarn = new Object(&yarnCenter[0].x, yarnCenter.size(), POSITIONS, GL_POINTS);
     yarn->setCamera(cam);
+    Object *ply1 = new Object(&plyCenter[0].x, plyCenter.size(), POSITIONS, GL_POINTS);
+    ply1->setCamera(cam);
     // 主循环
     while(!glfwWindowShouldClose(window)) {
         glfwPollEvents();
@@ -116,15 +106,15 @@ void singleYarn() {
         //
         ca.draw();
         //
-        yarn->setDrawMode(GL_POINTS);
-        yarn->setShader(&pointShader);
+        shader.use();
+        glUniform3f(glGetUniformLocation(shader.programID, "fragmentColor"), 1.0, 1.0, 1.0);
+        yarn->setShader(&shader);
         yarn->draw();
         //
         shader.use();
-        glUniform1f(glGetUniformLocation(shader.programID, "tessLevelOuter0"), tessLevelOuter0_uniform);
-        yarn->setDrawMode(GL_PATCHES);
-        yarn->setShader(&shader);
-        yarn->draw();
+        glUniform3f(glGetUniformLocation(shader.programID, "fragmentColor"), 1.0, 0.0, 0.0);
+        ply1->setShader(&shader);
+        ply1->draw();
         //
         panel.draw();
         glfwSwapBuffers(window);

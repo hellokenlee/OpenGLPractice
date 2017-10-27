@@ -13,7 +13,7 @@ uniform float tessLevelOuter0;
 void main() {
 	// 设置isoline的细分等级
 	gl_TessLevelOuter[0] = tessLevelOuter0;
-	gl_TessLevelOuter[1] = 1.0;
+	gl_TessLevelOuter[1] = 1;
 	// 顶点位置赋值
 	position_TES_in[0] = position_TCS_in[0];
 	position_TES_in[1] = position_TCS_in[0] + vec3(0.0, 1.0, 0.0);
