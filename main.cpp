@@ -64,7 +64,7 @@
 #include "whims/PNTriangle.hpp"
 
 int main(){
-    YarnLevelCloth::_main();
+    YarnLevelCloth::singleYarn();
     return 0;
 }
 
