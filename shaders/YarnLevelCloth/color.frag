@@ -2,6 +2,8 @@
 
 out vec4 color;
 
+in vec3 normal_FS_in;
+
 uniform vec3 fragmentColor;
 
 void main(){

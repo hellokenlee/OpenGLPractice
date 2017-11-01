@@ -7,9 +7,9 @@ uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
-out vec3 normal_FS_in;
+out vec3 normal_GS_in;
 
 void main(){
 	gl_Position = projection * view * model * vec4(position_VS_in, 1.0);
-	normal_FS_in = transpose(inverse(mat3(view * model))) * normal_VS_in;
+	normal_GS_in = transpose(inverse(mat3(view * model))) * normal_VS_in;
 }
