@@ -71,6 +71,7 @@ vector<glm::vec3> yarnCenter = {
 const GLfloat R_ply = 2.0f;
 // 控制层中心绕纺线中心的旋转周期
 const GLfloat alpha = 1.0f;
+const GLfloat alpha_hair = 0.233f;
 // 纺线的法向量
 glm::vec3 N_yarn = glm::vec3(0.0, 1.0, 0.0);
 // 纺线的双切向量(和切向量法向量平面垂直的向量)
@@ -80,6 +81,7 @@ glm::vec3 T_yarn = glm::vec3(0.0, 0.0, 1.0);
 //
 const GLfloat R_min = 0.1f;
 const GLfloat R_max = 4.0f;
+const GLfloat R_loop_max = 2.0 * R_max;
 //
 const GLfloat e_N = 1.5f;
 const GLfloat e_B = 1.0f;
@@ -103,7 +105,11 @@ vector<glm::vec3> calcPlyCenter(vector<glm::vec3> &yarnCenter, GLfloat theta_Ply
     }
     return plyCenter;
 }
-
+enum FiberType {
+    MIGRATION,
+    HAIR,
+    LOOP
+};
 // 根据纺线中心和层中心 计算每一根Fiber的中心位置
 vector<vector<glm::vec3>> calcMigrationFiber(vector<glm::vec3> &plyCenter, vector<glm::vec3> &yarnCenter) {
     // 生成 theta_i 和 R_i
@@ -122,17 +128,42 @@ vector<vector<glm::vec3>> calcMigrationFiber(vector<glm::vec3> &plyCenter, vecto
     //
     vector<vector<glm::vec3>> fiberCenter(R_initial.size(), vector<glm::vec3>(plyCenter.size() * 2));
     for(int i = 0; i < R_initial.size(); ++i) {
+        FiberType ft;
+        int tmp = rand() % 1000;
+        GLfloat _R_max, _R_min;
+        GLfloat _alpha = alpha;
+        if(tmp < 20){
+            // 模拟 Hair-Fiber： 概率 0.5%
+            ft = HAIR;
+            _R_max = R_max;
+            _R_max = R_max + (rand()/(double)(RAND_MAX) * 4.0f);
+            _R_min = R_min;
+            _alpha = alpha_hair;
+            cout<<_R_max<<endl;
+        } else if(tmp < 30) {
+            // 模拟 Loop-Fiber： 概率 1.0%
+            ft = LOOP;
+            _R_max = R_max;
+            //_R_max = R_loop_max;
+            _R_min = R_min;
+        } else {
+            // 模拟 Migration-Fiber： 剩下的概率
+            ft = MIGRATION;
+            _R_max = R_max;
+            _R_min = R_min;
+        }
+        GLfloat lastR = _R_min;
         // 对于每一根Fiber， 根据Ply中心计算Fiber位置
         for(int j = 0; j < plyCenter.size(); ++j) {
             // 反求theta
-            GLfloat theta = (2.0 * glm::pi<float>() * yarnCenter[j].z) / alpha;
+            GLfloat theta = (2.0 * glm::pi<float>() * yarnCenter[j].z) / _alpha;
             // 转换成弧度
             theta = theta * 2.0 * glm::pi<float>() / 360.0f;
             // 获取 R_i 和 theta_i
             GLfloat theta_i = theta_initial[i];
             GLfloat R_i = R_initial[i];
             // 根据 EQ.2 求出 R
-            GLfloat R = (R_i / 2.0f) * (R_max + R_min + (cos(theta_i + (s * theta)) * (R_max - R_min)));
+            GLfloat R = (R_i / 2.0f) * (_R_max + _R_min + (cos(theta_i + (s * theta)) * (_R_max - _R_min)));
             // 求出 N_ply
             glm::vec3 N_ply = glm::normalize(plyCenter[j] - yarnCenter[j]);
             // glm::vec3 B_ply = derivative(c_ply[j], theta);
@@ -153,11 +184,12 @@ vector<vector<glm::vec3>> calcMigrationFiber(vector<glm::vec3> &plyCenter, vecto
 //
 void singleYarn() {
     // 初始化
+    srand(time(nullptr));
     GLFWwindow *window = initWindow("TessellationShader", 800, 600, 4, 0);
     showEnviroment();
     glEnable(GL_PROGRAM_POINT_SIZE);
     glPointSize(2.0);
-    glLineWidth(2.0);
+    glLineWidth(1.0);
     CameraController::bindControl(window);
     Camera *cam = &CameraController::camera;
     CameraController::camera.moveto(glm::vec3(25.0f, 5.0f, 50.0f));
@@ -269,16 +301,16 @@ void singleYarn() {
         ply3->setShader(&shader);
         ply3->draw();
         //
-        bpShader.use();
+        shader.use();
         glUniform3f(glGetUniformLocation(bpShader.programID, "light.direction"), -1.0, 0.0, 0.0);
         glUniform3f(glGetUniformLocation(shader.programID, "fragmentColor"), 1.0, 0.5, 0.5);
-        ply1Fibers->setShader(&bpShader);
+        ply1Fibers->setShader(&shader);
         ply1Fibers->draw();
         glUniform3f(glGetUniformLocation(shader.programID, "fragmentColor"), 0.5, 1.0, 0.5);
-        ply2Fibers->setShader(&bpShader);
+        ply2Fibers->setShader(&shader);
         ply2Fibers->draw();
         glUniform3f(glGetUniformLocation(shader.programID, "fragmentColor"), 0.5, 0.5, 1.0);
-        ply3Fibers->setShader(&bpShader);
+        ply3Fibers->setShader(&shader);
         ply3Fibers->draw();
         /* 指定颜色绘制所有Fibers
         shader.use();
