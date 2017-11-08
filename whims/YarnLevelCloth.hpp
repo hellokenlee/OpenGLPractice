@@ -179,7 +179,67 @@ vector<vector<glm::vec3>> calcMigrationFiber(vector<glm::vec3> &plyCenter, vecto
     return fiberCenter;
 }
 
+vector<GLuint> createIndices(vector<glm::vec3> &positionsArray, int strap) {
+    vector<GLuint> indices;
+    for(unsigned int i = 0; i < positionsArray.size() - 1; ++i) {
+        for(unsigned int j = 0; j < strap; ++j) {
+            indices.push_back(i + j);
+        }
+    }
+    return indices;
+}
+
 #define DRAW_MODE GL_LINE_STRIP
+
+void singleYarnWithTess() {
+    // 初始化
+    srand(time(nullptr));
+    GLFWwindow *window = initWindow("TessellationShader", 800, 600, 4, 0);
+    showEnviroment();
+    CameraController::bindControl(window);
+    Camera *cam = &CameraController::camera;
+    // 一些设置
+    glEnable(GL_PROGRAM_POINT_SIZE);
+    glPointSize(2.0);
+    glLineWidth(1.0);
+    CameraController::camera.moveto(glm::vec3(25.0f, 5.0f, 50.0f));
+    CameraController::yaw = -180.0f;
+    CameraController::pitch = 0.0f;
+    CoordinateAxes ca(cam);
+    ControlPanel panel(window);
+    // 简单颜色着色器
+    Shader shader("shaders/YarnLevelCloth/color.vert", "shaders/YarnLevelCloth/color.frag");
+    // 细分着色器
+//    Shader tesShader("shaders/YarnLevelCloth/yarn.vert", "shaders/YarnLevelCloth/yarn.frag");
+//    tesShader.addOptionalShader("shaders/TessellationShader/yarn.tesc", GL_TESS_CONTROL_SHADER);
+//    tesShader.addOptionalShader("shaders/TessellationShader/yarn.tese", GL_TESS_EVALUATION_SHADER);
+//    // TCS输入的每一个Patch中有多少个顶点
+//    glPatchParameteri(GL_PATCH_VERTICES, 2);
+    // 纺线中心
+    //yarnCenter = Curve::CRChain(yarnCenter, 100);
+    vector<GLuint> indices = createIndices(yarnCenter, 2);
+    cout<<indices.size()<<endl;
+    Object *yarn = new Object(&yarnCenter[0].x, yarnCenter.size(), POSITIONS, GL_LINES, &indices[0], indices.size());
+    yarn->setCamera(cam);
+    //
+    while(!glfwWindowShouldClose(window)) {
+        glfwPollEvents();
+        CameraController::update();
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        ca.draw();
+        //
+        shader.use();
+        glUniform3f(glGetUniformLocation(shader.programID, "fragmentColor"), 1.0, 1.0, 1.0);
+        yarn->setShader(&shader);
+        yarn->draw();
+        //
+        panel.draw();
+        glfwSwapBuffers(window);
+    }
+    glfwDestroyWindow(window);
+    glfwTerminate();
+}
 
 //
 void singleYarn() {
@@ -206,11 +266,17 @@ void singleYarn() {
     glPatchParameteri(GL_PATCH_VERTICES, 2);
     glGetIntegerv(GL_PATCH_VERTICES, &patchVerticesNum);
     cout<<"Vertices in Each Patch has been Setted to: "<<patchVerticesNum<<endl<<endl;
-    // 着色器
+    // 简单颜色着色器
     Shader shader("shaders/YarnLevelCloth/color.vert", "shaders/YarnLevelCloth/color.frag");
+    // 显示法线的着色器
     Shader showNormalShader("shaders/YarnLevelCloth/showNormals.vert", "shaders/YarnLevelCloth/showNormals.frag");
     showNormalShader.addOptionalShader("shaders/YarnLevelCloth/showNormals.geom", GL_GEOMETRY_SHADER);
+    // 光照着色器
     Shader bpShader("shaders/YarnLevelCloth/blinnPhong.vert", "shaders/YarnLevelCloth/blinnPhong.frag");
+    // 细分着色器
+    Shader tesShader("shaders/YarnLevelCloth/yarn.vert", "shaders/YarnLevelCloth/yarn.frag");
+    tesShader.addOptionalShader("shaders/TessellationShader/yarn.tesc", GL_TESS_CONTROL_SHADER);
+    tesShader.addOptionalShader("shaders/TessellationShader/yarn.tese", GL_TESS_EVALUATION_SHADER);
     //
     yarnCenter = Curve::CRChain(yarnCenter, 100);
     vector<glm::vec3> plyCenter1 = calcPlyCenter(yarnCenter, 1.0f * 2.0f * glm::pi<float>() / 3.0f);
@@ -285,45 +351,28 @@ void singleYarn() {
         glUniform3f(glGetUniformLocation(shader.programID, "fragmentColor"), 1.0, 1.0, 1.0);
         yarn->setShader(&shader);
         yarn->draw();
-        //
+        /* 绘制3个Ply的中心
         shader.use();
         glUniform3f(glGetUniformLocation(shader.programID, "fragmentColor"), 1.0, 0.0, 0.0);
         ply1->setShader(&shader);
         ply1->draw();
-        //
         shader.use();
         glUniform3f(glGetUniformLocation(shader.programID, "fragmentColor"), 0.0, 1.0, 0.0);
         ply2->setShader(&shader);
         ply2->draw();
-        //
         shader.use();
         glUniform3f(glGetUniformLocation(shader.programID, "fragmentColor"), 0.0, 0.0, 1.0);
         ply3->setShader(&shader);
         ply3->draw();
-        //
-        shader.use();
-        glUniform3f(glGetUniformLocation(bpShader.programID, "light.direction"), -1.0, 0.0, 0.0);
-        glUniform3f(glGetUniformLocation(shader.programID, "fragmentColor"), 1.0, 0.5, 0.5);
-        ply1Fibers->setShader(&shader);
-        ply1Fibers->draw();
-        glUniform3f(glGetUniformLocation(shader.programID, "fragmentColor"), 0.5, 1.0, 0.5);
-        ply2Fibers->setShader(&shader);
-        ply2Fibers->draw();
-        glUniform3f(glGetUniformLocation(shader.programID, "fragmentColor"), 0.5, 0.5, 1.0);
-        ply3Fibers->setShader(&shader);
-        ply3Fibers->draw();
+        //*/
         /* 指定颜色绘制所有Fibers
         shader.use();
         glUniform3f(glGetUniformLocation(shader.programID, "fragmentColor"), 1.0, 0.5, 0.5);
         ply1Fibers->setShader(&shader);
         ply1Fibers->draw();
-        //
-        shader.use();
         glUniform3f(glGetUniformLocation(shader.programID, "fragmentColor"), 0.5, 1.0, 0.5);
         ply2Fibers->setShader(&shader);
         ply2Fibers->draw();
-        //
-        shader.use();
         glUniform3f(glGetUniformLocation(shader.programID, "fragmentColor"), 0.5, 0.5, 1.0);
         ply3Fibers->setShader(&shader);
         ply3Fibers->draw();
@@ -332,11 +381,6 @@ void singleYarn() {
         ply3Fibers->setShader(&showNormalShader);
         ply3Fibers->draw();
         //*/
-        shader.use();
-        glUniform3f(glGetUniformLocation(shader.programID, "fragmentColor"), 1.0, 1.0, 1.0);
-        cs->setShader(&shader);
-        cs->draw();
-        //
         panel.draw();
         glfwSwapBuffers(window);
     }
