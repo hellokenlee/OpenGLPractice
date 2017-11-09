@@ -210,15 +210,14 @@ void singleYarnWithTess() {
     // 简单颜色着色器
     Shader shader("shaders/YarnLevelCloth/color.vert", "shaders/YarnLevelCloth/color.frag");
     // 细分着色器
-//    Shader tesShader("shaders/YarnLevelCloth/yarn.vert", "shaders/YarnLevelCloth/yarn.frag");
-//    tesShader.addOptionalShader("shaders/TessellationShader/yarn.tesc", GL_TESS_CONTROL_SHADER);
-//    tesShader.addOptionalShader("shaders/TessellationShader/yarn.tese", GL_TESS_EVALUATION_SHADER);
-//    // TCS输入的每一个Patch中有多少个顶点
-//    glPatchParameteri(GL_PATCH_VERTICES, 2);
+    Shader tesShader("shaders/YarnLevelCloth/genPlyCenter.vert", "shaders/YarnLevelCloth/genPlyCenter.frag");
+    tesShader.addOptionalShader("shaders/YarnLevelCloth/genPlyCenter.tesc", GL_TESS_CONTROL_SHADER);
+    tesShader.addOptionalShader("shaders/YarnLevelCloth/genPlyCenter.tese", GL_TESS_EVALUATION_SHADER);
+    // TCS输入的每一个Patch中有多少个顶点
+    glPatchParameteri(GL_PATCH_VERTICES, 2);
     // 纺线中心
-    //yarnCenter = Curve::CRChain(yarnCenter, 100);
+    yarnCenter = Curve::CRChain(yarnCenter, 100);
     vector<GLuint> indices = createIndices(yarnCenter, 2);
-    cout<<indices.size()<<endl;
     Object *yarn = new Object(&yarnCenter[0].x, yarnCenter.size(), POSITIONS, GL_LINES, &indices[0], indices.size());
     yarn->setCamera(cam);
     //
@@ -231,7 +230,13 @@ void singleYarnWithTess() {
         //
         shader.use();
         glUniform3f(glGetUniformLocation(shader.programID, "fragmentColor"), 1.0, 1.0, 1.0);
+        yarn->setDrawMode(GL_LINES);
         yarn->setShader(&shader);
+        yarn->draw();
+        //
+        tesShader.use();
+        yarn->setDrawMode(GL_PATCHES);
+        yarn->setShader(&tesShader);
         yarn->draw();
         //
         panel.draw();

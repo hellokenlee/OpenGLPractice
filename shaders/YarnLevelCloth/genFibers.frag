@@ -1,6 +1,6 @@
 #version 400 core
 
-out vec3 color_FS_in;
+in vec3 color_FS_in;
 
 out vec4 color;
 
