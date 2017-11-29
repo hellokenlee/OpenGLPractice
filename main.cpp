@@ -62,9 +62,11 @@
 #include "whims/YarnLevelCloth.hpp"
 #include "whims/TessellationShader.hpp"
 #include "whims/PNTriangle.hpp"
+#include "whims/VolVisualize.hpp"
 
 int main(){
-    YarnLevelCloth::singleYarnWithTess();
+    //YarnLevelCloth::hariVisualize();
+    VolVisualize::_main();
     return 0;
 }
 

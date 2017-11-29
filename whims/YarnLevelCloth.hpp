@@ -221,6 +221,10 @@ void singleYarnWithTess() {
     Object *yarn = new Object(&yarnCenter[0].x, yarnCenter.size(), POSITIONS, GL_LINES, &indices[0], indices.size());
     yarn->setCamera(cam);
     //
+    vector<glm::vec3> plyCenter1 = calcPlyCenter(yarnCenter, 1.0f * 2.0f * glm::pi<float>() / 3.0f);
+    Object *ply1 = new Object(&plyCenter1[0].x, plyCenter1.size(), POSITIONS, GL_LINE_STRIP);
+    ply1->setCamera(cam);
+    //
     while(!glfwWindowShouldClose(window)) {
         glfwPollEvents();
         CameraController::update();
@@ -233,11 +237,15 @@ void singleYarnWithTess() {
         yarn->setDrawMode(GL_LINES);
         yarn->setShader(&shader);
         yarn->draw();
-        //
+        glUniform3f(glGetUniformLocation(shader.programID, "fragmentColor"), 1.0, 0.0, 0.0);
+        ply1->setShader(&shader);
+        ply1->draw();
+
         tesShader.use();
         yarn->setDrawMode(GL_PATCHES);
         yarn->setShader(&tesShader);
         yarn->draw();
+
         //
         panel.draw();
         glfwSwapBuffers(window);
@@ -393,5 +401,105 @@ void singleYarn() {
     glfwTerminate();
 }
 
+
+void hariVisualize() {
+    // 初始化
+    srand(time(nullptr));
+    GLFWwindow *window = initWindow("Hair", 800, 600, 4, 0);
+    showEnviroment();
+    CameraController::bindControl(window);
+    Camera *cam = &CameraController::camera;
+    // 一些设置
+    glEnable(GL_PROGRAM_POINT_SIZE);
+    glPointSize(2.0);
+    glLineWidth(1.0);
+    CoordinateAxes ca(cam);
+    ControlPanel panel(window);
+    // 简单颜色着色器
+    Shader shader("shaders/YarnLevelCloth/color.vert", "shaders/YarnLevelCloth/color.frag");
+    // 读取
+    const char filename[] = "textures/Yarns/fiber.txt";
+    FILE *f = fopen(filename, "r");
+    Union* hair = new Union();
+    Union* ply0 = new Union();
+    Union* ply1 = new Union();
+    Union* ply2 = new Union();
+    int linesNum = 0;
+    fscanf(f, "%d", &linesNum);
+    printf("Total %d Line.\n", linesNum);
+    for(int i = 0; i < 108; ++i) {
+        int pointsNum = 0;
+        fscanf(f, "%d", &pointsNum);
+        vector<glm::vec3> points(pointsNum);
+        for(int j = 0; j < pointsNum; ++j) {
+            fscanf(f, "%f %f %f", &points[j].x, &points[j].y, &points[j].z);
+        }
+        Object* line = new Object(&points[0].x, points.size(), POSITIONS, GL_LINE_STRIP);
+        line->scaleTo(10.0);
+        //hair->addObject(line);
+        ply0->addObject(line);
+        printf("  %dth Line has %d Points.\n", i, pointsNum);
+    }
+    for(int i = 108; i < 216; ++i) {
+        int pointsNum = 0;
+        fscanf(f, "%d", &pointsNum);
+        vector<glm::vec3> points(pointsNum);
+        for(int j = 0; j < pointsNum; ++j) {
+            fscanf(f, "%f %f %f", &points[j].x, &points[j].y, &points[j].z);
+        }
+        Object* line = new Object(&points[0].x, points.size(), POSITIONS, GL_LINE_STRIP);
+        line->scaleTo(10.0);
+        //hair->addObject(line);
+        ply1->addObject(line);
+        printf("  %dth Line has %d Points.\n", i, pointsNum);
+    }
+    for(int i = 216; i < 324; ++i) {
+        int pointsNum = 0;
+        fscanf(f, "%d", &pointsNum);
+        vector<glm::vec3> points(pointsNum);
+        for(int j = 0; j < pointsNum; ++j) {
+            fscanf(f, "%f %f %f", &points[j].x, &points[j].y, &points[j].z);
+        }
+        Object* line = new Object(&points[0].x, points.size(), POSITIONS, GL_LINE_STRIP);
+        line->scaleTo(10.0);
+        //hair->addObject(line);
+        ply2->addObject(line);
+        printf("  %dth Line has %d Points.\n", i, pointsNum);
+    }
+    ply0->setCamera(cam);
+    ply1->setCamera(cam);
+    ply2->setCamera(cam);
+    fclose(f);
+
+    // 主循环
+    while(!glfwWindowShouldClose(window)) {
+        glfwPollEvents();
+        CameraController::update();
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        //ca.draw();
+        //
+        shader.use();
+        glUniform3f(glGetUniformLocation(shader.programID, "fragmentColor"), 1.0, 0.5, 0.5);
+        ply0->setShader(&shader);
+        ply0->draw();
+
+        shader.use();
+        glUniform3f(glGetUniformLocation(shader.programID, "fragmentColor"), 0.5, 1.0, 0.5);
+        ply1->setShader(&shader);
+        ply1->draw();
+
+        shader.use();
+        glUniform3f(glGetUniformLocation(shader.programID, "fragmentColor"), 0.5, 0.5, 1.0);
+        ply2->setShader(&shader);
+        ply2->draw();
+        //
+        panel.draw();
+        glfwSwapBuffers(window);
+    }
+
+    glfwDestroyWindow(window);
+    glfwTerminate();
+}
 };
 #endif // YARN_LEVEL_CLOTH_HPP

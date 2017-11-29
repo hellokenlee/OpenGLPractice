@@ -4,6 +4,7 @@
 namespace Instancing{
 
 #define ROCK_AMOUNT 10000
+
 void tutorial_without_instancing(){
     GLFWwindow *window = initWindow("Instancing", 800, 600);
     showEnviroment();
@@ -13,7 +14,7 @@ void tutorial_without_instancing(){
     CameraController::bindControl(window);
     CameraController::camera.moveto(glm::vec3(0.0f, 5.0f, 50.0f));
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
+    ControlPanel panel(window);
     glEnable(GL_DEPTH_TEST);
 
     CoordinateAxes ca(&CameraController::camera);
@@ -87,7 +88,7 @@ void tutorial_with_instancing_by_IA(){
     showEnviroment();
     cout<<"Rock Num: "<<ROCK_AMOUNT<<" [with instancing by instanced array]"<<endl;
     glfwSwapInterval(0);
-
+    ControlPanel panel(window);
     CameraController::bindControl(window);
     CameraController::camera.moveto(glm::vec3(0.0f, 5.0f, 50.0f));
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -112,7 +113,7 @@ void tutorial_with_instancing_by_IA(){
     Model rock((GLchar*)"textures/rock/rock.obj");
 
     //随机生产ROCK_AMOUNT个model矩阵
-    glm::mat4 modelMatrices[ROCK_AMOUNT];
+    vector<glm::mat4> modelMatrices(ROCK_AMOUNT);
     srand(glfwGetTime());
     GLfloat radius = 50.0f;
     GLfloat offset = 5.0f;
@@ -165,13 +166,10 @@ void tutorial_with_instancing_by_IA(){
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
         CameraController::update();
-
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glClearColor(0.1, 0.1, 0.1, 1.0);
-
         // 绘制行星
         planet.draw();
-
         //绘制陨石
         rockShader.use();
         glUniformMatrix4fv(glGetUniformLocation(rockShader.programID,"view"),1,GL_FALSE,cam->getViewMatrixVal());
@@ -179,16 +177,20 @@ void tutorial_with_instancing_by_IA(){
         glBindVertexArray(rock.meshes[0].VAO);
         glDrawArraysInstanced(GL_TRIANGLES, 0, rock.meshes[0].vertices.size(), ROCK_AMOUNT);
         glBindVertexArray(0);
-
+        //
+        panel.draw();
+        //
         glfwSwapBuffers(window);
-        fc.update();
+        panel.draw();
     }
     glfwDestroyWindow(window);
     glfwTerminate();
 }
+
 void tutorial_with_instancing_by_UBO(){
     GLFWwindow *window = initWindow("Instancing", 800, 600);
     showEnviroment();
+    ControlPanel panel(window);
     cout<<"Rock Num: "<<ROCK_AMOUNT<<" [with instancing by UBO]"<<endl;
     glfwSwapInterval(0);
 
@@ -267,9 +269,9 @@ void tutorial_with_instancing_by_UBO(){
         glBindVertexArray(rock.meshes[0].VAO);
         glDrawArraysInstanced(GL_TRIANGLES, 0, rock.meshes[0].vertices.size(), ROCK_AMOUNT);
         glBindVertexArray(0);
-
+        //
+        panel.draw();
         glfwSwapBuffers(window);
-        fc.update();
     }
     glfwDestroyWindow(window);
     glfwTerminate();

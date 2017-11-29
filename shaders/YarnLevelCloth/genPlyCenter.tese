@@ -33,7 +33,6 @@ void main() {
 	vec3 pos = position_TES_in[0] + deltaX;
 	color_FS_in = vec3(1.0);
 	/*
-	// 根据公式算出
 	if(gl_TessCoord.y < 0.3) {
 		// 
 		color_FS_in = vec3(1.0, 0.0, 0.0);
@@ -48,7 +47,8 @@ void main() {
 		pos = calcPlyCenter(pos, 3.0f * 2.0f * PI / 3.0f);
 	}
 	*/
-	pos = calcPlyCenter(pos, 3.0f * 2.0f * PI / 3.0f);
+	//
+	pos = calcPlyCenter(pos, gl_TessCoord.y * 2.0f * PI);
 	// 写入顶点在NDC的位置
 	gl_Position = projection * view * vec4(pos, 1.0);
 }
