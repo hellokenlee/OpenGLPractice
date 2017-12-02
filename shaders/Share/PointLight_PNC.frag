@@ -22,25 +22,27 @@ void main(){
 	vec3 normal = normalize(normal_FS_in);
 	// 原始颜色
 	vec3 _color = vec3(0.0);
-	//! FIX ME: 点光源需要考虑到光线衰减
 	// 逐个叠加着色信息
 	for(int i = 0; i < LIGHTS_NUM; ++i){
 		// 环境光
 		vec3 ambient += lights_FS_in[i].ambient;
 		// 入射光方向
 		vec3 lightDir = normalize(lights_FS_in[i].position);
-		//  
-		float diff = max(dot(N, lightDir), 0.0);
-		vec3 diffuse += fs_in.lights[i].diffuse * diff;
-		//
+		// 漫反射
+		float diff = max(dot(normal, lightDir), 0.0);
+		vec3 diffuse += flights_FS_in[i].diffuse * diff;
+		// 视角方向
 		vec3 viewDir = normalize(fs_in.position);
-		vec3 H = normalize(lightDir);
-		float spec = pow(max(dot(N, H), 0.0), 4.0);
-		vec3 specular += fs_in.lights[i].specular * spec;
-
+		// 半程向量
+		vec3 halfway = normalize(lightDir);
+		// 镜面反射
+		float spec = pow(max(dot(normal, halfway), 0.0), 4.0);
+		vec3 specular += lights_FS_in[i].specular * spec;
+		// 离光源距离
 		float distance = length(light.position);
+		// 衰减
 		float attenuation = 1.0f / (distance * distance);
-
+		// 叠加着色
 		_color += attenuation * (ambient + diffuse + specular);
 	}
 	// 输出

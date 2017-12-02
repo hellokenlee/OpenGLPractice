@@ -59,14 +59,14 @@
 #include "whims/Benchmark.hpp"
 #include "whims/Mirror.hpp"
 #include "whims/Stella.hpp"
-#include "whims/YarnLevelCloth.hpp"
 #include "whims/TessellationShader.hpp"
 #include "whims/PNTriangle.hpp"
+#include "whims/YarnLevelCloth.hpp"
 #include "whims/VolVisualize.hpp"
 
 int main(){
-    //YarnLevelCloth::hariVisualize();
-    VolVisualize::_main();
+    YarnLevelCloth::hairVisualize();
+    //VolVisualize::_main();
     return 0;
 }
 

@@ -401,8 +401,10 @@ void singleYarn() {
     glfwTerminate();
 }
 
-
-void hariVisualize() {
+const int PLY0_END = 1;
+const int PLY1_END = 2;
+const int PLY2_END = 3;
+void hairVisualize() {
     // 初始化
     srand(time(nullptr));
     GLFWwindow *window = initWindow("Hair", 800, 600, 4, 0);
@@ -410,6 +412,7 @@ void hariVisualize() {
     CameraController::bindControl(window);
     Camera *cam = &CameraController::camera;
     // 一些设置
+    glEnable(GL_DEPTH_TEST);
     glEnable(GL_PROGRAM_POINT_SIZE);
     glPointSize(2.0);
     glLineWidth(1.0);
@@ -418,7 +421,8 @@ void hariVisualize() {
     // 简单颜色着色器
     Shader shader("shaders/YarnLevelCloth/color.vert", "shaders/YarnLevelCloth/color.frag");
     // 读取
-    const char filename[] = "textures/Yarns/fiber.txt";
+    //const char filename[] = "textures/Yarns/fiber.txt";
+    const char filename[] = "textures/Yarns/YarnPlies.txt";
     FILE *f = fopen(filename, "r");
     Union* hair = new Union();
     Union* ply0 = new Union();
@@ -427,44 +431,53 @@ void hariVisualize() {
     int linesNum = 0;
     fscanf(f, "%d", &linesNum);
     printf("Total %d Line.\n", linesNum);
-    for(int i = 0; i < 108; ++i) {
+    for(int i = 0; i < PLY0_END; ++i) {
         int pointsNum = 0;
         fscanf(f, "%d", &pointsNum);
         vector<glm::vec3> points(pointsNum);
         for(int j = 0; j < pointsNum; ++j) {
             fscanf(f, "%f %f %f", &points[j].x, &points[j].y, &points[j].z);
+            points[j].x = (points[j].x / 990.0f) - 0.5;
+            points[j].y = (points[j].y / 990.0f) - 0.5;
+            points[j].z = (points[j].z / 990.0f) - 0.5;
         }
         Object* line = new Object(&points[0].x, points.size(), POSITIONS, GL_LINE_STRIP);
-        line->scaleTo(10.0);
         //hair->addObject(line);
         ply0->addObject(line);
         printf("  %dth Line has %d Points.\n", i, pointsNum);
+        printf("    start: (%.2f, %.2f, %.2f); end: (%.2f, %.2f, %.2f)\n", points[0].x, points[0].y, points[0].z, points.back().x, points.back().y, points.back().z);
     }
-    for(int i = 108; i < 216; ++i) {
+    for(int i = PLY0_END; i < PLY1_END; ++i) {
         int pointsNum = 0;
         fscanf(f, "%d", &pointsNum);
         vector<glm::vec3> points(pointsNum);
         for(int j = 0; j < pointsNum; ++j) {
             fscanf(f, "%f %f %f", &points[j].x, &points[j].y, &points[j].z);
+            points[j].x = (points[j].x / 990.0f) - 0.5;
+            points[j].y = (points[j].y / 990.0f) - 0.5;
+            points[j].z = (points[j].z / 990.0f) - 0.5;
         }
         Object* line = new Object(&points[0].x, points.size(), POSITIONS, GL_LINE_STRIP);
-        line->scaleTo(10.0);
         //hair->addObject(line);
         ply1->addObject(line);
         printf("  %dth Line has %d Points.\n", i, pointsNum);
+        printf("    start: (%.2f, %.2f, %.2f); end: (%.2f, %.2f, %.2f)\n", points[0].x, points[0].y, points[0].z, points.back().x, points.back().y, points.back().z);
     }
-    for(int i = 216; i < 324; ++i) {
+    for(int i = PLY1_END; i < PLY2_END; ++i) {
         int pointsNum = 0;
         fscanf(f, "%d", &pointsNum);
         vector<glm::vec3> points(pointsNum);
         for(int j = 0; j < pointsNum; ++j) {
             fscanf(f, "%f %f %f", &points[j].x, &points[j].y, &points[j].z);
+            points[j].x = (points[j].x / 990.0f) - 0.5;
+            points[j].y = (points[j].y / 990.0f) - 0.5;
+            points[j].z = (points[j].z / 990.0f) - 0.5;
         }
         Object* line = new Object(&points[0].x, points.size(), POSITIONS, GL_LINE_STRIP);
-        line->scaleTo(10.0);
         //hair->addObject(line);
         ply2->addObject(line);
         printf("  %dth Line has %d Points.\n", i, pointsNum);
+        printf("    start: (%.2f, %.2f, %.2f); end: (%.2f, %.2f, %.2f)\n", points[0].x, points[0].y, points[0].z, points.back().x, points.back().y, points.back().z);
     }
     ply0->setCamera(cam);
     ply1->setCamera(cam);
@@ -477,7 +490,7 @@ void hariVisualize() {
         CameraController::update();
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        //ca.draw();
+        ca.draw();
         //
         shader.use();
         glUniform3f(glGetUniformLocation(shader.programID, "fragmentColor"), 1.0, 0.5, 0.5);

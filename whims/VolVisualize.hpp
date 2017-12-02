@@ -73,6 +73,17 @@ public:
     }
 };
 
+const glm::vec3 lightPositions[] = {
+    glm::vec3(0.0f, 2.0f, 0.0f),
+    glm::vec3(0.0f, 2.0f, 2.0f),
+    glm::vec3(0.0f, 2.0f, 4.0f),
+    glm::vec3(0.0f, 2.0f, 6.0f),
+    glm::vec3(0.0f, 2.0f, 8.0f),
+};
+
+const glm::vec3 lightAmbient = glm::vec3(0.05f);
+const glm::vec3 lightDiffuse = glm::vec3(0.01f);
+const glm::vec3 lightSpecular = glm::vec3(0.5f);
 
 void _main() {
     // 初始化
@@ -81,9 +92,11 @@ void _main() {
     CameraController::bindControl(window);
     Camera *cam = &CameraController::camera;
     // 一些设置
+    glEnable(GL_DEPTH_TEST);
     CoordinateAxes ca(cam);
     ControlPanel panel(window);
     // 简单颜色着色器
+    //Shader shader("shaders/Share/Color.vert", "shaders/Share/Color.frag");
     Shader shader("shaders/Share/VoxelObject.vert", "shaders/Share/VoxelObject.frag");
     //
     MitsubaVol mVol;
@@ -104,11 +117,28 @@ void _main() {
             }
         }
     }
-    Object cube(&vertices[0].x, vertices.size() / 2, POSITIONS_COLORS, GL_POINTS);
+    Object* cube = new Object(&vertices[0].x, vertices.size() / 2, POSITIONS_COLORS, GL_POINTS);
     //*/
     VoxelObject* cube = new VoxelObject(mVol.data, mVol.header.numX, mVol.header.numY, mVol.header.numZ);
     cube->setShader(&shader);
     cube->setCamera(cam);
+    // 写入光源位置
+    shader.use();
+    for(int i = 0; i < 5; ++i) {
+        char uniformName[128] = {0};
+        sprintf(uniformName, "lights_VS_in[%d].position", i);
+        cout<<uniformName<<endl;
+        glUniform3f(glGetUniformLocation(shader.programID, uniformName), lightPositions[i].x, lightPositions[i].y, lightPositions[i].z);
+        sprintf(uniformName, "lights_VS_in[%d].ambient", i);
+        cout<<uniformName<<endl;
+        glUniform3f(glGetUniformLocation(shader.programID, uniformName), lightAmbient.r, lightAmbient.g, lightAmbient.b);
+        sprintf(uniformName, "lights_VS_in[%d].diffuse", i);
+        cout<<uniformName<<endl;
+        glUniform3f(glGetUniformLocation(shader.programID, uniformName), lightDiffuse.r, lightDiffuse.g, lightDiffuse.b);
+        sprintf(uniformName, "lights_VS_in[%d].specular", i);
+        cout<<uniformName<<endl;
+        glUniform3f(glGetUniformLocation(shader.programID, uniformName), lightSpecular.r, lightSpecular.g, lightSpecular.b);
+    }
     // 主循环
     while(!glfwWindowShouldClose(window)) {
         glfwPollEvents();
