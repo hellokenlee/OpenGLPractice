@@ -10,24 +10,24 @@ Some results of each sections(updating...):
 
 | WITH SSAO | WITHOUT SSAO |
 | --- | --- |
-| ![](textures/demo/26-6.png)  | ![](textures/demo/26-7.png)  |
+| ![](Resources/Textures/demo/26-6.png)  | ![](Resources/Textures/demo/26-7.png)  |
 
 
 | Not Random Rotation | Not Range Check | Not Blur | Full SSAO | With Diffuse |
 | --- | --- | --- | --- | --- |
-| ![](textures/demo/26-3.png)  | ![](textures/demo/26-4.png)  | ![](textures/demo/26-2.png)  | ![](textures/demo/26-5.png)  | ![](textures/demo/26-1.png)  |
+| ![](Resources/Textures/demo/26-3.png)  | ![](Resources/Textures/demo/26-4.png)  | ![](Resources/Textures/demo/26-2.png)  | ![](Resources/Textures/demo/26-5.png)  | ![](Resources/Textures/demo/26-1.png)  |
 
 _ _ _
 
 25 Deferred Shading:  
 
-![](textures/demo/25-1.png)
+![](Resources/Textures/demo/25-1.png)
 
 G-Buffer Viewing
 
-| ![](textures/demo/25-Pos.png)  | ![](textures/demo/25-Nor.png) |
+| ![](Resources/Textures/demo/25-Pos.png)  | ![](Resources/Textures/demo/25-Nor.png) |
 | --- | --- |
-|  ![](textures/demo/25-Dif.png)  |  ![](textures/demo/25-Spec.png) |
+|  ![](Resources/Textures/demo/25-Dif.png)  |  ![](Resources/Textures/demo/25-Spec.png) |
 
 In my nVidia GT650m with 128 point lights in the scene.
 
@@ -43,11 +43,11 @@ _ _ _
 24 PBR:  
 
 
-![image](textures/demo/24-1.png)  
-![image](textures/demo/24-2.png)  
-![image](textures/demo/24-3.png)  
-![image](textures/demo/24-4.png)  
-![image](textures/demo/24-5.png)  
+![image](Resources/Textures/demo/24-1.png)  
+![image](Resources/Textures/demo/24-2.png)  
+![image](Resources/Textures/demo/24-3.png)  
+![image](Resources/Textures/demo/24-4.png)  
+![image](Resources/Textures/demo/24-5.png)  
 
 _ _ _
 
@@ -56,7 +56,7 @@ _ _ _
 
 | Without Bloom | With Bloom |
 | --- | --- |
-| ![image](textures/demo/23-1.png)   |![image](textures/demo/23-2.png)   | 
+| ![image](Resources/Textures/demo/23-1.png)   |![image](Resources/Textures/demo/23-2.png)   | 
 
 _ _ _
 
@@ -65,7 +65,7 @@ _ _ _
 
 | Without HDR | With HDR |
 | --- | --- |
-| ![image](textures/demo/22-1.png)   |![image](textures/demo/22-2.png)   | 
+| ![image](Resources/Textures/demo/22-1.png)   |![image](Resources/Textures/demo/22-2.png)   | 
 
 _ _ _
 
@@ -74,8 +74,8 @@ _ _ _
 
 | Only Diffuse | Diffuse + Normal Mapping | Diffuse + Normal + Parallax Mapping |
 | --- | --- | --- |
-| ![image](textures/demo/21-1.png)   | ![image](textures/demo/21-2.png)   | ![image](textures/demo/21-3.png)  
-| ![image](textures/demo/21-4.png)   | ![image](textures/demo/21-5.png)   | ![image](textures/demo/21-6.png)  
+| ![image](Resources/Textures/demo/21-1.png)   | ![image](Resources/Textures/demo/21-2.png)   | ![image](Resources/Textures/demo/21-3.png)  
+| ![image](Resources/Textures/demo/21-4.png)   | ![image](Resources/Textures/demo/21-5.png)   | ![image](Resources/Textures/demo/21-6.png)  
 
 _ _ _
 
@@ -84,7 +84,7 @@ _ _ _
 
 
 Shadow from a point light at (0, 0, 0): 
-![](textures/demo/20-1.png)
+![](Resources/Textures/demo/20-1.png)
 
 _ _ _
 
@@ -92,10 +92,10 @@ _ _ _
 
 
 Shadow and lighting with point light:
-![](textures/demo/19-1.png)
+![](Resources/Textures/demo/19-1.png)
 
 Shadow and lighting with directional light: 
-![](textures/demo/19-2.png)
+![](Resources/Textures/demo/19-2.png)
 _ _ _
 
 18 Normal Mapping:  
@@ -103,7 +103,7 @@ _ _ _
 
 | Without Normal Mapping | With Normal Mapping |
 | --- | --- |
-| ![image](textures/demo/18-NNM.png)   |![image](textures/demo/18-NM.png)   | 
+| ![image](Resources/Textures/demo/18-NNM.png)   |![image](Resources/Textures/demo/18-NM.png)   | 
 
 _ _ _
 
@@ -113,101 +113,101 @@ _ _ _
 
 | Linear Attenuation, No Gamma Correction | Quadratic Attenuation, No Gamma Correction | Linear Attenuation, Gamma Correction | Quadratic Attenuation, Gamma Correction|
 | --- | --- | --- | --- |
-| ![image](textures/demo/17-LNG.png)   |![image](textures/demo/17-QNG.png)   | ![image](textures/demo/17-LG.png)   | ![image](textures/demo/17-QG.png)   |
+| ![image](Resources/Textures/demo/17-LNG.png)   |![image](Resources/Textures/demo/17-QNG.png)   | ![image](Resources/Textures/demo/17-LG.png)   | ![image](Resources/Textures/demo/17-QG.png)   |
 
 _ _ _
 
 16 Advanced Lighting:
 
 Pure Phong Shading:  
-![image](textures/demo/16-1.png)  
+![image](Resources/Textures/demo/16-1.png)  
 Blinn-Phong Shading:  
-![image](textures/demo/16-2.png)  
+![image](Resources/Textures/demo/16-2.png)  
 
 _ _ _
 
 Whims: Animation《Magic of Stella》's ending scene.
 
-![image](textures/demo/w02.png)
+![image](Resources/Textures/demo/w02.png)
 _ _ _
 
 15 GeometryShader:
 
-![image](textures/demo/15-1.png)
-![image](textures/demo/15-2.gif)
+![image](Resources/Textures/demo/15-1.png)
+![image](Resources/Textures/demo/15-2.gif)
 
 _ _ _
 
 14 CubeMaps:
 
-![image](textures/demo/14-1.png)
-![image](textures/demo/14-2.png)
-![image](textures/demo/14-3.png)
-![image](textures/demo/14-4.png)
+![image](Resources/Textures/demo/14-1.png)
+![image](Resources/Textures/demo/14-2.png)
+![image](Resources/Textures/demo/14-3.png)
+![image](Resources/Textures/demo/14-4.png)
 _ _ _
   
 Whims: A Mirror! 
 
-![image](textures/demo/w01.png)
+![image](Resources/Textures/demo/w01.png)
 _ _ _
 
 13 Model Loading:
 
-![image](textures/demo/13-1.png)
+![image](Resources/Textures/demo/13-1.png)
 
-![image](textures/demo/13-2.png)
+![image](Resources/Textures/demo/13-2.png)
 _ _ _
 
 12 MultipleLights:
 
-![image](textures/demo/12.png)
+![image](Resources/Textures/demo/12.png)
 _ _ _
 
 11 LightCaster(Different kinds of light):
 
-![image](textures/demo/11-1.png)
+![image](Resources/Textures/demo/11-1.png)
 
-![image](textures/demo/11-2.png)
+![image](Resources/Textures/demo/11-2.png)
 
-![image](textures/demo/11-3.png)
+![image](Resources/Textures/demo/11-3.png)
 _ _ _
 10 LightMaps:
 
-![image](textures/demo/10.png)
+![image](Resources/Textures/demo/10.png)
 _ _ _
 09 Materials:
 
-![image](textures/demo/09.png)
+![image](Resources/Textures/demo/09.png)
 _ _ _
 08 BasicLighting
 
-![image](textures/demo/08.png)
+![image](Resources/Textures/demo/08.png)
 _ _ _
 07 Colors
 
-![image](textures/demo/07.png)
+![image](Resources/Textures/demo/07.png)
 _ _ _
 06 Camera
 
-![image](textures/demo/06.gif)
+![image](Resources/Textures/demo/06.gif)
 _ _ _
 05 CoordinateSystem
 
-![image](textures/demo/05.gif)
+![image](Resources/Textures/demo/05.gif)
 _ _ _
 04 Transformations
 
-![image](textures/demo/04.gif)
+![image](Resources/Textures/demo/04.gif)
 _ _ _
 03 Textures
 
-![image](textures/demo/03.png)
+![image](Resources/Textures/demo/03.png)
 _ _ _
 02 Shaders
 
-![image](textures/demo/02.gif)
+![image](Resources/Textures/demo/02.gif)
 _ _ _
 01 HelloTriangle
 
-![image](textures/demo/01.png)
+![image](Resources/Textures/demo/01.png)
 _ _ _
