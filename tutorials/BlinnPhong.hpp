@@ -1,8 +1,12 @@
 /*Copyright reserved by KenLee@2016 ken4000kl@gmail.com*/
-#ifndef BLINN_PHONG_HPP
-#define BLINN_PHONG_HPP
-namespace BlinnPhong{
+#ifndef BLINN_PHONG_CPP
+#define BLINN_PHONG_CPP
+
+// Common Headers
+#include "../NeneEngine/OpenGL/Nene.h"
 #include <cstdio>
+
+namespace BlinnPhong{
 //
 GLfloat planeVertices[] = {
     // Positions          // Normals         // Texture Coords
@@ -39,27 +43,22 @@ void tutorial(){
     //绑定按键回调函数
     glfwSetKeyCallback(window, keyCallback);
     glfwSetCursorPosCallback(window, CameraController::mouseCallback);
-
     showEnviroment();
-    CameraController::camera.moveto(glm::vec3(0.0f, 1.0f, 3.0f));
+    Camera* pCamera = CameraController::getCamera();
+    pCamera->moveto(glm::vec3(0.0f, 1.0f, 3.0f));
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
     glEnable(GL_DEPTH_TEST);
-
-    Shader shader("shaders/BlinnPhong/plane.vs", "shaders/BlinnPhong/plane.frag");
+    //
+    Shader shader("Resources/Shaders/BlinnPhong/plane.vs", "Resources/Shaders/BlinnPhong/plane.frag");
     shader.use();
     glUniform3f(glGetUniformLocation(shader.programID, "vLight.position"), lightPos.x, lightPos.y, lightPos.z);
-
-    CoordinateAxes ca(&CameraController::camera);
-
-
-    Object plane(planeVertices, 6, POSITIONS_NORMALS_TEXTURES, GL_TRIANGLES);
-    plane.setCamera(&CameraController::camera);
-    plane.setShader(&shader);
-
-    TextureManager* tm = TextureManager::getManager();
-    tm->loadTexture("textures/wood.jpg", 0, GL_BGR, GL_RGB);
-
+    //
+    CoordinateAxes ca(pCamera);
+    //
+    Shape plane(planeVertices, 6, POSITIONS_NORMALS_TEXTURES, GL_TRIANGLES);
+    //
+    Texture tex0("Resources/Textures/wood.jpg", GL_BGR, GL_RGB);
+    //
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
         CameraController::update();
@@ -67,10 +66,10 @@ void tutorial(){
         glClearColor(0.1, 0.1, 0.1, 1.0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        tm->bindTexture(0);
+        tex0.use();
         shader.use();
         glUniform1i(glGetUniformLocation(shader.programID, "blinn"), (int)blinn);
-        plane.draw();
+        plane.draw(&shader, pCamera);
 
         glfwSwapBuffers(window);
     }

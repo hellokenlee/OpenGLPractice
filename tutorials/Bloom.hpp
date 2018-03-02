@@ -1,6 +1,10 @@
 /*Copyright reserved by KenLee@2017 ken4000kl@gmail.com*/
-#ifndef BLOOM_HPP
-#define BLOOM_HPP
+#ifndef BLOOM_CPP
+#define BLOOM_CPP
+
+// Common Headers
+#include "../NeneEngine/OpenGL/Nene.h"
+
 namespace Bloom{
 
 //顶点数据前置声明
@@ -29,6 +33,7 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
         cout<<"Exposure: "<<exposure<<endl;
     }
 }
+
 // 实现泛光
 void tutorial(){
     GLFWwindow *window = initWindow("Bloom", 800, 600);
@@ -36,52 +41,44 @@ void tutorial(){
     glfwSetCursorPosCallback(window, CameraController::mouseCallback);
     showEnviroment();
     glfwSwapInterval(0);
-
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
-
-    CoordinateAxes ca(&CameraController::camera);
-    Camera *cam = &CameraController::camera;
+    Camera *pCamera = CameraController::getCamera();
+    CoordinateAxes ca(pCamera);
     FPSCounter fc;
     // init Shaders
-    Shader cubeShader("shaders/Bloom/cube.vs", "shaders/Bloom/cube.frag");
-    Shader lightShader("shaders/Bloom/light.vs", "shaders/Bloom/light.frag");
-    Shader screenShader("shaders/Bloom/screen.vs", "shaders/Bloom/screen.frag");
-    Shader blurShader("shaders/Bloom/blur.vs", "shaders/Bloom/blur.frag");
-    // init Objects
-    Object cubeMother(cubeVertices, 36, POSITIONS_NORMALS_TEXTURES, GL_TRIANGLES);
-    cubeMother.setCamera(cam);
-    cubeMother.setShader(&cubeShader);
-    // set cube models matrices
-    Object *cubes[7];
+    Shader cubeShader("Resources/Shaders/Bloom/cube.vert", "Resources/Shaders/Bloom/cube.frag");
+    Shader lightShader("Resources/Shaders/Bloom/light.vert", "Resources/Shaders/Bloom/light.frag");
+    Shader screenShader("Resources/Shaders/Bloom/screen.vert", "Resources/Shaders/Bloom/screen.frag");
+    Shader blurShader("Resources/Shaders/Bloom/blur.vert", "Resources/Shaders/Bloom/blur.frag");
+    // init Shapes
+    std::vector<Shape> cubes;
     for(int i = 0; i < 7; ++i){
-        cubes[i] = cubeMother.clone();
+        cubes.push_back(Shape(cubeVertices, 36, POSITIONS_NORMALS_TEXTURES, GL_TRIANGLES));
     }
-    cubes[0]->model =  glm::translate(cubes[0]->model, glm::vec3(0.0f, -1.0f, 0.0f));
-    cubes[0]->model = glm::scale(cubes[0]->model, glm::vec3(25.0f, 1.0f, 25.0f));
-    cubes[1]->model = glm::translate(cubes[1]->model, glm::vec3(0.0f, 1.5f, 0.0f));
-    cubes[2]->model = glm::translate(cubes[2]->model, glm::vec3(2.0f, 0.0f, 1.0f));
-    cubes[3]->model = glm::translate(cubes[3]->model, glm::vec3(-1.0f, -1.0f, 2.0f));
-    cubes[3]->model = glm::rotate(cubes[3]->model, glm::radians(60.0f), glm::normalize(glm::vec3(1.0, 0.0, 1.0)));
-    cubes[3]->model = glm::scale(cubes[3]->model, glm::vec3(2.0f, 2.0f, 2.0f));
-    cubes[4]->model = glm::translate(cubes[4]->model, glm::vec3(0.0f, 2.7f, 4.0f));
-    cubes[4]->model = glm::rotate(cubes[4]->model, glm::radians(23.0f), glm::normalize(glm::vec3(1.0f, 0.0f, 1.0f)));
-    cubes[4]->model = glm::scale(cubes[4]->model, glm::vec3(2.5f, 2.5f, 2.5f));
-    cubes[5]->model = glm::translate(cubes[5]->model, glm::vec3(-2.0f, 1.0f, -3.0));
-    cubes[5]->model = glm::rotate(cubes[5]->model, glm::radians(124.0f), glm::normalize(glm::vec3(1.0f, 0.0f, 1.0f)));
-    cubes[5]->model = glm::scale(cubes[5]->model, glm::vec3(2.0f, 2.0f, 2.0f));
-    cubes[6]->model = glm::translate(cubes[6]->model, glm::vec3(-3.0f, 0.0f, 0.0f));
+    cubes[0].setModelMat(glm::translate(cubes[0].getModelMat(), glm::vec3(0.0f, -1.0f, 0.0f)));
+    cubes[0].setModelMat(glm::scale(cubes[0].getModelMat(), glm::vec3(25.0f, 1.0f, 25.0f)));
+    cubes[1].setModelMat(glm::translate(cubes[1].getModelMat(), glm::vec3(0.0f, 1.5f, 0.0f)));
+    cubes[2].setModelMat(glm::translate(cubes[2].getModelMat(), glm::vec3(2.0f, 0.0f, 1.0f)));
+    cubes[3].setModelMat(glm::translate(cubes[3].getModelMat(), glm::vec3(-1.0f, -1.0f, 2.0f)));
+    cubes[3].setModelMat(glm::rotate(cubes[3].getModelMat(), glm::radians(60.0f), glm::normalize(glm::vec3(1.0, 0.0, 1.0))));
+    cubes[3].setModelMat(glm::scale(cubes[3].getModelMat(), glm::vec3(2.0f, 2.0f, 2.0f)));
+    cubes[4].setModelMat(glm::translate(cubes[4].getModelMat(), glm::vec3(0.0f, 2.7f, 4.0f)));
+    cubes[4].setModelMat(glm::rotate(cubes[4].getModelMat(), glm::radians(23.0f), glm::normalize(glm::vec3(1.0f, 0.0f, 1.0f))));
+    cubes[4].setModelMat(glm::scale(cubes[4].getModelMat(), glm::vec3(2.5f, 2.5f, 2.5f)));
+    cubes[5].setModelMat(glm::translate(cubes[5].getModelMat(), glm::vec3(-2.0f, 1.0f, -3.0)));
+    cubes[5].setModelMat(glm::rotate(cubes[5].getModelMat(), glm::radians(124.0f), glm::normalize(glm::vec3(1.0f, 0.0f, 1.0f))));
+    cubes[5].setModelMat(glm::scale(cubes[5].getModelMat(), glm::vec3(2.0f, 2.0f, 2.0f)));
+    cubes[6].setModelMat(glm::translate(cubes[6].getModelMat(), glm::vec3(-3.0f, 0.0f, 0.0f)));
     // set light's position
-    Object *lights[4];
+    std::vector<Shape> lights;
     for(int i = 0; i < 4; ++i){
-        lights[i] = cubeMother.clone();
-        lights[i]->moveTo(lightPositions[i]);
-        lights[i]->setShader(&lightShader);
-        lights[i]->scaleTo(0.5f);
+        lights.push_back(Shape(cubeVertices, 36, POSITIONS_NORMALS_TEXTURES, GL_TRIANGLES));
+        lights[i].moveTo(lightPositions[i]);
+        lights[i].scaleTo(0.5f);
     }
     // screen object
-    Object screen(screenVertices, 6, POSITIONS_TEXTURES, GL_TRIANGLES);
+    Shape screen(screenVertices, 6, POSITIONS_TEXTURES, GL_TRIANGLES);
     // FrameBuffers
     GLuint hdrFBO;
     glGenFramebuffers(1, &hdrFBO);
@@ -122,42 +119,41 @@ void tutorial(){
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, pingpingColorBuffers[i], 0);
     }
-    // texture
-    TextureManager *tm = TextureManager::getManager();
-    tm->loadTexture("textures/container2.png", 0, GL_BGRA, GL_SRGB);
-    tm->loadTexture("textures/wood.png", 1, GL_BGRA, GL_SRGB);
+    // textures
+    Texture tex0("Resources/Textures/container2.png", GL_BGRA, GL_SRGB);
+    Texture tex1("Resources/Textures/wood.png", GL_BGRA, GL_SRGB);
     //
     char uniformNameBuffer[64];
     // Main Loop
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
         CameraController::update();
-
         // 第一次渲染
         glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
         glEnable(GL_DEPTH_TEST);
         glClearColor(0.0, 0.0, 0.0, 1.0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            //render cubes
+        // render cubes
         cubeShader.use();
-        glUniform3fv(glGetUniformLocation(cubeShader.programID, "fViewPosition"), 1, glm::value_ptr(cam->cameraPos));
+        glUniform3fv(glGetUniformLocation(cubeShader.programID, "fViewPosition"),
+                     1, glm::value_ptr(pCamera->cameraPos));
         for(int i = 0; i < 4; ++i){
             sprintf(uniformNameBuffer, "lightPositions[%d]", i);
             glUniform3fv(glGetUniformLocation(cubeShader.programID, uniformNameBuffer), 1, glm::value_ptr(lightPositions[i]));
             sprintf(uniformNameBuffer, "lightColors[%d]", i);
             glUniform3fv(glGetUniformLocation(cubeShader.programID, uniformNameBuffer), 1, glm::value_ptr(lightColors[i]));
         }
-        tm->bindTexture(1);
-        cubes[0]->draw();
-        tm->bindTexture(0);
+        tex1.use();
+        cubes[0].draw(&cubeShader, pCamera);
+        tex0.use();
         for(int i = 1; i < 7; ++i){
-            cubes[i]->draw();
+            cubes[i].draw(&cubeShader, pCamera);
         }
-            //render lights
+        // render lights
         for(int i = 0; i < 4; ++i){
             lightShader.use();
             glUniform3fv(glGetUniformLocation(lightShader.programID, "lightColor"), 1, glm::value_ptr(lightColors[i]));
-            lights[i]->draw();
+            lights[i].draw(&lightShader, pCamera);
         }
         // 做两次连续渲染，高斯模糊
         glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBOs[0]);
@@ -166,13 +162,13 @@ void tutorial(){
         glBindTexture(GL_TEXTURE_2D, colorBuffers[1]);
         blurShader.use();
         glUniform1i(glGetUniformLocation(blurShader.programID, "horizontal"), 1);
-        screen.draw();
+        screen.draw(&blurShader, pCamera);
         glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBOs[1]);
         glClear(GL_COLOR_BUFFER_BIT);
         glBindTexture(GL_TEXTURE_2D, pingpingColorBuffers[0]);
         blurShader.use();
         glUniform1i(glGetUniformLocation(blurShader.programID, "horizontal"), 0);
-        screen.draw();
+        screen.draw(&blurShader, pCamera);
         // 把模糊的和非模糊的加起来，形成泛光效果
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glClearColor(0.0, 0.0, 0.0, 1.0);

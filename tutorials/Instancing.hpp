@@ -1,35 +1,34 @@
 /*Copyright reserved by KenLee@2017 ken4000kl@gmail.com*/
-#ifndef INSTANCING_HPP
-#define INSTANCING_HPP
+#ifndef INSTANCING_CPP
+#define INSTANCING_CPP
+
+// Common Headers
+#include "../NeneEngine/OpenGL/Nene.h"
+
 namespace Instancing{
 
 #define ROCK_AMOUNT 10000
 
 void tutorial_without_instancing(){
+
     GLFWwindow *window = initWindow("Instancing", 800, 600);
     showEnviroment();
-    cout<<"Rock Num: "<<ROCK_AMOUNT<<" [without instancing]"<<endl;
     glfwSwapInterval(0);
-
     CameraController::bindControl(window);
-    CameraController::camera.moveto(glm::vec3(0.0f, 5.0f, 50.0f));
+    Camera* pCamera = CameraController::getCamera();
+    pCamera->moveto(glm::vec3(0.0f, 5.0f, 50.0f));
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     ControlPanel panel(window);
     glEnable(GL_DEPTH_TEST);
-
-    CoordinateAxes ca(&CameraController::camera);
+    //
+    cout<<"Rock Num: "<<ROCK_AMOUNT<<" [without instancing]"<<endl;
+    CoordinateAxes ca(pCamera);
     FPSCounter fc;
-
-    Shader plaentShader("shaders/Instancing/model.vs", "shaders/Instancing/model.frag");
-
-    Model planet((GLchar*)"textures/planet/planet.obj");
-    planet.setCamera(&CameraController::camera);
-    planet.setShader(&plaentShader);
-
-    Model rock((GLchar*)"textures/rock/rock.obj");
-    rock.setCamera(&CameraController::camera);
-    rock.setShader(&plaentShader);
-
+    //
+    Shader plaentShader("Resources/Shaders/Instancing/model.vs", "Resources/Shaders/Instancing/model.frag");
+    //
+    Model planet((GLchar*)"Resources/Textures/planet/planet.obj");
+    Model rock((GLchar*)"Resources/Textures/rock/rock.obj");
     //随机生产ROCK_AMOUNT个model矩阵
     glm::mat4 modelMatrices[ROCK_AMOUNT];
     srand(glfwGetTime());
@@ -59,23 +58,20 @@ void tutorial_without_instancing(){
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
         CameraController::update();
-
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glClearColor(0.1, 0.1, 0.1, 1.0);
-
-        //ca.draw();
         // 绘制行星
         glm::mat4 planetModel;
         planetModel = glm::translate(planetModel, glm::vec3(0.0f, -5.0f, 0.0f));
         planetModel = glm::scale(planetModel, glm::vec3(4.0f, 4.0f, 4.0f));
-        planet.modelMat = planetModel;
-        planet.draw();
+        planet.setModelMat(planetModel);
+        planet.draw(&plaentShader, pCamera);
         //绘制陨石
         for(int i = 0; i < ROCK_AMOUNT; ++i){
-            rock.modelMat = modelMatrices[i];
-            rock.draw();
+            rock.setModelMat(modelMatrices[i]);
+            rock.draw(&plaentShader, pCamera);
         }
-
+        //
         glfwSwapBuffers(window);
         fc.update();
     }
@@ -86,32 +82,29 @@ void tutorial_without_instancing(){
 void tutorial_with_instancing_by_IA(){
     GLFWwindow *window = initWindow("Instancing", 800, 600);
     showEnviroment();
-    cout<<"Rock Num: "<<ROCK_AMOUNT<<" [with instancing by instanced array]"<<endl;
+
     glfwSwapInterval(0);
     ControlPanel panel(window);
     CameraController::bindControl(window);
-    CameraController::camera.moveto(glm::vec3(0.0f, 5.0f, 50.0f));
+    Camera* pCamera = CameraController::getCamera();
+    pCamera->moveto(glm::vec3(0.0f, 5.0f, 50.0f));
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
     glEnable(GL_DEPTH_TEST);
-
-    CoordinateAxes ca(&CameraController::camera);
+    //
+    cout<<"Rock Num: "<<ROCK_AMOUNT<<" [with instancing by instanced array]"<<endl;
+    CoordinateAxes ca(pCamera);
     FPSCounter fc;
-    Camera *cam = &CameraController::camera;
-
-    Shader plaentShader("shaders/Instancing/model.vs", "shaders/Instancing/model.frag");
-    Shader rockShader("shaders/Instancing/rocks_instancing2.vs", "shaders/Instancing/rocks_instancing.frag");
-
-    Model planet((GLchar*)"textures/planet/planet.obj");
-    planet.setCamera(cam);
-    planet.setShader(&plaentShader);
+    //
+    Shader plaentShader("Resources/Shaders/Instancing/model.vs", "Resources/Shaders/Instancing/model.frag");
+    Shader rockShader("Resources/Shaders/Instancing/rocks_instancing2.vs", "Resources/Shaders/Instancing/rocks_instancing.frag");
+    //
+    Model planet((GLchar*)"Resources/Textures/planet/planet.obj");
     glm::mat4 planetModel;
     planetModel = glm::translate(planetModel, glm::vec3(0.0f, -5.0f, 0.0f));
     planetModel = glm::scale(planetModel, glm::vec3(4.0f, 4.0f, 4.0f));
-    planet.modelMat = planetModel;
-
-    Model rock((GLchar*)"textures/rock/rock.obj");
-
+    planet.setModelMat(planetModel);
+    //
+    Model rock((GLchar*)"Resources/Textures/rock/rock.obj");
     //随机生产ROCK_AMOUNT个model矩阵
     vector<glm::mat4> modelMatrices(ROCK_AMOUNT);
     srand(glfwGetTime());
@@ -144,7 +137,7 @@ void tutorial_with_instancing_by_IA(){
     glBindBuffer(GL_ARRAY_BUFFER, IA_VBO);
     glBufferData(GL_ARRAY_BUFFER, ROCK_AMOUNT * sizeof(glm::mat4), &modelMatrices[0], GL_STATIC_DRAW);
     // 写入VAP
-    glBindVertexArray(rock.meshes[0].VAO);
+    glBindVertexArray(rock.meshes[0].getVAO());
         // 绑定实例数组
         GLsizei vec4Size = sizeof(glm::vec4);
         glEnableVertexAttribArray(3);
@@ -172,13 +165,15 @@ void tutorial_with_instancing_by_IA(){
         planet.draw();
         //绘制陨石
         rockShader.use();
-        glUniformMatrix4fv(glGetUniformLocation(rockShader.programID,"view"),1,GL_FALSE,cam->getViewMatrixVal());
-        glUniformMatrix4fv(glGetUniformLocation(rockShader.programID,"projection"),1,GL_FALSE,cam->getProjectionMatrixVal());
+        glUniformMatrix4fv(glGetUniformLocation(rockShader.programID, "view"),
+                           1, GL_FALSE, pCamera->getViewMatrixVal());
+        glUniformMatrix4fv(glGetUniformLocation(rockShader.programID, "projection"),
+                           1, GL_FALSE, pCamera->getProjectionMatrixVal());
         glBindVertexArray(rock.meshes[0].VAO);
         glDrawArraysInstanced(GL_TRIANGLES, 0, rock.meshes[0].vertices.size(), ROCK_AMOUNT);
         glBindVertexArray(0);
         //
-        panel.draw();
+        panel.draw(&plaentShader, pCamera);
         //
         glfwSwapBuffers(window);
         panel.draw();
@@ -204,10 +199,10 @@ void tutorial_with_instancing_by_UBO(){
     FPSCounter fc;
     Camera *cam = &CameraController::camera;
 
-    Shader plaentShader("shaders/Instancing/model.vs", "shaders/Instancing/model.frag");
-    Shader rockShader("shaders/Instancing/rocks_instancing.vs", "shaders/Instancing/rocks_instancing.frag");
+    Shader plaentShader("Resources/Shaders/Instancing/model.vs", "Resources/Shaders/Instancing/model.frag");
+    Shader rockShader("Resources/Shaders/Instancing/rocks_instancing.vs", "Resources/Shaders/Instancing/rocks_instancing.frag");
 
-    Model planet((GLchar*)"textures/planet/planet.obj");
+    Model planet((GLchar*)"Resources/Textures/planet/planet.obj");
     planet.setCamera(cam);
     planet.setShader(&plaentShader);
     glm::mat4 planetModel;
@@ -215,7 +210,7 @@ void tutorial_with_instancing_by_UBO(){
     planetModel = glm::scale(planetModel, glm::vec3(4.0f, 4.0f, 4.0f));
     planet.modelMat = planetModel;
 
-    Model rock((GLchar*)"textures/rock/rock.obj");
+    Model rock((GLchar*)"Resources/Textures/rock/rock.obj");
 
     //随机生产ROCK_AMOUNT个model矩阵
     glm::mat4 modelMatrices[ROCK_AMOUNT];
@@ -303,10 +298,10 @@ void exercise_without_instancing(){
 
     glEnable(GL_DEPTH_TEST);
 
-    Shader shader("shaders/Instancing/quads_not_instancing.vs", "shaders/Instancing/quads_not_instancing.frag");
+    Shader shader("Resources/Shaders/Instancing/quads_not_instancing.vs", "Resources/Shaders/Instancing/quads_not_instancing.frag");
 
-    Object quadMother(quadVertices, 6, POSITIONS_COLORS, GL_TRIANGLES);
-    Object *quads[NUM * NUM];
+    Shape quadMother(quadVertices, 6, POSITIONS_COLORS, GL_TRIANGLES);
+    Shape *quads[NUM * NUM];
     int qPos=0;
 
     for(int y = -NUM; y < NUM; y+=2){
@@ -349,7 +344,7 @@ void exercise_with_instancing_by_UBO(){
 
     glEnable(GL_DEPTH_TEST);
 
-    Shader shader("shaders/Instancing/quads_instancing.vs", "shaders/Instancing/quads_instancing.frag");
+    Shader shader("Resources/Shaders/Instancing/quads_instancing.vs", "Resources/Shaders/Instancing/quads_instancing.frag");
 
     //为了配合UBO std140 布局，采取vec4
     GLfloat offsets[4 * NUM * NUM];
@@ -373,7 +368,7 @@ void exercise_with_instancing_by_UBO(){
     glUniformBlockBinding(shader.programID, glGetUniformBlockIndex(shader.programID, "UBO"), 0);
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, UBO);
     //物体
-    Object quad(quadVertices, 6, POSITIONS_COLORS, GL_TRIANGLES);
+    Shape quad(quadVertices, 6, POSITIONS_COLORS, GL_TRIANGLES);
 
     FPSCounter fc;
     while(!glfwWindowShouldClose(window)){

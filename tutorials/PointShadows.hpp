@@ -1,6 +1,10 @@
 /*Copyright reserved by KenLee@2017 ken4000kl@gmail.com*/
-#ifndef POINT_SHADOWS_HPP
-#define POINT_SHADOWS_HPP
+#ifndef POINT_SHADOWS_CPP
+#define POINT_SHADOWS_CPP
+
+// Common Headers
+#include "../NeneEngine/OpenGL/Nene.h"
+
 namespace PointShadows{
 
 // 前置顶点声明
@@ -16,42 +20,33 @@ void tutorial(){
     GLFWwindow *window = initWindow("ShadowMapping", 800, 600);
     glfwSwapInterval(0);
     showEnviroment();
-
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     CameraController::bindControl(window);
-
     glEnable(GL_DEPTH_TEST);
-    //glEnable(GL_CULL_FACE);
-
-    Camera *cam = &CameraController::camera;
-    CoordinateAxes ca(cam);
+    Camera *pCamera = CameraController::getCamera();
+    CoordinateAxes ca(pCamera);
     ca.showGrid(false);
     // 着色器
-    Shader objectShader("shaders/PointShadows/object.vs", "shaders/PointShadows/object.frag");
-    Shader shadowShader("shaders/PointShadows/shadow.vs", "shaders/PointShadows/shadow.frag");
-    shadowShader.addOptionalShader("shaders/PointShadows/shadow.geom", GL_GEOMETRY_SHADER);
-    Shader objectWithShadow("shaders/PointShadows/object_shadowed.vs", "shaders/PointShadows/object_shadowed.frag");
+    Shader objectShader("Resources/Shaders/PointShadows/object.vs", "Resources/Shaders/PointShadows/object.frag");
+    Shader shadowShader("Resources/Shaders/PointShadows/shadow.vs", "Resources/Shaders/PointShadows/shadow.frag");
+    shadowShader.addOptionalShader("Resources/Shaders/PointShadows/shadow.geom", GL_GEOMETRY_SHADER);
+    Shader objectWithShadow("Resources/Shaders/PointShadows/object_shadowed.vs", "Resources/Shaders/PointShadows/object_shadowed.frag");
     // 物体
-    Object *cubeMother = new Object(cubeVertices, 36, POSITIONS_NORMALS_TEXTURES, GL_TRIANGLES);
-    cubeMother->setCamera(cam);
-    cubeMother->setShader(&objectShader);
-    Object* cubes[6];
+    std::vector<Shape> cubes;
     for(int i = 0; i < 6; ++i){
-        cubes[i] = cubeMother->clone();
+        cubes.push_back(Shape(cubeVertices, 36, POSITIONS_NORMALS_TEXTURES, GL_TRIANGLES));
     }
-    cubes[0]->model = glm::translate(cubes[0]->model, glm::vec3(4.0f, -3.5f, 0.0f));
-    cubes[1]->model = glm::translate(cubes[1]->model, glm::vec3(2.0f, 3.0f, 1.0f));
-    cubes[1]->model = glm::scale(cubes[1]->model, glm::vec3(1.5f));
-    cubes[2]->model = glm::translate(cubes[2]->model, glm::vec3(-3.0f, -1.0f, 0.0f));
-    cubes[3]->model = glm::translate(cubes[3]->model, glm::vec3(-1.5f, 1.0f, 1.5f));
-    cubes[4]->model = glm::translate(cubes[4]->model, glm::vec3(-1.0f, 2.0f, -3.0f));
-    cubes[4]->model = glm::rotate(cubes[4]->model, glm::radians(60.0f), glm::normalize(glm::vec3(1.0, 0.0, 1.0)));
-    cubes[4]->model = glm::scale(cubes[4]->model, glm::vec3(1.5f));
-    cubes[5]->model = glm::scale(cubes[5]->model, glm::vec3(20.0f));
+    cubes[0].setModelMat(glm::translate(cubes[0].getModelMat(), glm::vec3(4.0f, -3.5f, 0.0f)));
+    cubes[1].setModelMat(glm::translate(cubes[1].getModelMat(), glm::vec3(2.0f, 3.0f, 1.0f)));
+    cubes[1].setModelMat(glm::scale(cubes[1].getModelMat(), glm::vec3(1.5f)));
+    cubes[2].setModelMat(glm::translate(cubes[2].getModelMat(), glm::vec3(-3.0f, -1.0f, 0.0f)));
+    cubes[3].setModelMat(glm::translate(cubes[3].getModelMat(), glm::vec3(-1.5f, 1.0f, 1.5f)));
+    cubes[4].setModelMat(glm::translate(cubes[4].getModelMat(), glm::vec3(-1.0f, 2.0f, -3.0f)));
+    cubes[4].setModelMat(glm::rotate(cubes[4].getModelMat(), glm::radians(60.0f), glm::normalize(glm::vec3(1.0, 0.0, 1.0))));
+    cubes[4].setModelMat(glm::scale(cubes[4].getModelMat(), glm::vec3(1.5f)));
+    cubes[5].setModelMat(glm::scale(cubes[5].getModelMat(), glm::vec3(20.0f)));
     // 贴图
-    TextureManager *tm = TextureManager::getManager();
-    if(!tm->loadTexture("textures/wood.jpg", 0, GL_BGR,GL_RGB))
-        return ;
+    Texture tex0("Resources/Textures/wood.jpg", GL_BGR,GL_RGB);
     // 生成ShadowMap纹理附件
     GLuint depthCubeMap;
     glGenTextures(1, &depthCubeMap);
@@ -110,10 +105,8 @@ void tutorial(){
                 glUniformMatrix4fv(glGetUniformLocation(shadowShader.programID, lightSpaceMatricesUniformName), 1, GL_FALSE, glm::value_ptr(lightSpaceMatrices[i]));
             }
             for(int i = 0; i < 6; ++i){
-                cubes[i]->setShader(nullptr);
-                cubes[i]->setCamera(nullptr);
-                glUniformMatrix4fv(glGetUniformLocation(shadowShader.programID, "model"), 1, GL_FALSE, glm::value_ptr(cubes[i]->model));
-                cubes[i]->draw();
+                glUniformMatrix4fv(glGetUniformLocation(shadowShader.programID, "model"), 1, GL_FALSE, glm::value_ptr(cubes[i].getModelMat()));
+                cubes[i].draw(&shadowShader);
             }
         // 第二次渲染，根据ShadowMap渲染场景及阴影
         glViewport(0, 0, 800, 600);
@@ -121,24 +114,21 @@ void tutorial(){
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubeMap);
-            glActiveTexture(GL_TEXTURE1);
-            tm->bindTexture(0);
+            tex0.use(1);
             objectWithShadow.use();
             glUniform1f(glGetUniformLocation(objectWithShadow.programID, "far_plane"), far);
             glUniform1i(glGetUniformLocation(objectWithShadow.programID, "diffuseTexture"), 1);
             glUniform1i(glGetUniformLocation(objectWithShadow.programID, "shadowMap"), 0);
-            glUniform3fv(glGetUniformLocation(objectWithShadow.programID, "lightPosition"), 1, glm::value_ptr(lightPosition));
-            glUniform3fv(glGetUniformLocation(objectWithShadow.programID, "viewPosition"), 1, glm::value_ptr(cam->cameraPos));
+            glUniform3fv(glGetUniformLocation(objectWithShadow.programID, "lightPosition"), 1,
+                         glm::value_ptr(lightPosition));
+            glUniform3fv(glGetUniformLocation(objectWithShadow.programID, "viewPosition"), 1,
+                         glm::value_ptr(pCamera->cameraPos));
             glUniform1i(glGetUniformLocation(objectWithShadow.programID, "invertNormal"), 0);
             for(int i = 0; i < 5; ++i){
-                cubes[i]->setShader(&objectWithShadow);
-                cubes[i]->setCamera(cam);
-                cubes[i]->draw();
+                cubes[i].draw(&objectWithShadow, pCamera);
             }
             glUniform1i(glGetUniformLocation(objectWithShadow.programID, "invertNormal"), 1);
-            cubes[5]->setShader(&objectWithShadow);
-            cubes[5]->setCamera(cam);
-            cubes[5]->draw();
+            cubes[5].draw(&objectWithShadow, pCamera);
             ca.draw();
         glfwSwapBuffers(window);
         fc.update();

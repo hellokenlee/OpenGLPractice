@@ -1,6 +1,10 @@
 /*Copyright reserved by KenLee@2016 ken4000kl@gmail.com*/
-#ifndef ADVANCED_GLSL_HPP
-#define ADVANCED_GLSL_HPP
+#ifndef ADVANCED_GLSL_CPP
+#define ADVANCED_GLSL_CPP
+
+// Common Headers
+#include "../NeneEngine/OpenGL/Nene.h"
+
 namespace AdvancedGLSL{
 extern GLfloat cubeVertices[6*6*5];
 extern GLfloat cubePositions[6*6*3];
@@ -16,25 +20,20 @@ void tutorial(){
     // setup control
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     CameraController::bindControl(window);
+    Camera* pCamera = CameraController::getCamera();
     // gsls options
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_PROGRAM_POINT_SIZE);
     //
-    CoordinateAxes ca(&CameraController::camera);
+    CoordinateAxes ca(pCamera);
     //
-    Shader cubeShader("shaders/AdvancedGLSL/scene.vs", "shaders/AdvancedGLSL/two_textures.frag");
+    Shader cubeShader("Resources/Shaders/AdvancedGLSL/scene.vs", "Resources/Shaders/AdvancedGLSL/two_textures.frag");
     //
-    Object cube(cubeVertices, 36, POSITIONS_TEXTURES, GL_TRIANGLES);
-    cube.setShader(&cubeShader);
-    cube.setCamera(&CameraController::camera);
+    Shape cube(cubeVertices, 36, POSITIONS_TEXTURES, GL_TRIANGLES);
     cube.scaleTo(10.0f);
     //
-    TextureManager *tm = TextureManager::getManager();
-    //!TODO： 增加导入纹理错误检查
-    if(!tm->loadTexture("textures/container2.png", 0, GL_BGRA, GL_RGBA))
-        return ;
-    if(!tm->loadTexture("textures/cloth.jpg", 1, GL_BGR, GL_RGB))
-     return;
+    Texture tex0("Resources/Textures/container2.png", GL_BGRA, GL_RGBA);
+    Texture tex1("Resources/Textures/cloth.jpg", GL_BGR, GL_RGB);
     // main loop
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
@@ -47,12 +46,12 @@ void tutorial(){
 
         cubeShader.use();
         glActiveTexture(GL_TEXTURE0);
-        tm->bindTexture(0);
+        tex0.use(0);
         glUniform1i(glGetUniformLocation(cubeShader.programID, "texture0"), 0);
         glActiveTexture(GL_TEXTURE1);
-        tm->bindTexture(1);
+        tex1.use(1);
         glUniform1i(glGetUniformLocation(cubeShader.programID, "texture1"), 1);
-        cube.draw();
+        cube.draw(&cubeShader, pCamera);
 
         glfwSwapBuffers(window);
     }
@@ -63,17 +62,17 @@ void tutorial(){
 
 // 使用UBO来完成AdvancedData章节的渲染。使用UBO传递摄像机的View和Projection矩阵
 void exercise(){
-    GLFWwindow *window=initWindow("AdvancedData",800,600);
+    GLFWwindow *window=initWindow("AdvancedGLSL-Ex",800,600);
     showEnviroment();
     glfwSwapInterval(0);
 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     CameraController::bindControl(window);
     glEnable(GL_DEPTH_TEST);
-    CoordinateAxes ca(&CameraController::camera);
+    Camera* pCamera = CameraController::getCamera();
+    CoordinateAxes ca(pCamera);
     //
-    //
-    Shader cubeShader("shaders/AdvancedGLSL/scene2.vs","shaders/AdvancedGLSL/scene2.frag");
+    Shader cubeShader("Resources/Shaders/AdvancedGLSL/scene2.vs","Resources/Shaders/AdvancedGLSL/scene2.frag");
     // 申请UBO
     GLuint UBO;
     glGenBuffers(1, &UBO);
@@ -86,9 +85,7 @@ void exercise(){
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, UBO);
 
     //纹理载入
-    TextureManager* tm=TextureManager::getManager();
-    if(!tm->loadTexture("textures/container2.png",0,GL_BGRA,GL_RGBA))
-        return ;
+    Texture tex0("Resources/Textures/container2.png", GL_BGRA, GL_RGBA);
     //箱子物体 //使用glBufferSubData 分批导入顶点位置，法线和纹理坐标。存储形式为PPP...NNN...TTT。而以往的储存形式为PNTPNTPNT...
     GLuint VAO,VBO;
     glGenVertexArrays(1,&VAO);
@@ -121,13 +118,14 @@ void exercise(){
         ca.draw();
         //更新UBO数据
         glBindBuffer(GL_UNIFORM_BUFFER, UBO);
-        glBufferSubData(GL_UNIFORM_BUFFER, 0, 64, glm::value_ptr(CameraController::camera.view));
-        glBufferSubData(GL_UNIFORM_BUFFER, 64, 64, glm::value_ptr(CameraController::camera.projection));
+        glBufferSubData(GL_UNIFORM_BUFFER, 0, 64, glm::value_ptr(pCamera->view));
+        glBufferSubData(GL_UNIFORM_BUFFER, 64, 64, glm::value_ptr(pCamera->projection));
         glBindBuffer(GL_UNIFORM_BUFFER, 0);
         //绘制物体
-        tm->bindTexture(0);
+        tex0.use();
         cubeShader.use();
-        glUniformMatrix4fv(glGetUniformLocation(cubeShader.programID,"model"),1,GL_FALSE,glm::value_ptr(glm::mat4()));
+        glUniformMatrix4fv(glGetUniformLocation(cubeShader.programID,"model"),
+                           1, GL_FALSE,glm::value_ptr(glm::mat4()));
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES,0,36);
         glBindVertexArray(0);

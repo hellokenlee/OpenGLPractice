@@ -1,7 +1,12 @@
 /*Copyright reserved by KenLee@2016 ken4000kl@gmail.com*/
-#ifndef ADVANCED_DATA_HPP
-#define ADVANCED_DATA_HPP
+#ifndef ADVANCED_DATA_CPP
+#define ADVANCED_DATA_CPP
+
+// Common Headers
+#include "../NeneEngine/OpenGL/Nene.h"
+
 namespace AdvancedData{
+
 GLfloat cubeVertices1[] = {
     // Positions
     -1.0f,  1.0f, -1.0f,
@@ -46,6 +51,7 @@ GLfloat cubeVertices1[] = {
     -1.0f, -1.0f,  1.0f,
      1.0f, -1.0f,  1.0f
 };
+
 //顶点信息
 GLfloat cubePositions[] = {
     // Positions
@@ -182,22 +188,18 @@ GLfloat cubeTexCoords[]={
 };
 /// 写入Vertex Buffer的几种方法
 void tutorial(){
-    GLFWwindow *window=initWindow("AdvancedData",800,600);
+    GLFWwindow *window = initWindow("AdvancedData", 800, 600);
     showEnviroment();
     glfwSwapInterval(0);
-
+    Camera* pCamera = CameraController::getCamera();
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     CameraController::bindControl(window);
     glEnable(GL_DEPTH_TEST);
-    CoordinateAxes ca(&CameraController::camera);
+    CoordinateAxes ca(pCamera);
     //
-    Camera* cam=&CameraController::camera;
+    Shader shader("Resources/Shaders/AdvancedData/scene2.vs","Resources/Shaders/AdvancedData/scene2.frag");
     //
-    Shader shader("shaders/AdvancedData/scene2.vs","shaders/AdvancedData/scene2.frag");
-    //
-    TextureManager* tm=TextureManager::getManager();
-    if(!tm->loadTexture("textures/container2.png",0,GL_BGRA,GL_RGBA))
-        return ;
+    Texture tex0("Resources/Textures/container2.png", GL_BGRA, GL_RGBA);
     //
     GLuint VAO,VBO;
     glGenVertexArrays(1,&VAO);
@@ -276,11 +278,14 @@ void tutorial(){
 
         ca.draw();
 
-        tm->bindTexture(0);
+        tex0.use(0);
         shader.use();
-        glUniformMatrix4fv(glGetUniformLocation(shader.programID,"view"),1,GL_FALSE,cam->getViewMatrixVal());
-        glUniformMatrix4fv(glGetUniformLocation(shader.programID,"projection"),1,GL_FALSE,cam->getProjectionMatrixVal());
-        glUniformMatrix4fv(glGetUniformLocation(shader.programID,"model"),1,GL_FALSE,glm::value_ptr(glm::mat4()));
+        glUniformMatrix4fv(glGetUniformLocation(shader.programID,"view"),
+                           1, GL_FALSE, pCamera->getViewMatrixVal());
+        glUniformMatrix4fv(glGetUniformLocation(shader.programID,"projection"),
+                           1, GL_FALSE, pCamera->getProjectionMatrixVal());
+        glUniformMatrix4fv(glGetUniformLocation(shader.programID,"model"),
+                           1, GL_FALSE, glm::value_ptr(glm::mat4()));
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES,0,36);
         glBindVertexArray(0);

@@ -1,6 +1,10 @@
 /*Copyright reserved by KenLee@2016 ken4000kl@gmail.com*/
-#ifndef GAMMA_CORRECTION_HPP
-#define GAMMA_CORRECTION_HPP
+#ifndef GAMMA_CORRECTION_CPP
+#define GAMMA_CORRECTION_CPP
+
+// Common Headers
+#include "../NeneEngine/OpenGL/Nene.h"
+
 namespace GammaCorrection{
 //
 GLfloat planeVertices[] = {
@@ -52,43 +56,37 @@ void tutorial(){
     glfwSetKeyCallback(window, keyCallback);
     glfwSetCursorPosCallback(window, CameraController::mouseCallback);
     showEnviroment();
-
-    CameraController::camera.moveto(glm::vec3(0.0f, 1.0f, 3.0f));
+    Camera* pCamera = CameraController::getCamera();
+    pCamera->moveto(glm::vec3(0.0f, 1.0f, 3.0f));
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
     glEnable(GL_DEPTH_TEST);
-
-    Shader shader("shaders/GammaCorrection/plane.vs", "shaders/GammaCorrection/plane.frag");
+    //
+    Shader shader("Resources/Shaders/GammaCorrection/plane.vs", "Resources/Shaders/GammaCorrection/plane.frag");
     shader.use();
     glUniform3f(glGetUniformLocation(shader.programID, "vLight.position"), lightPos.x, lightPos.y, lightPos.z);
-
-    CoordinateAxes ca(&CameraController::camera);
-
-
-    Object plane(planeVertices, 6, POSITIONS_NORMALS_TEXTURES, GL_TRIANGLES);
-    plane.setCamera(&CameraController::camera);
-    plane.setShader(&shader);
-
-    TextureManager* tm = TextureManager::getManager();
-    tm->loadTexture("textures/wood.jpg", 0, GL_BGR, GL_SRGB);
-    tm->loadTexture("textures/wood.jpg", 1, GL_BGR, GL_RGB);
-
-
+    //
+    CoordinateAxes ca(pCamera);
+    //
+    Shape plane(planeVertices, 6, POSITIONS_NORMALS_TEXTURES, GL_TRIANGLES);
+    //
+    Texture tex0("Resources/Textures/wood.jpg", GL_BGR, GL_SRGB);
+    Texture tex1("Resources/Textures/wood.jpg", GL_BGR, GL_RGB);
+    //
     cout<<"Switched to "<<(blinn?"Blin Phong":"Pure Phong")<<" Mode"<<endl;
     cout<<"Gamma Correction : "<<(gamma?"ON":"OFF")<<endl;
     cout<<"Attenuation Function: "<<(attenIndex == 1 ? "Linear" : "Quadratic")<<endl;
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
         CameraController::update();
-
         glClearColor(0.1, 0.1, 0.1, 1.0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+        //
         if(gamma){
-            tm->bindTexture(0);
+            tex0.use();
         }else{
-            tm->bindTexture(1);
+            tex1.use();
         }
+        //
         shader.use();
         glUniform1i(glGetUniformLocation(shader.programID, "blinn"), blinn);
         glUniform1i(glGetUniformLocation(shader.programID, "attenIndex"), attenIndex);
@@ -97,8 +95,8 @@ void tutorial(){
         }else{
             glUniform1f(glGetUniformLocation(shader.programID, "gamma"), 1.0f);
         }
-        plane.draw();
-
+        plane.draw(&shader, pCamera);
+        //
         glfwSwapBuffers(window);
     }
     glfwDestroyWindow(window);

@@ -2,7 +2,8 @@
 #ifndef MIRROR_HPP
 #define MIRROR_HPP
 
-using namespace std;
+// Common Headers
+#include "../NeneEngine/OpenGL/Nene.h"
 
 namespace Mirror {
 
@@ -24,6 +25,7 @@ void _main() {
     GLFWwindow* window=initWindow("Mirror",800,600);
     showEnviroment();
     glfwSwapInterval(0);
+    Camera *pCamera = CameraController::getCamera();
     // Set the required callback functions
     CameraController::bindControl(window);
     // Options
@@ -34,36 +36,26 @@ void _main() {
     // 模板测试失败时：保持现有模板值；模板测试成功但深度测试失败：保持现有模板值；两个都成功： 替换成测试的参考值。
     glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
     // 初始化着色器
-    Shader shader("shaders/Mirror/scene.vs", "shaders/Mirror/scene.frag");
-    Shader mirrorShader("shaders/Mirror/scene_mirrored.vs", "shaders/Mirror/scene_mirrored.frag");
+    Shader shader("Resources/Shaders/Mirror/scene.vs", "Resources/Shaders/Mirror/scene.frag");
+    Shader mirrorShader("Resources/Shaders/Mirror/scene_mirrored.vs", "Resources/Shaders/Mirror/scene_mirrored.frag");
     // 写入镜子的顶点信息
     mirrorShader.use();
     glUniform3f(glGetUniformLocation(mirrorShader.programID,"mirror_position"),mirrorPosition.x,mirrorPosition.y,mirrorPosition.z);
     glUniform3f(glGetUniformLocation(mirrorShader.programID,"mirror_normal"),mirrorNormal.x,mirrorNormal.y,mirrorNormal.z);
     // 初始化方块物体
-    Object cube(cubeVertices,36,POSITIONS_TEXTURES,GL_TRIANGLES);
-    cube.setCamera(&CameraController::camera);
-    cube.setShader(&shader);
+    Shape cube(cubeVertices,36,POSITIONS_TEXTURES,GL_TRIANGLES);
     // 初始化地板物体
-    Object plane(planeVertices,6,POSITIONS_TEXTURES,GL_TRIANGLES);
-    plane.setCamera(&CameraController::camera);
-    plane.setShader(&shader);
+    Shape plane(planeVertices,6,POSITIONS_TEXTURES,GL_TRIANGLES);
     // 初始化镜子物体
-    Object mirror(mirrorVertices,6,POSITIONS_TEXTURES,GL_TRIANGLES);
-    mirror.setCamera(&CameraController::camera);
-    mirror.setShader(&shader);
+    Shape mirror(mirrorVertices,6,POSITIONS_TEXTURES,GL_TRIANGLES);
     mirror.moveTo(mirrorPosition);
     FPSCounter fc;
     // 读入纹理
-    TextureManager* tm=TextureManager::getManager();
-    if(!tm->loadTexture("textures/container2.png",0,GL_BGRA,GL_RGBA))
-        return ;
-    if(!tm->loadTexture("textures/wall.jpg",1,GL_BGR,GL_RGB))
-        return ;
-    if(!tm->loadTexture("textures/container2_specular.png",2,GL_BGRA,GL_RGBA))
-        return ;
+    Texture tex0("Resources/Textures/container2.png", 0, GL_BGRA, GL_RGBA);
+    Texture tex1("Resources/Textures/wall.jpg", 1, GL_BGR, GL_RGB);
+    Texture tex2("Resources/Textures/container2_specular.png", 2, GL_BGRA, GL_RGBA);
     // 显示坐标轴
-    CoordinateAxes ca(&CameraController::camera);
+    CoordinateAxes ca(pCamera);
     // 主循环
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
@@ -78,14 +70,14 @@ void _main() {
         glStencilMask(0x00);
             //重设模板函数
         glStencilFunc(GL_ALWAYS, 1, 0xFF);
-        tm->bindTexture(0);
-        cube.setShader(&shader);
+        tex0.use();
+
         cube.moveTo(cubePositions[0]);
         cube.draw();
         cube.moveTo(cubePositions[1]);
         cube.draw();
-        tm->bindTexture(1);
-        plane.setShader(&shader);
+        tex1.use();
+
         plane.draw();
         //绘制镜子
             //开启模板缓冲写,另镜子中的模板缓冲为全1
@@ -93,14 +85,14 @@ void _main() {
         glDepthMask(0x00);
         glStencilFunc(GL_ALWAYS, 1, 0xFF);
         glBindTexture(GL_TEXTURE_2D,0);
-        mirror.scaleTo(1.0f);
+        mirror.scaleTo(glm::vec3(1.0f));
         mirror.draw();
 
         //绘制镜子边框，放大1.1倍，类似于物体边缘绘制法
         glStencilMask(0x00);
         glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-        tm->bindTexture(2);
-        mirror.scaleTo(1.1f);
+        tex2.use();
+        mirror.scaleTo(glm::vec3(1.1f));
         mirror.draw();
 
         //第二次绘制，绘制镜子里世界
@@ -111,14 +103,12 @@ void _main() {
         glClear(GL_DEPTH_BUFFER_BIT);
             //只有模板为1的时候才绘制
         glStencilFunc(GL_EQUAL, 1, 0xFF);
-        tm->bindTexture(0);
-        cube.setShader(&mirrorShader);
+        tex0.use();
         cube.moveTo(cubePositions[0]);
         cube.draw();
         cube.moveTo(cubePositions[1]);
         cube.draw();
-        tm->bindTexture(1);
-        plane.setShader(&mirrorShader);
+        tex1.use();
         plane.draw();
 
         glfwSwapBuffers(window);

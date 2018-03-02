@@ -2,6 +2,10 @@
 #ifndef STELLA_HPP
 #define STELLA_HPP
 
+// Common Headers
+#include "../NeneEngine/OpenGL/Nene.h"
+#include <random>
+
 namespace Stella{
 
 extern GLfloat squareVertices[6 * 5];
@@ -21,30 +25,31 @@ const glm::vec3 COLORS[] = {
 //
 void _main() {
     GLFWwindow *window = initWindow("Stella!", 800, 600);
+    Camera *pCamera = CameraController::getCamera();
     showEnviroment();
     cout<<"Stella! SQUARES_NUM: "<<SQUARES_NUM<<endl;
     glfwSwapInterval(0);
 
     CameraController::bindControl(window);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    CameraController::camera.setPerspective(45.0f, 4.0f / 3.0f, 0.1f, 5000.0f);
-    CameraController::camera.moveto(glm::vec3(0.0f, 0.0f, 1200.0f));
+    pCamera->setPerspective(45.0f, 4.0f / 3.0f, 0.1f, 5000.0f);
+    pCamera->moveto(glm::vec3(0.0f, 0.0f, 1200.0f));
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    CoordinateAxes ca(&CameraController::camera);
+    CoordinateAxes ca(pCamera);
     FPSCounter fc;
 
-    Shader shader("shaders/Stella/stella.vs","shaders/Stella/stella.frag");
+    Shader shader("Resources/Shaders/Stella/stella.vs","Resources/Shaders/Stella/stella.frag");
 
     //生成随机位置,随机颜色
-    default_random_engine generator;
-    uniform_int_distribution<int> distributionColors(0, COLOR_NUM);
-    uniform_real_distribution<float> distributionAlpha(0.0, 0.4);
-    uniform_real_distribution<float> distributionUni(-1.0, 1.0);
-    uniform_real_distribution<float> distributionAngle(3.141592653f * 0, 3.141592653f * 0.5);
+    std::default_random_engine generator;
+    std::uniform_int_distribution<int> distributionColors(0, COLOR_NUM);
+    std::uniform_real_distribution<float> distributionAlpha(0.0, 0.4);
+    std::uniform_real_distribution<float> distributionUni(-1.0, 1.0);
+    std::uniform_real_distribution<float> distributionAngle(3.141592653f * 0, 3.141592653f * 0.5);
     glm::mat4 *positions = new glm::mat4[SQUARES_NUM];
     glm::vec4 *colors = new glm::vec4[SQUARES_NUM];
     float x, y, z, r, g, b, a;
@@ -124,8 +129,8 @@ void _main() {
         CameraController::update();
 
         shader.use();
-        glUniformMatrix4fv(glGetUniformLocation(shader.programID,"view"),1,GL_FALSE,CameraController::camera.getViewMatrixVal());
-        glUniformMatrix4fv(glGetUniformLocation(shader.programID,"projection"),1,GL_FALSE,CameraController::camera.getProjectionMatrixVal());
+        glUniformMatrix4fv(glGetUniformLocation(shader.programID,"view"), 1, GL_FALSE, pCamera->getViewMatrixVal());
+        glUniformMatrix4fv(glGetUniformLocation(shader.programID,"projection"), 1, GL_FALSE, pCamera->getProjectionMatrixVal());
         glBindVertexArray(vao);
             glDrawArraysInstanced(GL_TRIANGLES, 0, 6, SQUARES_NUM);
         glBindVertexArray(0);

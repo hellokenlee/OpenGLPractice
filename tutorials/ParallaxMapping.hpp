@@ -1,6 +1,10 @@
 /*Copyright reserved by KenLee@2017 ken4000kl@gmail.com*/
-#ifndef PARALLAX_MAPPING_HPP
-#define PARALLAX_MAPPING_HPP
+#ifndef PARALLAX_MAPPING_CPP
+#define PARALLAX_MAPPING_CPP
+
+// Common Headers
+#include "../NeneEngine/OpenGL/Nene.h"
+
 namespace ParallaxMapping{
 
 glm::vec3 lightPos = glm::vec3(2.0, 2.0, 1.0);
@@ -49,28 +53,22 @@ void tutorial(){
     glfwSetCursorPosCallback(window, CameraController::mouseCallback);
     showEnviroment();
     glfwSwapInterval(0);
-
+    Camera *pCamera = CameraController::getCamera();
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glEnable(GL_DEPTH_TEST);
-
-    CoordinateAxes ca(&CameraController::camera);
-    Camera *cam = &CameraController::camera;
-    cam->moveto(glm::vec3(0.0f, 0.0f, 10.0f));
-
-    Shader shader("shaders/ParallaxMapping/wall_spm.vs", "shaders/ParallaxMapping/wall_spm.frag");
+    CoordinateAxes ca(pCamera);
+    pCamera->moveto(glm::vec3(0.0f, 0.0f, 10.0f));
+    //
+    Shader shader("Resources/Shaders/ParallaxMapping/wall_spm.vs", "Resources/Shaders/ParallaxMapping/wall_spm.frag");
     shader.use();
     glUniform3f(glGetUniformLocation(shader.programID, "vLight.position"), lightPos.x, lightPos.y, lightPos.z);
     glUniform1i(glGetUniformLocation(shader.programID, "texture_diffuse1"), 0);
     glUniform1i(glGetUniformLocation(shader.programID, "texture_normal1"), 1);
     glUniform1i(glGetUniformLocation(shader.programID, "texture_depth1"), 2);
     glUniform1f(glGetUniformLocation(shader.programID, "heightScale"), 0.2);
-
-    Object wall(planeVertices, 6, POSITIONS_TEXTURES, GL_TRIANGLES);
+    //
+    Shape wall(planeVertices, 6, POSITIONS_TEXTURES, GL_TRIANGLES);
     wall.scaleTo(5.0f);
-    //wall.model = glm::rotate(wall.model, glm::radians(-40.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-    wall.setCamera(&CameraController::camera);
-    wall.setShader(&shader);
-
     // 计算TBN矩阵
     glm::vec3 TBN[3 * 2];
     glm::vec3 normal(0.0f, 0.0f, 1.0f);
@@ -119,16 +117,10 @@ void tutorial(){
             glVertexAttribDivisor(4, 1);
         glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    TextureManager* tm = TextureManager::getManager();
-
-//    tm->loadTexture("textures/bricks2.jpg", 0, GL_BGR, GL_SRGB);
-//    tm->loadTexture("textures/bricks2_normal.jpg", 1, GL_BGR, GL_RGB);
-//    tm->loadTexture("textures/bricks2_disp.jpg", 2, GL_BGR, GL_RGB);
-
-    tm->loadTexture("textures/wood.png", 0, GL_BGRA, GL_SRGB);
-    tm->loadTexture("textures/toy_box_normal.png", 1, GL_BGRA, GL_RGBA);
-    tm->loadTexture("textures/toy_box_disp.png", 2, GL_BGRA, GL_RGBA);
+    //
+    Texture tex0("Resources/Textures/wood.png", GL_BGRA, GL_SRGB);
+    Texture tex1("Resources/Textures/toy_box_normal.png", GL_BGRA, GL_RGBA);
+    Texture tex2("Resources/Textures/toy_box_disp.png", GL_BGRA, GL_RGBA);
     FPSCounter fc;
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
@@ -137,16 +129,15 @@ void tutorial(){
         glClearColor(0.1, 0.1, 0.1, 1.0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glActiveTexture(GL_TEXTURE0);
-        tm->bindTexture(0);
-        glActiveTexture(GL_TEXTURE1);
-        tm->bindTexture(1);
-        glActiveTexture(GL_TEXTURE2);
-        tm->bindTexture(2);
-        glUniform3f(glGetUniformLocation(shader.programID, "viewPosition"), cam->cameraPos.x, cam->cameraPos.y, cam->cameraPos.z);
+        wall.setModelMat(glm::rotate(wall.getModelMat(), glm::radians(0.05f), glm::vec3(1.0f, 0.0f, 0.0f)));
+        tex0.use(0);
+        tex1.use(1);
+        tex2.use(2);
+        glUniform3f(glGetUniformLocation(shader.programID, "viewPosition"),
+                    pCamera->cameraPos.x, pCamera->cameraPos.y, pCamera->cameraPos.z);
         glUniform1i(glGetUniformLocation(shader.programID, "doNormalMapping"), normalMap);
         glUniform1i(glGetUniformLocation(shader.programID, "doParallaxMapping"), parallaxMap);
-        wall.draw();
+        wall.draw(&shader, pCamera);
 
         glfwSwapBuffers(window);
         fc.update();

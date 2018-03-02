@@ -1,12 +1,16 @@
 /*Copyright reserved by KenLee@2016 ken4000kl@gmail.com*/
-#ifndef MODEL_LOADING_HPP
-#define MODEL_LOADING_HPP
+#ifndef MODEL_LOADING_CPP
+#define MODEL_LOADING_CPP
+
+// Common Headers
+#include "../NeneEngine/OpenGL/Nene.h"
+
 namespace ModelLoading{
 //顶点信息前置声明
 extern GLfloat cubeVertices[36*8];
-#define NR_POINT_LIGHTS 7
+#define NR_POINT_LIGHTS 3
 //点灯源位置
-glm::vec3 lightPos[NR_POINT_LIGHTS+10]={
+glm::vec3 lightPos[7] = {
     glm::vec3(0.0f, 16.0f, 1.5f),
     glm::vec3(-3.0f, 12.0f, 1.5f),
     glm::vec3(3.0f, 12.0f, 1.5f),
@@ -14,40 +18,38 @@ glm::vec3 lightPos[NR_POINT_LIGHTS+10]={
     glm::vec3(2.0f, 8.0f, 1.5f),
     glm::vec3(-2.5f, 2.0f, 1.5f),
     glm::vec3(2.5f, 2.0f, 1.5f),
-    };
+};
 //光照颜色(光源颜色)
 glm::vec3 lightColor(1.0f,1.0f,1.0f);
 
 //显示程序
 void tutorial(){
-    GLFWwindow *window=initWindow("ModelLoading",800,600);
+    GLFWwindow *window = initWindow("ModelLoading", 800, 600);
     showEnviroment();
     glEnable(GL_DEPTH_TEST);
+    Camera* pCamera = CameraController::getCamera();
     glfwSwapInterval(0);
     //着色器初始化
-    Shader modelShader("shaders/ModelLoading/nanosuit.vs","shaders/ModelLoading/nanosuit.frag");
+    Shader modelShader("Resources/Shaders/ModelLoading/nanosuit.vs","Resources/Shaders/ModelLoading/nanosuit.frag");
     //模型初始化
-    Model model((GLchar*)"textures/nanosuit/nanosuit.obj");
-    model.setShader(&modelShader);
-    model.setCamera(&CameraController::camera);
+    Model model((GLchar*)"Resources/Meshes/nanosuit/nanosuit.obj");
     //绑定控制
     CameraController::bindControl(window);
-    CameraController::camera.moveto(glm::vec3(0,20,20));
-    CameraController::camera.rotate(-40,0);
+    pCamera->moveto(glm::vec3(0, 20, 20));
+    pCamera->rotate(-40, 0);
     //关闭鼠标显示
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     //显示坐标轴
-    CoordinateAxes ca(&CameraController::camera);
+    CoordinateAxes ca(pCamera);
     //绘制
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         CameraController::update();
-
+        //
         ca.draw();
-        model.draw();
+        model.draw(&modelShader, pCamera);
         glfwSwapBuffers(window);
     }
     glfwDestroyWindow(window);
@@ -59,23 +61,20 @@ void exercise1(){
     showEnviroment();
     glEnable(GL_DEPTH_TEST);
     glfwSwapInterval(0);
-
+    Camera* pCamera = CameraController::getCamera();
     //初始化点光源着色器
-    Shader lampShader("shaders/ModelLoading/lamp.vs","shaders/ModelLoading/lamp.frag");
+    Shader lampShader("Resources/Shaders/ModelLoading/lamp.vs","Resources/Shaders/ModelLoading/lamp.frag");
     lampShader.use();
     glUniform3f(glGetUniformLocation(lampShader.programID,"lampColor"),lightColor.x,lightColor.y,lightColor.z);
     //初始化点光源模型
-    Object cube(cubeVertices,36,POSITIONS_NORMALS_TEXTURES,GL_TRIANGLES);
-    cube.setCamera(&CameraController::camera);
-    cube.setShader(&lampShader);
-    cube.scaleTo(0.05);
-    Object* lamps[NR_POINT_LIGHTS];
-    for(int i=0;i<NR_POINT_LIGHTS;++i){
-        lamps[i]=cube.clone();
-        lamps[i]->moveTo(lightPos[i]);
+    std::vector<Shape> lamps;
+    for(int i = 0; i < NR_POINT_LIGHTS; ++i) {
+        lamps.push_back(Shape(cubeVertices, 36, POSITIONS_NORMALS_TEXTURES, GL_TRIANGLES));
+        lamps[i].scaleTo(0.05f);
+        lamps[i].moveTo(lightPos[i]);
     }
     //着色器初始化
-    Shader modelShader("shaders/ModelLoading/nanosuit2.vs","shaders/ModelLoading/nanosuit2.frag");
+    Shader modelShader("Resources/Shaders/ModelLoading/nanosuit2.vs","Resources/Shaders/ModelLoading/nanosuit2.frag");
     //设置灯光参数
     modelShader.use();
     glm::vec3 lightDiffuseColor = lightColor * glm::vec3(0.8f);
@@ -100,17 +99,15 @@ void exercise1(){
     }
     glUniform1f(glGetUniformLocation(modelShader.programID,"shininess"),32.0f);
     //模型初始化
-    Model model((GLchar*)"textures/nanosuit/nanosuit.obj");
-    model.setShader(&modelShader);
-    model.setCamera(&CameraController::camera);
+    Model model((GLchar*)"Resources/Meshes/nanosuit/nanosuit.obj");
     //绑定控制
     CameraController::bindControl(window);
-    CameraController::camera.moveto(glm::vec3(0,20,20));
-    CameraController::camera.rotate(-40,0);
+    pCamera->moveto(glm::vec3(0, 20, 20));
+    pCamera->rotate(-40, 0);
     //关闭鼠标显示
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     //显示坐标轴
-    CoordinateAxes ca(&CameraController::camera);
+    CoordinateAxes ca(pCamera);
     ca.showGrid(false);
     //绘制
     while(!glfwWindowShouldClose(window)){
@@ -119,11 +116,11 @@ void exercise1(){
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
         CameraController::update();
 
-        for(int i=0;i<NR_POINT_LIGHTS;++i){
-            //lamps[i]->draw();
+        for(int i = 0; i < NR_POINT_LIGHTS; ++i){
+            lamps[i].draw(&lampShader, pCamera);
         }
         ca.draw();
-        model.draw();
+        model.draw(&modelShader, pCamera);
 
         glfwSwapBuffers(window);
     }

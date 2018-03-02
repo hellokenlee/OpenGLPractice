@@ -1,6 +1,10 @@
 /*Copyright reserved by KenLee@2017 ken4000kl@gmail.com*/
-#ifndef HDR_HPP
-#define HDR_HPP
+#ifndef HDR_CPP
+#define HDR_CPP
+
+// Common Headers
+#include "../NeneEngine/OpenGL/Nene.h"
+
 namespace HDR{
 
 extern GLfloat screenVertices[6*5];
@@ -32,14 +36,10 @@ void tutorial(){
     glfwSetCursorPosCallback(window, CameraController::mouseCallback);
     showEnviroment();
     glfwSwapInterval(0);
-
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glEnable(GL_DEPTH_TEST);
-
-    CoordinateAxes ca(&CameraController::camera);
-    Camera *cam = &CameraController::camera;
-
-
+    Camera *pCamera = CameraController::getCamera();
+    CoordinateAxes ca(pCamera);
     FPSCounter fc;
     // 生成HDR纹理附件
     GLuint hdrTexture;
@@ -59,44 +59,40 @@ void tutorial(){
             cout << "Framebuffer not complete!" << endl;
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     // 着色器
-    Shader tunnelShader("shaders/HDR/tunnel.vs", "shaders/HDR/tunnel.frag");
-    Shader screenShader("shaders/HDR/screen.vs", "shaders/HDR/screen.frag");
+    Shader tunnelShader("Resources/Shaders/HDR/tunnel.vs", "Resources/Shaders/HDR/tunnel.frag");
+    Shader screenShader("Resources/Shaders/HDR/screen.vs", "Resources/Shaders/HDR/screen.frag");
     // 隧道物体
-    Object tunnel(cubeVertices, 36, POSITIONS_NORMALS_TEXTURES, GL_TRIANGLES);
-    tunnel.setCamera(cam);
-    tunnel.setShader(&tunnelShader);
-    tunnel.model = glm::translate(tunnel.model, glm::vec3(0.0, 0.0, 25.0));
-    tunnel.model = glm::scale(tunnel.model, glm::vec3(5.0, 5.0, 55.0));
+    Shape tunnel(cubeVertices, 36, POSITIONS_NORMALS_TEXTURES, GL_TRIANGLES);
+    tunnel.setModelMat(glm::translate(tunnel.getModelMat(), glm::vec3(0.0, 0.0, 25.0)));
+    tunnel.setModelMat(glm::scale(tunnel.getModelMat(), glm::vec3(5.0, 5.0, 55.0)));
     //
-    Object screen(screenVertices, 6, POSITIONS_TEXTURES, GL_TRIANGLES);
-    screen.setCamera(cam);
-    screen.setShader(&screenShader);
-
+    Shape screen(screenVertices, 6, POSITIONS_TEXTURES, GL_TRIANGLES);
     // 纹理
-    TextureManager* tm = TextureManager::getManager();
-    tm->loadTexture("textures/wood.png", 0, GL_BGRA, GL_SRGB);
+    Texture tex0("Resources/Textures/wood.png", GL_BGRA, GL_SRGB);
     //
     char uniformNameBuffer[64];
     // 主循环
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
         CameraController::update();
-
+        //
         glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
         glEnable(GL_DEPTH_TEST);
         glClearColor(0.1, 0.1, 0.1, 1.0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        tunnel.setShader(&tunnelShader);
         tunnelShader.use();
         for(int i = 0; i < 4; ++i){
             sprintf(uniformNameBuffer, "lightPositions[%d]", i);
-            glUniform3fv(glGetUniformLocation(tunnelShader.programID, uniformNameBuffer), 1, glm::value_ptr(lightPositions[i]));
+            glUniform3fv(glGetUniformLocation(tunnelShader.programID, uniformNameBuffer),
+                         1, glm::value_ptr(lightPositions[i]));
             sprintf(uniformNameBuffer, "lightColors[%d]", i);
-            glUniform3fv(glGetUniformLocation(tunnelShader.programID, uniformNameBuffer), 1, glm::value_ptr(lightColors[i]));
+            glUniform3fv(glGetUniformLocation(tunnelShader.programID, uniformNameBuffer),
+                         1, glm::value_ptr(lightColors[i]));
         }
-        glUniform3fv(glGetUniformLocation(tunnelShader.programID, "fViewPosition"), 1, glm::value_ptr(cam->cameraPos));
-        tm->bindTexture(0);
-        tunnel.draw();
+        glUniform3fv(glGetUniformLocation(tunnelShader.programID, "fViewPosition"),
+                     1, glm::value_ptr(pCamera->cameraPos));
+        tex0.use(0);
+        tunnel.draw(&tunnelShader, pCamera);
         //
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glDisable(GL_DEPTH_TEST);
@@ -107,9 +103,8 @@ void tutorial(){
         glUniform1i(glGetUniformLocation(screenShader.programID, "toLDR"), doToneMapping);
         glUniform1f(glGetUniformLocation(screenShader.programID, "exposure"), exposure);
         screen.draw();
-
+        //
         glfwSwapBuffers(window);
-        //fc.update();
     }
 
     glfwDestroyWindow(window);

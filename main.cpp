@@ -1,3 +1,5 @@
+/*Copyright reserved by KenLee@2018 ken4000kl@gmail.com*/
+
 // GLEW
 #define GLEW_STATIC
 #include <GL/glew.h>
@@ -9,64 +11,162 @@
 #include <assimp/postprocess.h>
 // FreeImage
 #include <FreeImage.h>
-// C++ Library
-#include <cstdlib>
-#include <cstdio>
-#include <iostream>
-#include <string>
-#include <array>
-#include <map>
-// WMD Engine
-#define CHECK_GL_ERROR
-#include "wmdge/wmdge.h"
-// Tutorial
-#include "tutorials/HelloTriangle.hpp"
-#include "tutorials/Shaders.hpp"
-#include "tutorials/Textures.hpp"
-#include "tutorials/Transformations.hpp"
-#include "tutorials/CoordinateSystem.hpp"
-#include "tutorials/Camera.hpp"
-#include "tutorials/Colors.hpp"
-#include "tutorials/BasicLighting.hpp"
-#include "tutorials/Materials.hpp"
-#include "tutorials/LightMaps.hpp"
-#include "tutorials/LightCasters.hpp"
-#include "tutorials/MultipleLights.hpp"
-#include "tutorials/ModelLoading.hpp"
-#include "tutorials/DepthTest.hpp"
-#include "tutorials/StencilTest.hpp"
-#include "tutorials/Blending.hpp"
-#include "tutorials/FaceCulling.hpp"
-#include "tutorials/Framebuffers.hpp"
-#include "tutorials/Cubemaps.hpp"
-#include "tutorials/AdvancedData.hpp"
-#include "tutorials/AdvancedGLSL.hpp"
-#include "tutorials/GeometryShader.hpp"
-#include "tutorials/Instancing.hpp"
-#include "tutorials/AntiAliasing.hpp"
-#include "tutorials/BlinnPhong.hpp"
-#include "tutorials/GammaCorrection.hpp"
-#include "tutorials/NormalMapping.hpp"
-#include "tutorials/ShadowMapping.hpp"
-#include "tutorials/PointShadows.hpp"
-#include "tutorials/ParallaxMapping.hpp"
-#include "tutorials/HDR.hpp"
-#include "tutorials/Bloom.hpp"
-#include "tutorials/PBR.hpp"
-#include "tutorials/DeferredShading.hpp"
-#include "tutorials/SSAO.hpp"
-// Whims
-#include "whims/Benchmark.hpp"
-#include "whims/Mirror.hpp"
-#include "whims/Stella.hpp"
-#include "whims/TessellationShader.hpp"
-#include "whims/PNTriangle.hpp"
-#include "whims/YarnLevelCloth.hpp"
-#include "whims/VolVisualize.hpp"
+// Graphics Engine
+#include "NeneEngine/OpenGL/Nene.h"
 
+// Tutorials
+#include "Tutorials/HelloTriangle.hpp"
+#include "Tutorials/Shaders.hpp"
+#include "Tutorials/Textures.hpp"
+#include "Tutorials/Transformations.hpp"
+#include "Tutorials/CoordinateSystem.hpp"
+#include "Tutorials/Camera.hpp"
+#include "Tutorials/Colors.hpp"
+#include "Tutorials/BasicLighting.hpp"
+#include "Tutorials/Materials.hpp"
+#include "Tutorials/LightMaps.hpp"
+#include "Tutorials/LightCasters.hpp"
+#include "Tutorials/MultipleLights.hpp"
+#include "Tutorials/ModelLoading.hpp"
+#include "Tutorials/DepthTest.hpp"
+#include "Tutorials/StencilTest.hpp"
+#include "Tutorials/Blending.hpp"
+#include "Tutorials/FaceCulling.hpp"
+#include "Tutorials/Framebuffers.hpp"
+#include "Tutorials/Cubemaps.hpp"
+#include "Tutorials/AdvancedData.hpp"
+#include "Tutorials/AdvancedGLSL.hpp"
+#include "Tutorials/GeometryShader.hpp"
+//#include "Tutorials/Instancing.hpp" -> 和现在的引擎不适配
+#include "Tutorials/AntiAliasing.hpp"
+#include "Tutorials/BlinnPhong.hpp"
+#include "Tutorials/GammaCorrection.hpp"
+#include "Tutorials/NormalMapping.hpp"
+#include "Tutorials/ShadowMapping.hpp"
+#include "Tutorials/PointShadows.hpp"
+#include "Tutorials/ParallaxMapping.hpp"
+#include "Tutorials/HDR.hpp"
+#include "Tutorials/Bloom.hpp"
+#include "Tutorials/PBR.hpp"
+#include "Tutorials/DeferredShading.hpp"
+#include "Tutorials/SSAO.hpp"
+
+
+// Whims
+#include "Whims/Mirror.hpp"
+#include "Whims/Stella.hpp"
+//#include "Whims/TessellationShader.hpp"
+//#include "Whims/PNTriangle.hpp"
+//#include "Whims/YarnLevelCloth.hpp"
+//#include "Whims/VolVisualize.hpp"
+
+// Tests
+void runAllTutoials();
+
+// APP Entry
 int main(){
-    YarnLevelCloth::hairVisualize();
-    //VolVisualize::_main();
+    runAllTutoials();
     return 0;
 }
 
+void runAllTutoials() {
+    /*
+    HelloTriangle::tutorial();
+    HelloTriangle::exercies1();
+    HelloTriangle::exercise2();
+    HelloTriangle::exercies3();
+
+    Shaders::tutorial();
+    Shaders::exercise1();
+    Shaders::exercise2();
+    Shaders::exercise3();
+
+    Textures::tutorial();
+    Textures::exercise1();
+    Textures::exercise2();
+    Textures::exercise3();
+    Textures::exercise4();
+
+    Transformations::tutorial();
+    Transformations::exercise1();
+    Transformations::exercise2();
+
+    CoordinateSystem::tutorial();
+    Cameras::tutorial();
+    Cameras::exercise1();
+
+    Colors::tutorial();
+    BasicLighting::tutorial();
+    BasicLighting::exercise1();
+    BasicLighting::exercise3();
+    BasicLighting::exercise4();
+
+    Materials::tutorial();
+    Materials::exercise1();
+    */
+    LightMaps::tutorial();
+    LightMaps::exercise2();
+    LightMaps::exercise3();
+    LightMaps::exercise4();
+    /*
+    LightCasters::tutorialDirectionalLight();
+    LightCasters::tutorialPointLight();
+    LightCasters::tutorialSpotLight();
+
+    MultipleLights::tutorial();
+
+    ModelLoading::tutorial();
+    ModelLoading::exercise1();
+
+    DepthTest::tutorial();
+
+    StencilTest::tutorial();
+    StencilTest::exercise1();
+
+    Blending::tutorial();
+    Blending::exercise1();
+    FaceCulling::tutorial();
+    FaceCulling::exercise1();
+
+    Framebuffers::tutorial();
+    Framebuffers::exercise1();
+
+    Cubemapes::tutorial();
+    Cubemapes::exercise1();
+    AdvancedData::tutorial();
+    AdvancedGLSL::tutorial();
+    AdvancedGLSL::exercise();
+
+    GeometyShader::tutorial();
+    GeometyShader::exercise1();
+    GeometyShader::exercise2();
+
+    AntiAliasing::tutorial();
+    AntiAliasing::exercise();
+
+    BlinnPhong::tutorial();
+
+    GammaCorrection::tutorial();
+
+    NormalMapping::tutorial();
+
+    ShadowMapping::tutorial();
+    ShadowMapping::exercise1();
+    ShadowMapping::exercise2();
+
+    PointShadows::tutorial();
+
+    ParallaxMapping::tutorial();
+
+    HDR::tutorial();
+
+    Bloom::tutorial();
+
+    PBR::tutorial();
+    PBR::exercise2();
+
+    DeferredShading::tutorial();
+    DeferredShading::exercise1();
+    SSAO::tutorial();
+    //*/
+}

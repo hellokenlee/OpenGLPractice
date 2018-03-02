@@ -1,7 +1,12 @@
 /*Copyright reserved by KenLee@2017 ken4000kl@gmail.com*/
-#ifndef ANTI_ALIASING_HPP
-#define ANTI_ALIASING_HPP
+#ifndef ANTI_ALIASING_CPP
+#define ANTI_ALIASING_CPP
+
+// Common Headers
+#include "../NeneEngine/OpenGL/Nene.h"
+
 namespace AntiAliasing{
+
 extern GLfloat cubeVertices[6*6*5];
 
 // 使用GLFW提供的MSAA缓冲
@@ -26,7 +31,7 @@ void tutorial(){
     }
     //获取显示器大小
     const GLFWvidmode *screen;
-    screen=glfwGetVideoMode(glfwGetPrimaryMonitor());
+    screen = glfwGetVideoMode(glfwGetPrimaryMonitor());
     //设置窗口在中间
     glfwSetWindowPos(window,(screen->width-w)/2,(screen->height-h)/2);
     glfwMakeContextCurrent(window);
@@ -53,15 +58,13 @@ void tutorial(){
     glEnable(GL_MULTISAMPLE);
     //glDisable(GL_MULTISAMPLE);
     // 坐标系对象
-    CoordinateAxes ca(&CameraController::camera);
+    CoordinateAxes ca(CameraController::getCamera());
     // 着色器
-    Shader cubeShader("shaders/AntiAliasing/object.vs", "shaders/AntiAliasing/object.frag");
+    Shader cubeShader("Resources/Shaders/AntiAliasing/object.vs", "Resources/Shaders/AntiAliasing/object.frag");
     // 方块
-    Object cube(cubeVertices, 36, POSITIONS_TEXTURES, GL_TRIANGLES);
-    cube.setShader(&cubeShader);
-    cube.setCamera(&CameraController::camera);
-    CameraController::camera.cameraPos = glm::vec3(-0.177235f, 0.197711f, 1.68138f);
-    CameraController::camera.rotate(3.14999,-78.5998);
+    Shape cube(cubeVertices, 36, POSITIONS_TEXTURES, GL_TRIANGLES);
+    CameraController::getCamera()->cameraPos = glm::vec3(-0.177235f, 0.197711f, 1.68138f);
+    CameraController::getCamera()->rotate(3.14999,-78.5998);
     // 主循环
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
@@ -69,7 +72,7 @@ void tutorial(){
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
-        cube.draw();
+        cube.draw(&cubeShader, CameraController::getCamera());
 
         glfwSwapBuffers(window);
     }
@@ -91,14 +94,11 @@ void exercise(){
     // 启用测试
     glEnable(GL_DEPTH_TEST);
     // 着色器
-    Shader cubeShader("shaders/AntiAliasing/object.vs", "shaders/AntiAliasing/object.frag");
-    Shader screenShader("shaders/AntiAliasing/screen.vs", "shaders/AntiAliasing/screen.frag");
+    Shader cubeShader("Resources/Shaders/AntiAliasing/object.vs", "Resources/Shaders/AntiAliasing/object.frag");
+    Shader screenShader("Resources/Shaders/AntiAliasing/screen.vs", "Resources/Shaders/AntiAliasing/screen.frag");
     // 方块
-    Object cube(cubeVertices, 36, POSITIONS_TEXTURES, GL_TRIANGLES);
-    cube.setShader(&cubeShader);
-    cube.setCamera(&CameraController::camera);
-    Object screen(screenVertices,6,POSITIONS_TEXTURES,GL_TRIANGLES);
-    screen.setShader(&screenShader);
+    Shape cube(cubeVertices, 36, POSITIONS_TEXTURES, GL_TRIANGLES);
+    Shape screen(screenVertices,6,POSITIONS_TEXTURES,GL_TRIANGLES);
     // 创建离屏缓冲
     GLuint MSAAfbo;
     glGenFramebuffers(1, &MSAAfbo);
@@ -111,7 +111,7 @@ void exercise(){
         glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
         // 附加到FB上
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, MSAAtex, 0);
-        // 生产Render Buffer Object
+        // 生产Render Buffer Shape
         GLuint MSAArbo;
         glGenRenderbuffers(1, &MSAArbo);
         glBindRenderbuffer(GL_RENDERBUFFER, MSAArbo);
@@ -167,7 +167,7 @@ void exercise(){
         glEnable(GL_DEPTH_TEST);
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        cube.draw();
+        cube.draw(&cubeShader, CameraController::getCamera());
 
         // 转移结果到中间
         glBindFramebuffer(GL_READ_FRAMEBUFFER, MSAAfbo);
@@ -186,7 +186,7 @@ void exercise(){
         glClear(GL_COLOR_BUFFER_BIT);
         glDisable(GL_DEPTH_TEST);
         glBindTexture(GL_TEXTURE_2D, texColorBuffer);
-        screen.draw();
+        screen.draw(&screenShader);
 
         // 显示
         glfwSwapBuffers(window);

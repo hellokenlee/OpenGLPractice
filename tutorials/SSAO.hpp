@@ -1,9 +1,12 @@
 /*Copyright reserved by KenLee@2017 ken4000kl@gmail.com*/
-#ifndef SSAO_HPP
-#define SSAO_HPP
+#ifndef SSAO_CPP
+#define SSAO_CPP
 
 #include <unistd.h>
 #include <random>
+
+// Common Headers
+#include "../NeneEngine/OpenGL/Nene.h"
 
 namespace SSAO{
 
@@ -50,20 +53,14 @@ void tutorial(){
     showEnviroment();
     glfwSwapInterval(0);
     CameraController::bindControl(window);
-    CameraController::camera.moveto(glm::vec3(0.0f, 0.0f, 8.0f));
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
-    CoordinateAxes ca(&CameraController::camera);
-    Camera *cam = &CameraController::camera;
+    //
+    Camera *pCamera = CameraController::getCamera();
+    pCamera->moveto(glm::vec3(0.0f, 0.0f, 8.0f));
+    //
+    CoordinateAxes ca(pCamera);
     FPSCounter fc;
-    /*
-    cam->moveto(glm::vec3(-0.78, 0.78, 5.95));
-    CameraController::pitch = -9.05;
-    CameraController::yaw = -42.45;
-    cam->rotate(-9.05, -42.45);
-    glfwSetCursorPosCallback(window, nullptr);
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-    */
     // 准备G缓冲
     GLuint gBuffer;
     glGenFramebuffers(1, &gBuffer);
@@ -105,25 +102,23 @@ void tutorial(){
         }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     // 着色器们
-    Shader objShader("shaders/SSAO/object.vert", "shaders/SSAO/object.frag");
-    Shader screenShader("shaders/SSAO/screen.vert", "shaders/SSAO/screen.frag");
-    Shader ssaoShader("shaders/SSAO/ssao.vert", "shaders/SSAO/ssao.frag");
-    Shader blurShader("shaders/SSAO/blur.vert", "shaders/SSAO/blur.frag");
+    Shader objShader("Resources/Shaders/SSAO/object.vert", "Resources/Shaders/SSAO/object.frag");
+    Shader screenShader("Resources/Shaders/SSAO/screen.vert", "Resources/Shaders/SSAO/screen.frag");
+    Shader ssaoShader("Resources/Shaders/SSAO/ssao.vert", "Resources/Shaders/SSAO/ssao.frag");
+    Shader blurShader("Resources/Shaders/SSAO/blur.vert", "Resources/Shaders/SSAO/blur.frag");
     // 屏幕
-    Object screen(screenVertices, 6, POSITIONS_TEXTURES, GL_TRIANGLES);
+    Shape screen(screenVertices, 6, POSITIONS_TEXTURES, GL_TRIANGLES);
     // 房间物体
-    Object room(cubeVertices, 36, POSITIONS_NORMALS_TEXTURES, GL_TRIANGLES);
-    room.setShader(&objShader);
-    room.setCamera(cam);
-    room.model = glm::translate(room.model, glm::vec3(0.0, 7.0f, 0.0f));
-    room.model = glm::scale(room.model, glm::vec3(7.5f, 7.5f, 7.5f));
+    Shape room(cubeVertices, 36, POSITIONS_NORMALS_TEXTURES, GL_TRIANGLES);
+    room.setModelMat(glm::translate(room.getModelMat(), glm::vec3(0.0, 7.0f, 0.0f)));
+    room.setModelMat(glm::scale(room.getModelMat(), glm::vec3(7.5f, 7.5f, 7.5f)));
     // 人物模型
-    Model nanoMan((GLchar*)"textures/nanosuit/nanosuit.obj");
-    nanoMan.setShader(&objShader);
-    nanoMan.setCamera(cam);
-    nanoMan.modelMat = glm::translate(nanoMan.modelMat, glm::vec3(0.0f, 0.0f, 5.0));
-    nanoMan.modelMat = glm::rotate(nanoMan.modelMat, glm::radians(-90.0f), glm::vec3(1.0, 0.0, 0.0));
-    nanoMan.modelMat = glm::scale(nanoMan.modelMat, glm::vec3(0.5f));
+    Model nanoMan((GLchar*)"Resources/Meshes/nanosuit/nanosuit.obj");
+    glm::mat4 tmpMat;
+    tmpMat = glm::translate(tmpMat, glm::vec3(0.0f, 0.0f, 5.0));
+    tmpMat = glm::rotate(tmpMat, glm::radians(-90.0f), glm::vec3(1.0, 0.0, 0.0));
+    tmpMat = glm::scale(tmpMat, glm::vec3(0.5f));
+    nanoMan.setModelMat(tmpMat);
     // 准备SSAO采样器
     // 初始化半球kernel
     uniform_real_distribution<float> randomFloats(0.0, 1.0);
@@ -195,8 +190,7 @@ void tutorial(){
     //
     ControlPanel panel(window);
     char uniformName[128];
-    TextureManager* tm = TextureManager::getManager();
-    tm->loadTexture("textures/white.png", 0, GL_BGRA, GL_RGBA);
+    Texture tex0("Resources/Textures/white.png", GL_BGRA, GL_RGBA);
     // 主循环
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
@@ -206,17 +200,15 @@ void tutorial(){
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
         objShader.use();
         glUniform1f(glGetUniformLocation(objShader.programID, "inverseNormal"), -1.0f);
-        glActiveTexture(GL_TEXTURE0);
-        tm->bindTexture(0);
-        glActiveTexture(GL_TEXTURE1);
-        tm->bindTexture(0);
+        tex0.use(0);
+        tex0.use(1);
         glUniform1i(glGetUniformLocation(objShader.programID, "texture_diffuse1"), 0);
         glUniform1i(glGetUniformLocation(objShader.programID, "texture_specular1"), 1);
         glCullFace(GL_FRONT);
-        room.draw();
+        room.draw(&objShader, pCamera);
         glUniform1f(glGetUniformLocation(objShader.programID, "inverseNormal"),  1.0f);
         glCullFace(GL_BACK);
-        nanoMan.draw();
+        nanoMan.draw(&objShader, pCamera);
         // SSAO Pass
         glBindFramebuffer(GL_FRAMEBUFFER, ssaoFBO);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -230,19 +222,20 @@ void tutorial(){
         glUniform1i(glGetUniformLocation(ssaoShader.programID, "gPosition"), 0);
         glUniform1i(glGetUniformLocation(ssaoShader.programID, "gNormal"), 1);
         glUniform1i(glGetUniformLocation(ssaoShader.programID, "texNoise"), 2);
-        glUniformMatrix4fv(glGetUniformLocation(ssaoShader.programID, "projection"), 1, GL_FALSE, cam->getProjectionMatrixVal());
+        glUniformMatrix4fv(glGetUniformLocation(ssaoShader.programID, "projection"),
+                           1, GL_FALSE, pCamera->getProjectionMatrixVal());
         for(unsigned int i = 0; i < SAMPLES_NUM; ++i){
             sprintf(uniformName, "samples[%d]", i);
             glUniform3f(glGetUniformLocation(ssaoShader.programID, uniformName), ssaoKernel[i].x, ssaoKernel[i].y, ssaoKernel[i].z);
         }
-        screen.draw();
+        screen.draw(&ssaoShader, pCamera);
         // SSAO Blur Pass
         glBindFramebuffer(GL_FRAMEBUFFER, blurFBO);
         glClear(GL_COLOR_BUFFER_BIT);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, ssaoColorBuffer);
         blurShader.use();
-        screen.draw();
+        screen.draw(&blurShader, pCamera);
         // Deferred Shading : Lighting Pass
         // 绑定纹理
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -264,10 +257,10 @@ void tutorial(){
         glUniform1i(glGetUniformLocation(screenShader.programID, "gAlbedoSpec"), 2);
         glUniform1i(glGetUniformLocation(screenShader.programID, "ssao"), 3);
         // 需要把光源位置转换到视角空间
-        glm::vec3 lightPosViewSpace = glm::vec3(cam->projection * glm::vec4(lightPos, 1.0f));
+        glm::vec3 lightPosViewSpace = glm::vec3(pCamera->projection * glm::vec4(lightPos, 1.0f));
         glUniform3f(glGetUniformLocation(screenShader.programID, "light.position"), lightPosViewSpace.x, lightPosViewSpace.y, lightPosViewSpace.z);
         glUniform3f(glGetUniformLocation(screenShader.programID, "light.color"), lightColor.x, lightColor.y, lightColor.z);
-        screen.draw();
+        screen.draw(&screenShader, pCamera);
         //
         panel.draw();
         // Buffer swap

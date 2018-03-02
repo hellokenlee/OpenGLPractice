@@ -1,12 +1,15 @@
 /*Copyright reserved by KenLee@2016 ken4000kl@gmail.com*/
-#ifndef SHADERS_HPP
-#define SHADERS_HPP
+#ifndef SHADERS_CPP
+#define SHADERS_CPP
 
 #include <math.h>
 #include <string>
 #include <fstream>
 #include <sstream>
 #include <iostream>
+
+// Common Headers
+#include "../NeneEngine/OpenGL/Nene.h"
 
 //Chapcter2 namespace
 namespace Shaders{
@@ -23,7 +26,7 @@ void tutorial(){
     GLFWwindow *window=initWindow("Shaders", 800, 600);
     showEnviroment();
     //创建ShaderProgram
-    Shader shaderProgram("shaders/Shaders/shader.vs","shaders/Shaders/shader.frag");
+    Shader shaderProgram("Resources/Shaders/Shaders/shader.vs","Resources/Shaders/Shaders/shader.frag");
     //导入数据，创建VAO
     GLuint VBO,VAO;
     glGenBuffers(1,&VBO);
@@ -60,7 +63,7 @@ void tutorial(){
 void exercise1(){
     GLFWwindow *window=initWindow("Shader-EX1", 800, 600);
     showEnviroment();
-    Shader shaderProgram("shaders/Shaders/shaderEx1.vs","shaders/Shaders/shader.frag");
+    Shader shaderProgram("Resources/Shaders/Shaders/shaderEx1.vs","Resources/Shaders/Shaders/shader.frag");
     GLuint VAO,VBO;
     glGenBuffers(1,&VBO);
     glGenVertexArrays(1,&VAO);
@@ -104,7 +107,7 @@ void exercise2(){
     //关闭垂直同步
     glfwSwapInterval(0);
     showEnviroment();
-    Shader shaderProgram("shaders/Shaders/shaderEx2.vs","shaders/Shaders/shader.frag");
+    Shader shaderProgram("Resources/Shaders/Shaders/shaderEx2.vs","Resources/Shaders/Shaders/shader.frag");
     GLuint VAO,VBO;
     glGenBuffers(1,&VBO);
     glGenVertexArrays(1,&VAO);
@@ -152,7 +155,7 @@ void exercise3(){
     //初始化
     GLFWwindow *window=initWindow("Shader-EX3", 800, 600);
     showEnviroment();
-    Shader shaderProgram("shaders/Shaders/shaderEx3.vs","shaders/Shaders/shader.frag");
+    Shader shaderProgram("Resources/Shaders/Shaders/shaderEx3.vs","Resources/Shaders/Shaders/shader.frag");
     GLuint VAO,VBO;
     glGenBuffers(1,&VBO);
     glGenVertexArrays(1,&VAO);

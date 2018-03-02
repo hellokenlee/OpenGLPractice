@@ -1,6 +1,10 @@
 /*Copyright reserved by KenLee@2017 ken4000kl@gmail.com*/
-#ifndef PBR_HPP
-#define PBR_HPP
+#ifndef PBR_CPP
+#define PBR_CPP
+
+// Common Headers
+#include "../NeneEngine/OpenGL/Nene.h"
+
 namespace PBR{
 
 // 光源位置
@@ -24,39 +28,31 @@ void tutorial(){
     GLFWwindow *window = initWindow("PBR", 800, 600);
     showEnviroment();
     glfwSwapInterval(0);
-
-    ControlPanel panel(window);
-
     CameraController::bindControl(window);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glEnable(GL_DEPTH_TEST);
-
-    CoordinateAxes ca(&CameraController::camera);
-    Camera *cam = &CameraController::camera;
-
+    Camera *pCamera = CameraController::getCamera();
+    //
+    CoordinateAxes ca(pCamera);
     FPSCounter fc;
-
-    Shader pbrShader("shaders/PBR/pbr.vs", "shaders/PBR/pbr.frag");
-    Shader sphereShader("shaders/PBR/sphere.vs", "shaders/PBR/sphere.frag");
-    Shader normalShader("shaders/PBR/showNormals.vs", "shaders/PBR/showNormals.frag");
-    normalShader.addOptionalShader("shaders/PBR/showNormals.geom", GL_GEOMETRY_SHADER);
-    Object *sphere = Geometry::icoSphere(2);
-    sphere->setShader(&pbrShader);
-    sphere->setCamera(cam);
-
+    ControlPanel panel(window);
+    //
+    Shader pbrShader("Resources/Shaders/PBR/pbr.vs", "Resources/Shaders/PBR/pbr.frag");
+    Shader sphereShader("Resources/Shaders/PBR/sphere.vs", "Resources/Shaders/PBR/sphere.frag");
+    Shader normalShader("Resources/Shaders/PBR/showNormals.vs", "Resources/Shaders/PBR/showNormals.frag");
+    normalShader.addOptionalShader("Resources/Shaders/PBR/showNormals.geom", GL_GEOMETRY_SHADER);
+    //
+    std::unique_ptr<Shape> sphere = Geometry::createIcoSphere(2);
     char uniformNameBuffer[128];
     int rowNum = 7, colNum = 7;
-
-
-
+    //
     while(!glfwWindowShouldClose(window)){
+        //
         glfwPollEvents();
         CameraController::update();
-
         glClearColor(0.1, 0.1, 0.1, 1.0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        //ca.draw();
+        //
         pbrShader.use();
         // 写入光源信息
         for(int i = 0; i < 4; ++i){
@@ -66,21 +62,21 @@ void tutorial(){
             glUniform3fv(glGetUniformLocation(pbrShader.programID, uniformNameBuffer), 1, glm::value_ptr(lightColors[i]));
         }
         // 写入视角位置
-        glUniform3fv(glGetUniformLocation(pbrShader.programID, "viewPos"), 1, glm::value_ptr(cam->cameraPos));
+        glUniform3fv(glGetUniformLocation(pbrShader.programID, "viewPos"),
+                     1, glm::value_ptr(pCamera->cameraPos));
         // 写入不变的材质信息
         glUniform3f(glGetUniformLocation(pbrShader.programID, "material.albedo"), 0.5f, 0.0f, 0.0f);
         glUniform1f(glGetUniformLocation(pbrShader.programID, "material.ao"), 1.0f);
         // 按位置写入材质，位置信息
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         for(int r = 0; r < rowNum; ++r){
             glUniform1f(glGetUniformLocation(pbrShader.programID, "material.metallic"), float(r) / float(rowNum));
             for(int c = 0; c < colNum; ++c){
-                glUniform1f(glGetUniformLocation(pbrShader.programID, "material.roughness"), glm::clamp(float(c) / float(colNum), 0.05f, 1.0f));
+                glUniform1f(glGetUniformLocation(pbrShader.programID, "material.roughness"),
+                            glm::clamp(float(c) / float(colNum), 0.05f, 1.0f));
                 sphere->moveTo(glm::vec3(2.5 * (c - ((float)colNum / 2.0)), 2.5 * (r - ((float)rowNum / 2.0)), 0.0f));
-                sphere->draw();
+                sphere->draw(&pbrShader, pCamera);
             }
         }
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         //
         panel.draw();
         glfwSwapBuffers(window);
@@ -90,36 +86,34 @@ void tutorial(){
 }
 
 // 纹理PBR， 预计算TBN矩阵，手动传入
+/* 缺少预计算TBN.
 void exercise1(){
-    GLFWwindow *window = initWindow("PBR", 800, 600);
+    GLFWwindow *window = initWindow("PBR-Ex1", 800, 600);
     showEnviroment();
     glfwSwapInterval(0);
-
     CameraController::bindControl(window);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glEnable(GL_DEPTH_TEST);
-
-    CoordinateAxes ca(&CameraController::camera);
-    Camera *cam = &CameraController::camera;
-
+    Camera *pCamera = CameraController::getCamera();
+    //
+    CoordinateAxes ca(pCamera);
     FPSCounter fc;
-
-    Shader pbrShader("shaders/PBR/pbr_texture3.vs", "shaders/PBR/pbr_texture3.frag");
-    Shader showTBNShader("shaders/PBR/showTBN.vs", "shaders/PBR/showTBN.frag");
-    showTBNShader.addOptionalShader("shaders/PBR/showTBN.geom", GL_GEOMETRY_SHADER);
-
-    Object *sphere = Geometry::icoSphere(3);
-    sphere->setCamera(cam);
-
-    TextureManager* tm = TextureManager::getManager();
-    tm->loadTexture("textures/sphere/rustediron2_basecolor.png", 0, GL_BGRA, GL_RGBA);
-    tm->loadTexture("textures/sphere/rustediron2_normal.png", 1, GL_BGRA, GL_RGBA);
-    tm->loadTexture("textures/sphere/rustediron2_metallic.png", 2, GL_BGRA, GL_RGBA);
-    tm->loadTexture("textures/sphere/rustediron2_roughness.png", 3, GL_BGRA, GL_RGBA);
-    tm->loadTexture("textures/sphere/rustediron2_ao.png", 4, GL_BGRA, GL_RGBA);
-
+    //
+    Shader pbrShader("Resources/Shaders/PBR/pbr_texture3.vs", "Resources/Shaders/PBR/pbr_texture3.frag");
+    Shader showTBNShader("Resources/Shaders/PBR/showTBN.vs", "Resources/Shaders/PBR/showTBN.frag");
+    showTBNShader.addOptionalShader("Resources/Shaders/PBR/showTBN.geom", GL_GEOMETRY_SHADER);
+    //
+    std::unique_ptr<Shape> sphere = Geometry::createIcoSphere(1);
+    //
+    Texture tex0("Resources/Textures/sphere/rustediron2_basecolor.png", GL_BGRA, GL_RGBA);
+    Texture tex1("Resources/Textures/sphere/rustediron2_normal.png", GL_BGRA, GL_RGBA);
+    Texture tex2("Resources/Textures/sphere/rustediron2_metallic.png", GL_BGRA, GL_RGBA);
+    Texture tex3("Resources/Textures/sphere/rustediron2_roughness.png", GL_BGRA, GL_RGBA);
+    Texture tex4("Resources/Textures/sphere/rustediron2_ao.png", GL_BGRA, GL_RGBA);
+    //
     char uniformNameBuffer[128];
     int rowNum = 7, colNum = 7;
+    //
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
         CameraController::update();
@@ -133,76 +127,66 @@ void exercise1(){
         // 写入光源信息
         for(int i = 0; i < 4; ++i){
             sprintf(uniformNameBuffer, "lights[%d].position", i);
-            glUniform3fv(glGetUniformLocation(pbrShader.programID, uniformNameBuffer), 1, glm::value_ptr(lightPositions[i]));
+            glUniform3fv(glGetUniformLocation(pbrShader.programID, uniformNameBuffer),
+                         1, glm::value_ptr(lightPositions[i]));
             sprintf(uniformNameBuffer, "lights[%d].color", i);
-            glUniform3fv(glGetUniformLocation(pbrShader.programID, uniformNameBuffer), 1, glm::value_ptr(lightColors[i]));
+            glUniform3fv(glGetUniformLocation(pbrShader.programID, uniformNameBuffer),
+                         1, glm::value_ptr(lightColors[i]));
         }
         // 写入视角位置
-        glUniform3fv(glGetUniformLocation(pbrShader.programID, "viewPos"), 1, glm::value_ptr(cam->cameraPos));
+        glUniform3fv(glGetUniformLocation(pbrShader.programID, "viewPos"), 1,
+                     glm::value_ptr(pCamera->cameraPos));
         //贴图
-        glActiveTexture(GL_TEXTURE0);
-        tm->bindTexture(0);
-        glActiveTexture(GL_TEXTURE1);
-        tm->bindTexture(1);
-        glActiveTexture(GL_TEXTURE2);
-        tm->bindTexture(2);
-        glActiveTexture(GL_TEXTURE3);
-        tm->bindTexture(3);
-        glActiveTexture(GL_TEXTURE4);
-        tm->bindTexture(4);
+        tex0.use(0);
+        tex1.use(1);
+        tex2.use(2);
+        tex3.use(3);
+        tex4.use(4);
         // 写入贴图
         glUniform1i(glGetUniformLocation(pbrShader.programID, "albedoMap"), 0);
         glUniform1i(glGetUniformLocation(pbrShader.programID, "normalMap"), 1);
         glUniform1i(glGetUniformLocation(pbrShader.programID, "metallicMap"), 2);
         glUniform1i(glGetUniformLocation(pbrShader.programID, "roughnessMap"), 3);
         glUniform1i(glGetUniformLocation(pbrShader.programID, "aoMap"), 4);
-
         // 按位置改变model矩阵
         for(int r = 0; r < rowNum; ++r){
             for(int c = 0; c < colNum; ++c){
                 sphere->moveTo(glm::vec3(2.5 * (c - ((float)colNum / 2.0)), 2.5 * (r - ((float)rowNum / 2.0)), 0.0f));
-                sphere->setShader(&pbrShader);
-                sphere->draw();
+                sphere->draw(&pbrShader, pCamera);
             }
         }
-
         glfwSwapBuffers(window);
         fc.update();
     }
     glfwDestroyWindow(window);
     glfwTerminate();
 }
-
+*/
 // 纹理PBR， 在片段着色器中计算TBN矩阵
 void exercise2(){
-    GLFWwindow *window = initWindow("PBR", 800, 600);
+    GLFWwindow *window = initWindow("PBR-Ex2", 800, 600);
     showEnviroment();
     glfwSwapInterval(0);
-
     CameraController::bindControl(window);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glEnable(GL_DEPTH_TEST);
-
-    CoordinateAxes ca(&CameraController::camera);
-    Camera *cam = &CameraController::camera;
-
-    FPSCounter fc;
-
-    Shader pbrShader("shaders/PBR/pbr_texture2.vs", "shaders/PBR/pbr_texture2.frag");
-    Object *sphere = Geometry::icoSphere(4);
-    sphere->setShader(&pbrShader);
-    sphere->setCamera(cam);
-
-
-    TextureManager* tm = TextureManager::getManager();
-    tm->loadTexture("textures/sphere/rustediron2_basecolor.png", 0, GL_BGRA, GL_RGBA);
-    tm->loadTexture("textures/sphere/rustediron2_normal.png", 1, GL_BGRA, GL_RGBA);
-    tm->loadTexture("textures/sphere/rustediron2_metallic.png", 2, GL_BGRA, GL_RGBA);
-    tm->loadTexture("textures/sphere/rustediron2_roughness.png", 3, GL_BGRA, GL_RGBA);
-    tm->loadTexture("textures/sphere/rustediron2_ao.png", 4, GL_BGRA, GL_RGBA);
-
+    Camera *pCamera = CameraController::getCamera();
+    //
+    CoordinateAxes ca(pCamera);
+    ControlPanel panel(window);
+    //
+    Shader pbrShader("Resources/Shaders/PBR/pbr_texture2.vs", "Resources/Shaders/PBR/pbr_texture2.frag");
+    std::unique_ptr<Shape> sphere = Geometry::createIcoSphere(4);
+    //
+    Texture tex0("Resources/Textures/sphere/rustediron2_basecolor.png", GL_BGRA, GL_RGBA);
+    Texture tex1("Resources/Textures/sphere/rustediron2_normal.png", GL_BGRA, GL_RGBA);
+    Texture tex2("Resources/Textures/sphere/rustediron2_metallic.png", GL_BGRA, GL_RGBA);
+    Texture tex3("Resources/Textures/sphere/rustediron2_roughness.png", GL_BGRA, GL_RGBA);
+    Texture tex4("Resources/Textures/sphere/rustediron2_ao.png", GL_BGRA, GL_RGBA);
+    //
     char uniformNameBuffer[128];
-    int rowNum = 1, colNum = 1;
+    int rowNum = 7,colNum = 7;
+    //
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
         CameraController::update();
@@ -216,23 +200,21 @@ void exercise2(){
         // 写入光源信息
         for(int i = 0; i < 4; ++i){
             sprintf(uniformNameBuffer, "lightPositions[%d]", i);
-            glUniform3fv(glGetUniformLocation(pbrShader.programID, uniformNameBuffer), 1, glm::value_ptr(lightPositions[i]));
+            glUniform3fv(glGetUniformLocation(pbrShader.programID, uniformNameBuffer),
+                         1, glm::value_ptr(lightPositions[i]));
             sprintf(uniformNameBuffer, "lightColors[%d]", i);
-            glUniform3fv(glGetUniformLocation(pbrShader.programID, uniformNameBuffer), 1, glm::value_ptr(lightColors[i]));
+            glUniform3fv(glGetUniformLocation(pbrShader.programID, uniformNameBuffer),
+                         1, glm::value_ptr(lightColors[i]));
         }
         // 写入视角位置
-        glUniform3fv(glGetUniformLocation(pbrShader.programID, "camPos"), 1, glm::value_ptr(cam->cameraPos));
+        glUniform3fv(glGetUniformLocation(pbrShader.programID, "camPos"),
+                     1, glm::value_ptr(pCamera->cameraPos));
         //贴图
-        glActiveTexture(GL_TEXTURE0);
-        tm->bindTexture(0);
-        glActiveTexture(GL_TEXTURE1);
-        tm->bindTexture(1);
-        glActiveTexture(GL_TEXTURE2);
-        tm->bindTexture(2);
-        glActiveTexture(GL_TEXTURE3);
-        tm->bindTexture(3);
-        glActiveTexture(GL_TEXTURE4);
-        tm->bindTexture(4);
+        tex0.use(0);
+        tex1.use(1);
+        tex2.use(2);
+        tex3.use(3);
+        tex4.use(4);
         // 写入贴图
         glUniform1i(glGetUniformLocation(pbrShader.programID, "albedoMap"), 0);
         glUniform1i(glGetUniformLocation(pbrShader.programID, "normalMap"), 1);
@@ -243,12 +225,12 @@ void exercise2(){
         for(int r = 0; r < rowNum; ++r){
             for(int c = 0; c < colNum; ++c){
                 sphere->moveTo(glm::vec3(2.5 * (c - ((float)colNum / 2.0)), 2.5 * (r - ((float)rowNum / 2.0)), 0.0f));
-                sphere->draw();
+                sphere->draw(&pbrShader, pCamera);
             }
         }
-
+        //
+        panel.draw();
         glfwSwapBuffers(window);
-        fc.update();
     }
     glfwDestroyWindow(window);
     glfwTerminate();

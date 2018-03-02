@@ -2,6 +2,9 @@
 #ifndef PN_TRIANGLE_HPP
 #define PN_TRIANGLE_HPP
 
+// Common Headers
+#include "../NeneEngine/OpenGL/Nene.h"
+
 namespace PNTriangle {
 // 三角形顶点
 GLfloat vertices[] = {
@@ -34,21 +37,21 @@ void _main() {
     CoordinateAxes ca(cam);
     ControlPanel panel(window);
     // 初始化着色器
-    Shader shader("shaders/PNTriangle/pn.vert", "shaders/PNTriangle/pn.frag");
-    shader.addOptionalShader("shaders/PNTriangle/pn.tesc", GL_TESS_CONTROL_SHADER);
-    shader.addOptionalShader("shaders/PNTriangle/pn.tese", GL_TESS_EVALUATION_SHADER);
+    Shader shader("Resources/Shaders/PNTriangle/pn.vert", "Resources/Shaders/PNTriangle/pn.frag");
+    shader.addOptionalShader("Resources/Shaders/PNTriangle/pn.tesc", GL_TESS_CONTROL_SHADER);
+    shader.addOptionalShader("Resources/Shaders/PNTriangle/pn.tese", GL_TESS_EVALUATION_SHADER);
 
-    Shader shader2("shaders/GeometryShader/showNormals.vs", "shaders/GeometryShader/showNormals.frag");
-    shader2.addOptionalShader("shaders/GeometryShader/showNormals.geom", GL_GEOMETRY_SHADER);
+    Shader shader2("Resources/Shaders/GeometryShader/showNormals.vs", "Resources/Shaders/GeometryShader/showNormals.frag");
+    shader2.addOptionalShader("Resources/Shaders/GeometryShader/showNormals.geom", GL_GEOMETRY_SHADER);
 
-    Shader shader3("shaders/Share/Color.vert", "shaders/Share/Color.frag");
+    Shader shader3("Resources/Shaders/Share/Color.vert", "Resources/Shaders/Share/Color.frag");
     // 模型
-    Object triangle(vertices, 3, POSITIONS_NORMALS, GL_TRIANGLES);
+    Shape triangle(vertices, 3, POSITIONS_NORMALS, GL_TRIANGLES);
     triangle.scaleTo(2.0f);
     triangle.setCamera(cam);
     triangle.setDrawMode(GL_PATCHES);
 
-    Model monkey("textures/monkey2.obj");
+    Model monkey("Resources/Textures/monkey2.obj");
     monkey.setCamera(cam);
     //monkey.setDrawMode(GL_PATCHES);
 

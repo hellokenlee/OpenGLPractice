@@ -1,59 +1,60 @@
 /*Copyright reserved by KenLee@2016 ken4000kl@gmail.com*/
-#ifndef DEPTH_TEST_HPP
-#define DEPTH_TEST_HPP
+#ifndef DEPTH_TEST_CPP
+#define DEPTH_TEST_CPP
+
+// Common Headers
+#include "../NeneEngine/OpenGL/Nene.h"
+
 namespace DepthTest{
 
 //顶点信息前置声明
 extern GLfloat cubeVertices[36*5];
 extern GLfloat planeVertices[6*5];
 //
-glm::vec3 cubePositions[2]={glm::vec3(-1.0f, 0.0f, -1.0f),glm::vec3(2.0f, 0.0f, 0.0f)};
+glm::vec3 cubePositions[2] = {glm::vec3(-1.0f, 0.0f, -1.0f),glm::vec3(2.0f, 0.0f, 0.0f)};
+
+// 可视化深度缓冲以及解决Z-Fighting
 void tutorial(){
     // Init GLFW
-    GLFWwindow* window=initWindow("DepthTest",800,600);
+    GLFWwindow* window = initWindow("DepthTest",800,600);
     // Set the required callback functions
     CameraController::bindControl(window);
-    CameraController::camera.moveto(glm::vec3(0,-0.4,3));
+    Camera* pCamera = CameraController::getCamera();
+    pCamera->moveto(glm::vec3(0.0f, -0.4f, 3.0f));
     // Options
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     // Setup some OpenGL options
     glEnable(GL_DEPTH_TEST);
     //glDepthFunc(GL_ALWAYS); // Set to always pass the depth test (same effect as glDisable(GL_DEPTH_TEST))
     // Setup and compile our shaders
-    Shader shader("shaders/DepthTest/scene1.vs", "shaders/DepthTest/scene1.frag");
+    //Shader shader("Resources/Shaders/DepthTest/scene1.vs", "Resources/Shaders/DepthTest/scene1.frag");
+    Shader shader("Resources/Shaders/DepthTest/scene1.vs", "Resources/Shaders/DepthTest/zVisualize.frag"); // 可视化深度缓冲
     // Setup cube VAO
-    Object cube(cubeVertices,36,POSITIONS_TEXTURES,GL_TRIANGLES);
-    cube.setCamera(&CameraController::camera);
-    cube.setShader(&shader);
+    Shape cube(cubeVertices, 36, POSITIONS_TEXTURES, GL_TRIANGLES);
     // Setup plane VAO
-    Object plane(planeVertices,6,POSITIONS_TEXTURES,GL_TRIANGLES);
-    plane.setCamera(&CameraController::camera);
-    plane.setShader(&shader);
+    Shape plane(planeVertices, 6, POSITIONS_TEXTURES, GL_TRIANGLES);
     // Load textures
-    TextureManager* tm=TextureManager::getManager();
-    if(!tm->loadTexture("textures/container.jpg",0,GL_BGR,GL_RGB))
-        return ;
-
+    Texture tex("Resources/Textures/container.jpg", GL_BGR, GL_RGB);
     //显示坐标轴
-    CoordinateAxes ca(&CameraController::camera);
+    CoordinateAxes ca(pCamera);
     //
-    tm->bindTexture(0);
+    tex.use();
     // Game loop
     while(!glfwWindowShouldClose(window)){
         //
         glfwPollEvents();
         CameraController::update();
         glClearColor(0.0f,0.0f,0.0f,1.0f);
-        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         //
         ca.draw();
 
-        plane.draw();
+        plane.draw(&shader, pCamera);
 
         cube.moveTo(cubePositions[0]);
-        cube.draw();
+        cube.draw(&shader, pCamera);
         cube.moveTo(cubePositions[1]);
-        cube.draw();
+        cube.draw(&shader, pCamera);
 
         // Swap the buffers
         glfwSwapBuffers(window);

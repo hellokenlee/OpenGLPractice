@@ -1,10 +1,9 @@
 /*Copyright reserved by KenLee@2016 ken4000kl@gmail.com*/
-#ifndef TRANSFORMATIONS_HPP
-#define TRANSFORMATIONS_HPP
-//GL Math Library
-#include "../wmdge/glm/glm.hpp"
-#include "../wmdge/glm/gtc/matrix_transform.hpp"
-#include "../wmdge/glm/gtc/type_ptr.hpp"
+#ifndef TRANSFORMATIONS_CPP
+#define TRANSFORMATIONS_CPP
+
+// Common Headers
+#include "../NeneEngine/OpenGL/Nene.h"
 
 namespace Transformations{
 GLfloat vertices[] = {
@@ -18,17 +17,15 @@ GLuint indices[] = {
     0,1,3,
     1,2,3
 };
+
 //教程实现：旋转的盒子
 void tutorial(){
     //定义变换矩阵
-    //glm::mat4 trans;
-    //trans=glm::rotate(trans,90.0f,glm::vec3(0.0,0.0,1.0));
-    //trans=glm::scale(trans,glm::vec3(0.5,0.5,0.5));
     //创建窗口
     GLFWwindow *window=initWindow("Transformation", 800, 600);
     showEnviroment();
     //创建Shader
-    Shader shaderProgram("shaders/Transformations/shader.vs","shaders/Transformations/shader.frag");
+    Shader shaderProgram("Resources/Shaders/Transformations/shader.vs","Resources/Shaders/Transformations/shader.frag");
     //读入数据
     GLuint VBO,VAO,EBO;
     glGenBuffers(1,&VBO);
@@ -47,8 +44,10 @@ void tutorial(){
         glEnableVertexAttribArray(2);
     glBindVertexArray(0);
     //设置纹理
-    GLuint tex2=Textures::loadTextureFromImage("textures/face.png",GL_RGBA,GL_BGRA,GL_REPEAT,GL_LINEAR);
-    GLuint tex1=Textures::loadTextureFromImage("textures/container.jpg",GL_RGB,GL_BGR,GL_REPEAT,GL_LINEAR);
+    Texture _tex2("Resources/Textures/face.png", GL_BGRA, GL_RGBA);
+    Texture _tex1("Resources/Textures/container.jpg", GL_BGR, GL_RGB);
+    GLuint tex2 = _tex2.getTexID();
+    GLuint tex1 = _tex1.getTexID();
     //主循环
     while(!glfwWindowShouldClose(window)){
         //Keybord and mouse
@@ -58,20 +57,19 @@ void tutorial(){
         glClear(GL_COLOR_BUFFER_BIT);
         //变换矩阵
         glm::mat4 trans;
-
         trans=glm::translate(trans, glm::vec3(0.75f, -0.75f, 0.0f));
         trans=glm::scale(trans,glm::vec3(0.5,0.5,0.5));
-        trans=glm::rotate(trans,(GLfloat)glfwGetTime() * 50.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+        trans=glm::rotate(trans,(GLfloat)glfwGetTime() * 5.0f, glm::vec3(0.0f, 0.0f, 1.0f));
         //变换
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram.programID, "transform"), 1, GL_FALSE, glm::value_ptr(trans));
         //绑定纹理1
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D,tex1);
-        glUniform1i(glGetUniformLocation(shaderProgram.programID,"tex1"),0);
+        glBindTexture(GL_TEXTURE_2D, tex1);
+        glUniform1i(glGetUniformLocation(shaderProgram.programID,"tex1"), 0);
         //绑定纹理2
         glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D,tex2);
-        glUniform1i(glGetUniformLocation(shaderProgram.programID,"tex2"),1);
+        glBindTexture(GL_TEXTURE_2D, tex2);
+        glUniform1i(glGetUniformLocation(shaderProgram.programID,"tex2"), 1);
         //Draw
         shaderProgram.use();
         glBindVertexArray(VAO);
@@ -93,7 +91,7 @@ void exercise1(){
     GLFWwindow *window=initWindow("Transformation-EX1", 800, 600);
     showEnviroment();
     //创建Shader
-    Shader shaderProgram("shaders/Transformations/shader.vs","shaders/Transformations/shader.frag");
+    Shader shaderProgram("Resources/Shaders/Transformations/shader.vs","Resources/Shaders/Transformations/shader.frag");
     //读入数据
     GLuint VBO,VAO,EBO;
     glGenBuffers(1,&VBO);
@@ -112,8 +110,10 @@ void exercise1(){
         glEnableVertexAttribArray(2);
     glBindVertexArray(0);
     //设置纹理
-    GLuint tex2=Textures::loadTextureFromImage("textures/face.png",GL_RGBA,GL_BGRA,GL_REPEAT,GL_LINEAR);
-    GLuint tex1=Textures::loadTextureFromImage("textures/container.jpg",GL_RGB,GL_BGR,GL_REPEAT,GL_LINEAR);
+    Texture _tex2("Resources/Textures/face.png", GL_BGRA, GL_RGBA);
+    Texture _tex1("Resources/Textures/container.jpg", GL_BGR, GL_RGB);
+    GLuint tex2 = _tex2.getTexID();
+    GLuint tex1 = _tex1.getTexID();
     //主循环
     while(!glfwWindowShouldClose(window)){
         //Keybord and mouse
@@ -123,7 +123,7 @@ void exercise1(){
         glClear(GL_COLOR_BUFFER_BIT);
         //变换矩阵
         glm::mat4 trans;
-        trans=glm::rotate(trans,(GLfloat)glfwGetTime() * 50.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+        trans=glm::rotate(trans,(GLfloat)glfwGetTime() * 5.0f, glm::vec3(0.0f, 0.0f, 1.0f));
         trans=glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
         //变换
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram.programID, "transform"), 1, GL_FALSE, glm::value_ptr(trans));
@@ -154,7 +154,7 @@ void exercise2(){
     GLFWwindow *window=initWindow("Transformation-EX2", 800, 600);
     showEnviroment();
     //创建Shader
-    Shader shaderProgram("shaders/Transformations/shader.vs","shaders/Transformations/shader.frag");
+    Shader shaderProgram("Resources/Shaders/Transformations/shader.vs","Resources/Shaders/Transformations/shader.frag");
     //读入数据
     GLuint VBO,VAO,EBO;
     glGenBuffers(1,&VBO);
@@ -173,8 +173,10 @@ void exercise2(){
         glEnableVertexAttribArray(2);
     glBindVertexArray(0);
     //设置纹理
-    GLuint tex2=Textures::loadTextureFromImage("textures/face.png",GL_RGBA,GL_BGRA,GL_REPEAT,GL_LINEAR);
-    GLuint tex1=Textures::loadTextureFromImage("textures/container.jpg",GL_RGB,GL_BGR,GL_REPEAT,GL_LINEAR);
+    Texture _tex2("Resources/Textures/face.png", GL_BGRA, GL_RGBA);
+    Texture _tex1("Resources/Textures/container.jpg", GL_BGR, GL_RGB);
+    GLuint tex2 = _tex2.getTexID();
+    GLuint tex1 = _tex1.getTexID();
     //主循环
     while(!glfwWindowShouldClose(window)){
         //Keybord and mouse
@@ -185,7 +187,7 @@ void exercise2(){
         //变换矩阵
         glm::mat4 trans;
         trans=glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
-        trans=glm::rotate(trans,(GLfloat)glfwGetTime() * 50.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+        trans=glm::rotate(trans,(GLfloat)glfwGetTime() * 5.0f, glm::vec3(0.0f, 0.0f, 1.0f));
         //变换
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram.programID, "transform"), 1, GL_FALSE, glm::value_ptr(trans));
         //绑定纹理1

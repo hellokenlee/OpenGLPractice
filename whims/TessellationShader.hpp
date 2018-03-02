@@ -2,6 +2,9 @@
 #ifndef TESSELLATION_SHADER_HPP
 #define TESSELLATION_SHADER_HPP
 
+// Common Headers
+#include "../NeneEngine/OpenGL/Nene.h"
+
 namespace TessellationShader {
 
 GLfloat vertices[] = {
@@ -33,16 +36,16 @@ void _main() {
     CoordinateAxes ca(cam);
     ControlPanel panel(window);
     // 初始化着色器
-    Shader shader("shaders/TessellationShader/tes.vert", "shaders/TessellationShader/tes.frag");
-    shader.addOptionalShader("shaders/TessellationShader/tes.tesc", GL_TESS_CONTROL_SHADER);
-    shader.addOptionalShader("shaders/TessellationShader/tes.tese", GL_TESS_EVALUATION_SHADER);
-    Shader shader2("shaders/Share/Color.vert", "shaders/Share/Color.frag");
+    Shader shader("Resources/Shaders/TessellationShader/tes.vert", "Resources/Shaders/TessellationShader/tes.frag");
+    shader.addOptionalShader("Resources/Shaders/TessellationShader/tes.tesc", GL_TESS_CONTROL_SHADER);
+    shader.addOptionalShader("Resources/Shaders/TessellationShader/tes.tese", GL_TESS_EVALUATION_SHADER);
+    Shader shader2("Resources/Shaders/Share/Color.vert", "Resources/Shaders/Share/Color.frag");
     // 模型
-    Object triangle(vertices, 3, POSITIONS_NORMALS, GL_TRIANGLES);
+    Shape triangle(vertices, 3, POSITIONS_NORMALS, GL_TRIANGLES);
     triangle.scaleTo(2.0f);
     triangle.setCamera(cam);
     triangle.setDrawMode(GL_PATCHES);
-    Model quad("textures/quad2.obj");
+    Model quad("Resources/Textures/quad2.obj");
     quad.setCamera(cam);
     quad.setDrawMode(GL_PATCHES);
     // 主循环
@@ -125,13 +128,13 @@ void isolines() {
     glGetIntegerv(GL_PATCH_VERTICES, &patchVerticesNum);
     cout<<"Vertices in Each Patch has been Setted to: "<<patchVerticesNum<<endl<<endl;
     // 着色器
-    Shader pointShader("shaders/TessellationShader/color.vert", "shaders/TessellationShader/color.frag");
+    Shader pointShader("Resources/Shaders/TessellationShader/color.vert", "Resources/Shaders/TessellationShader/color.frag");
     //
-    Shader shader("shaders/TessellationShader/isoline.vert", "shaders/TessellationShader/isoline.frag");
-    shader.addOptionalShader("shaders/TessellationShader/isoline.tesc", GL_TESS_CONTROL_SHADER);
-    shader.addOptionalShader("shaders/TessellationShader/isoline.tese", GL_TESS_EVALUATION_SHADER);
+    Shader shader("Resources/Shaders/TessellationShader/isoline.vert", "Resources/Shaders/TessellationShader/isoline.frag");
+    shader.addOptionalShader("Resources/Shaders/TessellationShader/isoline.tesc", GL_TESS_CONTROL_SHADER);
+    shader.addOptionalShader("Resources/Shaders/TessellationShader/isoline.tese", GL_TESS_EVALUATION_SHADER);
     //
-    Object *yarn = new Object(&vertices2[0].x, vertices2.size(), POSITIONS, GL_LINES);
+    Shape *yarn = new Shape(&vertices2[0].x, vertices2.size(), POSITIONS, GL_LINES);
     yarn->setCamera(cam);
     // 主循环
     while(!glfwWindowShouldClose(window)) {

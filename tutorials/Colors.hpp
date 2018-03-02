@@ -1,6 +1,10 @@
 /*Copyright reserved by KenLee@2016 ken4000kl@gmail.com*/
-#ifndef COLORS_HPP
-#define COLORS_HPP
+#ifndef COLORS_CPP
+#define COLORS_CPP
+
+// Common Headers
+#include "../NeneEngine/OpenGL/Nene.h"
+
 namespace Colors{
 //顶点信息前置声明
 extern GLfloat cubeVertices[36*5];
@@ -13,6 +17,7 @@ glm::vec3 lampPos(1.2f,1.5f,-2.0f);
 void tutorial(){
     GLFWwindow *window=initWindow("Colors",800,600);
     showEnviroment();
+    Camera* pCamera = CameraController::getCamera();
     //盒子顶点数据
     GLuint cubeVBO,cubeVAO;
     glGenBuffers(1,&cubeVBO);
@@ -32,8 +37,8 @@ void tutorial(){
         glEnableVertexAttribArray(0);
     glBindVertexArray(0);
     //着色器程序
-    Shader cubeShader("shaders/Colors/shader.vs","shaders/Colors/cubefrag.frag");
-    Shader lampShader("shaders/Colors/shader.vs","shaders/Colors/lampfrag.frag");
+    Shader cubeShader("Resources/Shaders/Colors/shader.vs","Resources/Shaders/Colors/cubefrag.frag");
+    Shader lampShader("Resources/Shaders/Colors/shader.vs","Resources/Shaders/Colors/lampfrag.frag");
     //uniform 的位置
     GLint cubeColorPos=glGetUniformLocation(cubeShader.programID,"objColor");
     GLint lightColorPos=glGetUniformLocation(cubeShader.programID,"lightColor");
@@ -66,7 +71,7 @@ void tutorial(){
     //关闭鼠标显示
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     //显示坐标轴
-    CoordinateAxes ca(&CameraController::camera);
+    CoordinateAxes ca(CameraController::getCamera());
     //帧数计数器
     FPSCounter fc;
     //Main loop
@@ -79,14 +84,14 @@ void tutorial(){
         ca.draw();
 
         lampShader.use();
-        glUniformMatrix4fv(lampViewPos,1,GL_FALSE,CameraController::camera.getViewMatrixVal());
-        glUniformMatrix4fv(lampProjPos,1,GL_FALSE,CameraController::camera.getProjectionMatrixVal());
+        glUniformMatrix4fv(lampViewPos,1,GL_FALSE, pCamera->getViewMatrixVal());
+        glUniformMatrix4fv(lampProjPos,1,GL_FALSE, pCamera->getProjectionMatrixVal());
         glBindVertexArray(lampVAO);
         glDrawArrays(GL_TRIANGLES,0,36);
 
         cubeShader.use();
-        glUniformMatrix4fv(cubeViewPos,1,GL_FALSE,CameraController::camera.getViewMatrixVal());
-        glUniformMatrix4fv(cubeProjPos,1,GL_FALSE,CameraController::camera.getProjectionMatrixVal());
+        glUniformMatrix4fv(cubeViewPos,1,GL_FALSE, pCamera->getViewMatrixVal());
+        glUniformMatrix4fv(cubeProjPos,1,GL_FALSE, pCamera->getProjectionMatrixVal());
         glBindVertexArray(cubeVAO);
         glDrawArrays(GL_TRIANGLES,0,36);
 

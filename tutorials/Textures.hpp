@@ -1,6 +1,9 @@
 /*Copyright reserved by KenLee@2016 ken4000kl@gmail.com*/
-#ifndef TEXTURES_HPP
-#define TEXTURES_HPP
+#ifndef TEXTURES_CPP
+#define TEXTURES_CPP
+
+// Common Headers
+#include "../NeneEngine/OpenGL/Nene.h"
 
 namespace Textures{
 //从图片文件生产纹理
@@ -72,7 +75,7 @@ void tutorial(){
     GLFWwindow *window=initWindow("Textures", 800 ,600);
     showEnviroment();
     //创建Shader
-    Shader shaderProgram("shaders/Textures/shader.vs","shaders/Textures/shader.frag");
+    Shader shaderProgram("Resources/Shaders/Textures/shader.vs","Resources/Shaders/Textures/shader.frag");
     //读入数据
     GLuint VBO,VAO,EBO;
     glGenBuffers(1,&VBO);
@@ -91,8 +94,8 @@ void tutorial(){
         glEnableVertexAttribArray(2);
     glBindVertexArray(0);
     //设置纹理
-    GLuint tex2=loadTextureFromImage("textures/face.png",GL_RGBA,GL_BGRA,GL_REPEAT,GL_LINEAR);
-    GLuint tex1=loadTextureFromImage("textures/container.jpg",GL_RGB,GL_BGR,GL_REPEAT,GL_LINEAR);
+    GLuint tex2=loadTextureFromImage("Resources/Textures/face.png",GL_RGBA,GL_BGRA,GL_REPEAT,GL_LINEAR);
+    GLuint tex1=loadTextureFromImage("Resources/Textures/container.jpg",GL_RGB,GL_BGR,GL_REPEAT,GL_LINEAR);
     //主循环
     while(!glfwWindowShouldClose(window)){
         //Keybord and mouse
@@ -125,7 +128,7 @@ void exercise1(){
     GLFWwindow *window=initWindow("Textures-EX1", 800, 600);
     showEnviroment();
     //创建Shader
-    Shader shaderProgram("shaders/Textures/shader.vs","shaders/Textures/shaderEx1.frag");
+    Shader shaderProgram("Resources/Shaders/Textures/shader.vs","Resources/Shaders/Textures/shaderEx1.frag");
     //读入数据
     GLuint VBO,VAO,EBO;
     glGenBuffers(1,&VBO);
@@ -144,8 +147,8 @@ void exercise1(){
         glEnableVertexAttribArray(2);
     glBindVertexArray(0);
     //设置纹理
-    GLuint tex2=loadTextureFromImage("textures/face.png",GL_RGBA,GL_BGRA,GL_REPEAT,GL_LINEAR);
-    GLuint tex1=loadTextureFromImage("textures/container.jpg",GL_RGB,GL_BGR,GL_REPEAT,GL_LINEAR);
+    GLuint tex2=loadTextureFromImage("Resources/Textures/face.png",GL_RGBA,GL_BGRA,GL_REPEAT,GL_LINEAR);
+    GLuint tex1=loadTextureFromImage("Resources/Textures/container.jpg",GL_RGB,GL_BGR,GL_REPEAT,GL_LINEAR);
     //主循环
     while(!glfwWindowShouldClose(window)){
         //Keybord and mouse
@@ -178,7 +181,7 @@ void exercise2(){
     GLFWwindow *window=initWindow("Textures-EX2", 800, 600);
     showEnviroment();
     //创建Shader
-    Shader shaderProgram("shaders/Textures/shader.vs","shaders/Textures/shaderEx2.frag");
+    Shader shaderProgram("Resources/Shaders/Textures/shader.vs","Resources/Shaders/Textures/shaderEx2.frag");
     //读入数据
     GLuint VBO,VAO,EBO;
     glGenBuffers(1,&VBO);
@@ -197,8 +200,8 @@ void exercise2(){
         glEnableVertexAttribArray(2);
     glBindVertexArray(0);
     //设置纹理
-    GLuint tex2=loadTextureFromImage("textures/face.png",GL_RGBA,GL_BGRA,GL_MIRRORED_REPEAT,GL_LINEAR);
-    GLuint tex1=loadTextureFromImage("textures/container.jpg",GL_RGB,GL_BGR,GL_CLAMP_TO_EDGE,GL_LINEAR);
+    GLuint tex2=loadTextureFromImage("Resources/Textures/face.png",GL_RGBA,GL_BGRA,GL_MIRRORED_REPEAT,GL_LINEAR);
+    GLuint tex1=loadTextureFromImage("Resources/Textures/container.jpg",GL_RGB,GL_BGR,GL_CLAMP_TO_EDGE,GL_LINEAR);
     //主循环
     while(!glfwWindowShouldClose(window)){
         //Keybord and mouse
@@ -239,7 +242,7 @@ void exercise3(){
     GLFWwindow *window=initWindow("Texture-EX3", 800, 600);
     showEnviroment();
     //创建Shader
-    Shader shaderProgram("shaders/Textures/shader.vs","shaders/Textures/shaderEx4.frag");
+    Shader shaderProgram("Resources/Shaders/Textures/shader.vs","Resources/Shaders/Textures/shaderEx4.frag");
     //读入数据
     GLuint VBO,VAO,EBO;
     glGenBuffers(1,&VBO);
@@ -258,8 +261,8 @@ void exercise3(){
         glEnableVertexAttribArray(2);
     glBindVertexArray(0);
     //设置纹理
-    GLuint tex2=loadTextureFromImage("textures/face.png",GL_RGBA,GL_BGRA,GL_REPEAT,GL_NEAREST);
-    GLuint tex1=loadTextureFromImage("textures/container.jpg",GL_RGB,GL_BGR,GL_REPEAT,GL_NEAREST);
+    GLuint tex2=loadTextureFromImage("Resources/Textures/face.png",GL_RGBA,GL_BGRA,GL_REPEAT,GL_NEAREST);
+    GLuint tex1=loadTextureFromImage("Resources/Textures/container.jpg",GL_RGB,GL_BGR,GL_REPEAT,GL_NEAREST);
     //主循环
     while(!glfwWindowShouldClose(window)){
         //Keybord and mouse
@@ -315,7 +318,7 @@ void exercise4(){
     //显示环境
     showEnviroment();
     //创建Shader
-    Shader shaderProgram("shaders/Textures/shader.vs","shaders/Textures/shaderEx4.frag");
+    Shader shaderProgram("Resources/Shaders/Textures/shader.vs","Resources/Shaders/Textures/shaderEx4.frag");
     //读入数据
     GLuint VBO,VAO,EBO;
     glGenBuffers(1,&VBO);
@@ -334,8 +337,8 @@ void exercise4(){
         glEnableVertexAttribArray(2);
     glBindVertexArray(0);
     //设置纹理
-    GLuint tex2=loadTextureFromImage("textures/face.png",GL_RGBA,GL_BGRA,GL_REPEAT,GL_LINEAR);
-    GLuint tex1=loadTextureFromImage("textures/container.jpg",GL_RGB,GL_BGR,GL_REPEAT,GL_LINEAR);
+    GLuint tex2=loadTextureFromImage("Resources/Textures/face.png",GL_RGBA,GL_BGRA,GL_REPEAT,GL_LINEAR);
+    GLuint tex1=loadTextureFromImage("Resources/Textures/container.jpg",GL_RGB,GL_BGR,GL_REPEAT,GL_LINEAR);
     //主循环
     while(!glfwWindowShouldClose(window)){
         //Keybord and mouse

@@ -1,6 +1,10 @@
 /*Copyright reserved by KenLee@2016 ken4000kl@gmail.com*/
-#ifndef MATERIALS_HPP
-#define MATERIALS_HPP
+#ifndef MATERIALS_CPP
+#define MATERIALS_CPP
+
+// Common Headers
+#include "../NeneEngine/OpenGL/Nene.h"
+
 namespace Materials{
 //顶点信息前置声明
 extern GLfloat cubeVertices[36*6];
@@ -18,9 +22,10 @@ void tutorial(){
     GLFWwindow *window=initWindow("Materials",800,600);
     showEnviroment();
     glEnable(GL_DEPTH_TEST);
+    Camera* pCamera = CameraController::getCamera();
     //着色器程序初始化
-    Shader cubeShader("shaders/Materials/cube.vs","shaders/Materials/cube.frag");
-    Shader lampShader("shaders/Materials/lamp.vs","shaders/Materials/lamp.frag");
+    Shader cubeShader("Resources/Shaders/Materials/cube.vs","Resources/Shaders/Materials/cube.frag");
+    Shader lampShader("Resources/Shaders/Materials/lamp.vs","Resources/Shaders/Materials/lamp.frag");
     cubeShader.use();
     GLint matAmbientLoc = glGetUniformLocation(cubeShader.programID, "material.ambient");
     GLint matDiffuseLoc = glGetUniformLocation(cubeShader.programID, "material.diffuse");
@@ -41,16 +46,12 @@ void tutorial(){
     lampShader.use();
     GLint lampColorLoc=glGetUniformLocation(lampShader.programID,"lampColor");
     //物体对象初始化
-    Object cube(cubeVertices,36,POSITIONS_NORMALS,GL_TRIANGLES);
-    cube.setCamera(&CameraController::camera);
-    cube.setShader(&cubeShader);
+    Shape cube(cubeVertices,36,POSITIONS_NORMALS,GL_TRIANGLES);
     cube.moveTo(cubePos);
 
-    Object lamp(cubeVertices,36,POSITIONS_NORMALS,GL_TRIANGLES);
-    lamp.setCamera(&CameraController::camera);
-    lamp.setShader(&lampShader);
+    Shape lamp(cubeVertices,36,POSITIONS_NORMALS,GL_TRIANGLES);
     lamp.moveTo(lampPos);
-    lamp.scaleTo(0.4);
+    lamp.scaleTo(glm::vec3(0.4f));
     //绑定控制
     glfwSetKeyCallback(window,CameraController::keyCallback);
     glfwSetCursorPosCallback(window,CameraController::mouseCallback);
@@ -58,7 +59,7 @@ void tutorial(){
     //关闭鼠标显示
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     //显示坐标轴
-    CoordinateAxes ca(&CameraController::camera);
+    CoordinateAxes ca(pCamera);
     //帧数计数器
     FPSCounter fc;
     //主循环
@@ -70,20 +71,20 @@ void tutorial(){
 
         ca.draw();
 
-        lamp.shader->use();
+        lampShader.use();
         lightColor.x = sin(glfwGetTime() * 2.0f * 0.3);
         lightColor.y = sin(glfwGetTime() * 0.7f * 0.3);
         lightColor.z = sin(glfwGetTime() * 1.3f * 0.3);
         glUniform3f(lampColorLoc,lightColor.x,lightColor.y,lightColor.z);
-        lamp.draw();
+        lamp.draw(&lampShader, pCamera);
 
-        cube.shader->use();
+        cubeShader.use();
         glm::vec3 diffuseColor = lightColor   * glm::vec3(0.5f); // Decrease the influence
         glm::vec3 ambientColor = diffuseColor * glm::vec3(0.1f); // Low influence
         glUniform3f(lightAmbientLoc, ambientColor.x, ambientColor.y, ambientColor.z);
         glUniform3f(lightDiffuseLoc, diffuseColor.x, diffuseColor.y, diffuseColor.z);
         glUniform3f(lightSpecularLoc, lightColor.x, lightColor.y, lightColor.z);
-        cube.draw();
+        cube.draw(&cubeShader, pCamera);
 
         glfwSwapBuffers(window);
         fc.update();
@@ -100,9 +101,10 @@ void exercise1(){
     GLFWwindow *window=initWindow("Materials",800,600);
     showEnviroment();
     glEnable(GL_DEPTH_TEST);
+    Camera* pCamera = CameraController::getCamera();
     //着色器程序初始化
-    Shader cubeShader("shaders/Materials/cube.vs","shaders/Materials/cube.frag");
-    Shader lampShader("shaders/Materials/lamp.vs","shaders/Materials/lamp.frag");
+    Shader cubeShader("Resources/Shaders/Materials/cube.vs","Resources/Shaders/Materials/cube.frag");
+    Shader lampShader("Resources/Shaders/Materials/lamp.vs","Resources/Shaders/Materials/lamp.frag");
     cubeShader.use();
     GLint matAmbientLoc = glGetUniformLocation(cubeShader.programID, "material.ambient");
     GLint matDiffuseLoc = glGetUniformLocation(cubeShader.programID, "material.diffuse");
@@ -126,16 +128,12 @@ void exercise1(){
     GLint lampColorLoc=glGetUniformLocation(lampShader.programID,"lampColor");
     glUniform3f(lampColorLoc,1.0f, 1.0f, 1.0f);
     //物体对象初始化
-    Object cube(cubeVertices,36,POSITIONS_NORMALS,GL_TRIANGLES);
-    cube.setCamera(&CameraController::camera);
-    cube.setShader(&cubeShader);
+    Shape cube(cubeVertices,36,POSITIONS_NORMALS,GL_TRIANGLES);
     cube.moveTo(cubePos);
 
-    Object lamp(cubeVertices,36,POSITIONS_NORMALS,GL_TRIANGLES);
-    lamp.setCamera(&CameraController::camera);
-    lamp.setShader(&lampShader);
+    Shape lamp(cubeVertices,36,POSITIONS_NORMALS,GL_TRIANGLES);
     lamp.moveTo(lampPos);
-    lamp.scaleTo(0.4);
+    lamp.scaleTo(glm::vec3(0.4f));
     //绑定控制
     glfwSetKeyCallback(window,CameraController::keyCallback);
     glfwSetCursorPosCallback(window,CameraController::mouseCallback);
@@ -143,7 +141,7 @@ void exercise1(){
     //关闭鼠标显示
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     //显示坐标轴
-    CoordinateAxes ca(&CameraController::camera);
+    CoordinateAxes ca(pCamera);
     //帧数计数器
     FPSCounter fc;
     //主循环
@@ -154,8 +152,8 @@ void exercise1(){
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
         ca.draw();
-        lamp.draw();
-        cube.draw();
+        lamp.draw(&lampShader, pCamera);
+        cube.draw(&cubeShader, pCamera);
 
         glfwSwapBuffers(window);
         fc.update();

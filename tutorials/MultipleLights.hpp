@@ -1,6 +1,10 @@
 /*Copyright reserved by KenLee@2016 ken4000kl@gmail.com*/
-#ifndef MULTIPLE_LIGHTS_HPP
-#define MULTIPLE_LIGHTS_HPP
+#ifndef MULTIPLE_LIGHTS_CPP
+#define MULTIPLE_LIGHTS_CPP
+
+// Common Headers
+#include "../NeneEngine/OpenGL/Nene.h"
+
 namespace MultipleLights{
 //顶点信息前置声明
 extern GLfloat cubeVertices[36*8];
@@ -15,9 +19,10 @@ void tutorial(){
     showEnviroment();
     glEnable(GL_DEPTH_TEST);
     glfwSwapInterval(1);
+    Camera* pCamera = CameraController::getCamera();
     //着色器程序初始化1
-    Shader cubeShader("shaders/MultipleLights/cube.vs","shaders/MultipleLights/cube.frag");
-    Shader lampShader("shaders/MultipleLights/lamp.vs","shaders/MultipleLights/lamp.frag");
+    Shader cubeShader("Resources/Shaders/MultipleLights/cube.vs","Resources/Shaders/MultipleLights/cube.frag");
+    Shader lampShader("Resources/Shaders/MultipleLights/lamp.vs","Resources/Shaders/MultipleLights/lamp.frag");
     //设置Uniforms
     cubeShader.use();
     //设置材质Uniform
@@ -60,58 +65,51 @@ void tutorial(){
     lampShader.use();
     glUniform3f(glGetUniformLocation(lampShader.programID,"lampColor"), 1.0f, 1.0f, 1.0f);
     //物体对象初始化
-    Object cubeMother(cubeVertices,36,POSITIONS_NORMALS_TEXTURES,GL_TRIANGLES);
-    cubeMother.setCamera(&CameraController::camera);
-    cubeMother.setShader(&cubeShader);
-    Object* cubes[10];
-    for(int i=0;i<10;++i){
-        cubes[i]=cubeMother.clone();
-        cubes[i]->model=glm::translate(glm::mat4(),cubePositions[i]);
-        GLfloat angle=20.0f*i;
-        cubes[i]->model=glm::rotate(cubes[i]->model,angle,glm::vec3(1.0f, 0.3f, 0.5f));
+    vector<Shape> cubes;
+    for(int i = 0; i < 10; ++i){
+        cubes.push_back(Shape(cubeVertices, 36, POSITIONS_NORMALS_TEXTURES, GL_TRIANGLES));
+        glm::mat4 tmpModel = glm::translate(glm::mat4(), cubePositions[i]);
+        GLfloat angle = 20.0f * i;
+        tmpModel = glm::rotate(tmpModel, angle, glm::vec3(1.0f, 0.3f, 0.5f));
+        cubes[i].setModelMat(tmpModel);
     }
     //点光源们初始化
-    cubeMother.setShader(&lampShader);
-    Object* lamps[4];
-    for(int i=0;i<4;++i){
-        lamps[i]=cubeMother.clone();
-        lamps[i]->moveTo(pointLightPositions[i]);
-        lamps[i]->scaleTo(0.2);
+    vector<Shape> lamps;
+    for(int i = 0; i < 4; ++i){
+        lamps.push_back(Shape(cubeVertices, 36, POSITIONS_NORMALS_TEXTURES, GL_TRIANGLES));
+        lamps[i].moveTo(pointLightPositions[i]);
+        lamps[i].scaleTo(0.2);
     }
     //绑定控制
     CameraController::bindControl(window);
     //关闭鼠标显示
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     //显示坐标轴
-    CoordinateAxes ca(&CameraController::camera);
+    CoordinateAxes ca(pCamera);
     ca.showGrid(false);
     //帧数计数器
     FPSCounter fc;
     //载入纹理
-    TextureManager* tm=TextureManager::getManager();
-    if(!tm->loadTexture("textures/container2.png",0,GL_BGRA,GL_RGBA))
-        return ;
-    if(!tm->loadTexture("textures/container2_specular.png",1,GL_BGRA,GL_RGBA))
-        return ;
+    Texture tex0("Resources/Textures/container2.png", GL_BGRA, GL_RGBA);
+    Texture tex1("Resources/Textures/container2_specular.png", GL_BGRA, GL_RGBA);
     //主循环
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
         CameraController::update();
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-        //绘制坐标轴
+        // 绘制坐标轴
         ca.draw();
-        //绘制点光源方块
-        for(int i=0;i<4;++i)
-            lamps[i]->draw();
-        //绘制物体
-        cubeMother.shader->use();
-        glActiveTexture(GL_TEXTURE0);
-        tm->bindTexture(0);
-        glActiveTexture(GL_TEXTURE1);
-        tm->bindTexture(1);
-        for(int i=0;i<10;++i)
-            cubes[i]->draw();
+        // 绘制点光源方块
+        for(int i = 0; i < 4; ++i) {
+            lamps[i].draw(&lampShader, pCamera);
+        }
+        // 绘制物体
+        tex0.use(0);
+        tex1.use(1);
+        for(int i = 0; i < 10; ++i){
+            cubes[i].draw(&cubeShader, pCamera);
+        }
         //置换缓冲
         glfwSwapBuffers(window);
         fc.update();
@@ -180,7 +178,7 @@ glm::vec3 cubePositions[10] = {
     glm::vec3( 1.5f,  0.2f, -1.5f),
     glm::vec3(-1.3f,  1.0f, -1.5f)
 };
-glm::vec3 pointLightPositions[] = {
+glm::vec3 pointLightPositions[4] = {
     glm::vec3( 0.7f,  0.2f,  2.0f),
     glm::vec3( 2.3f, -3.3f, -4.0f),
     glm::vec3(-4.0f,  2.0f, -12.0f),

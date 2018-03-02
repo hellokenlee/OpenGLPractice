@@ -2,7 +2,9 @@
 #ifndef VOL_VISUALIZE_HPP
 #define VOL_VISUALIZE_HPP
 
-#define DEBUG
+// Common Headers
+#include "../NeneEngine/OpenGL/Nene.h"
+
 namespace VolVisualize {
 
 class MitsubaVol {
@@ -27,7 +29,7 @@ public:
     vector<float> data;
 public:
     bool checkHeader() {
-        //if(header.v == 'v' && header.o == 'o' && header.l == 'l')
+        return (header.v == 'v' && header.o == 'o' && header.l == 'l');
     }
     bool load(const char* filePath) {
         FILE *f = fopen(filePath, "r");
@@ -90,17 +92,17 @@ void _main() {
     GLFWwindow *window = initWindow("TessellationShader", 800, 600, 3, 3);
     showEnviroment();
     CameraController::bindControl(window);
-    Camera *cam = &CameraController::camera;
+    Camera *cam = CameraController::getCamera();
     // 一些设置
     glEnable(GL_DEPTH_TEST);
     CoordinateAxes ca(cam);
     ControlPanel panel(window);
     // 简单颜色着色器
-    //Shader shader("shaders/Share/Color.vert", "shaders/Share/Color.frag");
-    Shader shader("shaders/Share/VoxelObject.vert", "shaders/Share/VoxelObject.frag");
+    //Shader shader("Resources/Shaders/Share/Color.vert", "Resources/Shaders/Share/Color.frag");
+    Shader shader("Resources/Shaders/Share/VoxelShape.vert", "Resources/Shaders/Share/VoxelShape.frag");
     //
     MitsubaVol mVol;
-    mVol.load("textures/Yarns/yarn_3_od.vol");
+    mVol.load("Resources/Textures/Yarns/yarn_3_od.vol");
     //mVol.load("/home/kenlee/Workspace/Mitsuba/ClothCTImage/velvetA/smallA_full_part0_od_sub.vol");
     mVol.showInfo();
     /*
@@ -117,9 +119,9 @@ void _main() {
             }
         }
     }
-    Object* cube = new Object(&vertices[0].x, vertices.size() / 2, POSITIONS_COLORS, GL_POINTS);
+    Shape* cube = new Shape(&vertices[0].x, vertices.size() / 2, POSITIONS_COLORS, GL_POINTS);
     //*/
-    VoxelObject* cube = new VoxelObject(mVol.data, mVol.header.numX, mVol.header.numY, mVol.header.numZ);
+    VoxelShape* cube = new VoxelShape(mVol.data, mVol.header.numX, mVol.header.numY, mVol.header.numZ);
     cube->setShader(&shader);
     cube->setCamera(cam);
     // 写入光源位置

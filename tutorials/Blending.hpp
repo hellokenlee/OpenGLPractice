@@ -1,43 +1,45 @@
 /*Copyright reserved by KenLee@2016 ken4000kl@gmail.com*/
-#ifndef BLENDING_HPP
-#define BLENDING_HPP
+#ifndef BLENDING_CPP
+#define BLENDING_CPP
+
+// Common Headers
+#include "../NeneEngine/OpenGL/Nene.h"
+//
+#include <map>
+
 namespace Blending{
+
 extern GLfloat squareVertices[5*6];
 extern GLfloat planeVertices[5*6];
 extern GLfloat cubeVertices[36*5];
 extern glm::vec3 grassPositions[5];
 extern glm::vec3 cubePositions[2];
+
+// 绘制透明物体
 void tutorial(){
     //
     GLFWwindow* window=initWindow("Blending",800,600);
     showEnviroment();
     // Set the required callback functions
     CameraController::bindControl(window);
-    // Options
+    Camera* pCamera = CameraController::getCamera();
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    // Setup some OpenGL options
     glEnable(GL_DEPTH_TEST);
     //
-    CoordinateAxes ca(&CameraController::camera);
-    //草
-    Shader grassShader("shaders/Blending/scene.vs","shaders/Blending/discard.frag");
-    Object grassSquare(squareVertices,6,POSITIONS_TEXTURES,GL_TRIANGLES);
-    grassSquare.setShader(&grassShader);
-    grassSquare.setCamera(&CameraController::camera);
-    grassSquare.moveTo(glm::vec3(0,0.5,0));
-    //地面
-    Object ground(planeVertices,6,POSITIONS_TEXTURES,GL_TRIANGLES);
-    ground.setShader(&grassShader);
-    ground.setCamera(&CameraController::camera);
+    CoordinateAxes ca(pCamera);
+    // 草
+    Shader shader("Resources/Shaders/Blending/scene.vs","Resources/Shaders/Blending/discard.frag");
+    Shape grassSquare(squareVertices, 6, POSITIONS_TEXTURES, GL_TRIANGLES);
+    grassSquare.moveTo(glm::vec3(0.0f, 0.5f, 0.0f));
+    // 地面
+    Shape ground(planeVertices,6,POSITIONS_TEXTURES,GL_TRIANGLES);
     //箱子
-    Object box(cubeVertices,36,POSITIONS_TEXTURES,GL_TRIANGLES);
-    box.setShader(&grassShader);
-    box.setCamera(&CameraController::camera);
+    Shape box(cubeVertices,36,POSITIONS_TEXTURES,GL_TRIANGLES);
     //纹理
-    TextureManager *tm=TextureManager::getManager();
-    tm->loadTexture("textures/grass.png",0,GL_BGRA,GL_RGBA,0,0,GL_CLAMP_TO_EDGE);
-    tm->loadTexture("textures/timg2.jpg",1,GL_BGR,GL_RGB);
-    tm->loadTexture("textures/container2.png",2,GL_BGRA,GL_RGBA);
+    //Texture tex0("Resources/Textures/glass.png", GL_BGRA, GL_RGBA, 0, 0, GL_CLAMP_TO_EDGE); //启用这个显示半透明物体有渲染bug
+    Texture tex0("Resources/Textures/grass.png", GL_BGRA, GL_RGBA, 0, 0, GL_CLAMP_TO_EDGE);
+    Texture tex1("Resources/Textures/timg2.jpg", GL_BGR,GL_RGB);
+    Texture tex2("Resources/Textures/container2.png", GL_BGRA, GL_RGBA);
     while(!glfwWindowShouldClose(window)){
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
@@ -45,21 +47,20 @@ void tutorial(){
         glfwPollEvents();
         CameraController::update();
 
-        //ca.draw();
         //画草
-        tm->bindTexture(0);
+        tex0.use(0);
         for(auto pos:grassPositions){
             grassSquare.moveTo(pos);
-            grassSquare.draw();
+            grassSquare.draw(&shader, pCamera);
         }
         //画地面
-        tm->bindTexture(1);
-        ground.draw();
+        tex1.use(0);
+        ground.draw(&shader, pCamera);
         //画箱子
-        tm->bindTexture(2);
+        tex2.use(0);
         for(auto pos:cubePositions){
             box.moveTo(pos);
-            box.draw();
+            box.draw(&shader, pCamera);
         }
 
         glfwSwapBuffers(window);
@@ -69,18 +70,20 @@ void tutorial(){
 }
 
 bool cmp(glm::vec3 pos1,glm::vec3 pos2){
-    GLfloat dist1=glm::length(pos1-CameraController::camera.cameraPos);
-    GLfloat dist2=glm::length(pos2-CameraController::camera.cameraPos);
-    return dist1>dist2;
+    GLfloat dist1 = glm::length(pos1 - CameraController::getCamera()->cameraPos);
+    GLfloat dist2 = glm::length(pos2 - CameraController::getCamera()->cameraPos);
+    return dist1 > dist2;
 }
 
+// 排序绘制半透明玻璃
 void exercise1(){
     //
-    GLFWwindow* window=initWindow("Blending",800,600);
+    GLFWwindow* window = initWindow("Blending", 800, 600);
     showEnviroment();
     glfwSwapInterval(0);
     // Set the required callback functions
     CameraController::bindControl(window);
+    Camera* pCamera = CameraController::getCamera();
     // Options
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     // Setup some OpenGL options
@@ -88,31 +91,25 @@ void exercise1(){
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
     //
-    CoordinateAxes ca(&CameraController::camera);
+    CoordinateAxes ca(pCamera);
     //半透明玻璃
-    Shader grassShader("shaders/Blending/scene.vs","shaders/Blending/blend.frag");
-    Object grassSquare(squareVertices,6,POSITIONS_TEXTURES,GL_TRIANGLES);
-    grassSquare.setShader(&grassShader);
-    grassSquare.setCamera(&CameraController::camera);
+    Shader shader("Resources/Shaders/Blending/scene.vs","Resources/Shaders/Blending/blend.frag");
+    //
+    Shape grassSquare(squareVertices, 6, POSITIONS_TEXTURES,GL_TRIANGLES);
     grassSquare.moveTo(glm::vec3(0,0.5,0));
-    map<GLfloat,glm::vec3> sortedGrass;
+    std::map<GLfloat,glm::vec3> sortedGrass;
     for(auto pos:grassPositions){
-        GLfloat dist=glm::length((CameraController::camera).cameraPos-pos);
-        sortedGrass[dist]=pos;
+        GLfloat dist = glm::length(pCamera->cameraPos - pos);
+        sortedGrass[dist] = pos;
     }
     //地面
-    Object ground(planeVertices,6,POSITIONS_TEXTURES,GL_TRIANGLES);
-    ground.setShader(&grassShader);
-    ground.setCamera(&CameraController::camera);
+    Shape ground(planeVertices, 6, POSITIONS_TEXTURES,GL_TRIANGLES);
     //箱子
-    Object box(cubeVertices,36,POSITIONS_TEXTURES,GL_TRIANGLES);
-    box.setShader(&grassShader);
-    box.setCamera(&CameraController::camera);
+    Shape box(cubeVertices, 36, POSITIONS_TEXTURES,GL_TRIANGLES);
     //纹理
-    TextureManager *tm=TextureManager::getManager();
-    tm->loadTexture("textures/glass.png",0,GL_BGRA,GL_RGBA,0,0,GL_CLAMP_TO_EDGE);
-    tm->loadTexture("textures/timg2.jpg",1,GL_BGR,GL_RGB);
-    tm->loadTexture("textures/container2.png",2,GL_BGRA,GL_RGBA);
+    Texture tex0("Resources/Textures/glass.png", GL_BGRA, GL_RGBA, 0, 0, GL_CLAMP_TO_EDGE);
+    Texture tex1("Resources/Textures/timg2.jpg", GL_BGR,GL_RGB);
+    Texture tex2("Resources/Textures/container2.png", GL_BGRA, GL_RGBA);
     //
     FPSCounter fp;
     while(!glfwWindowShouldClose(window)){
@@ -122,29 +119,22 @@ void exercise1(){
         glfwPollEvents();
         CameraController::update();
 
-        //ca.draw();
-        //画地面
-        tm->bindTexture(1);
-        ground.draw();
-         //画箱子
-        tm->bindTexture(2);
+        // ca.draw();
+        // 画地面
+        tex1.use();
+        ground.draw(&shader, pCamera);
+        // 画箱子
+        tex2.use();
         for(auto pos:cubePositions){
             box.moveTo(pos);
-            box.draw();
+            box.draw(&shader, pCamera);
         }
         //画玻璃，透明的永远要最后画
-
-        tm->bindTexture(0);
-         /*
-        for(auto it=sortedGrass.rbegin();it!=sortedGrass.rend();++it){
-            grassSquare.moveTo(it->second);
-            grassSquare.draw();
-        }
-        */
-        sort(grassPositions,grassPositions+5,cmp);
-        for(auto pos:grassPositions){
+        tex0.use();
+        sort(grassPositions, grassPositions + 5, cmp);
+        for(auto pos : grassPositions){
             grassSquare.moveTo(pos);
-            grassSquare.draw();
+            grassSquare.draw(&shader, pCamera);
         }
 
         glfwSwapBuffers(window);

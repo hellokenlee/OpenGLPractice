@@ -1,6 +1,10 @@
 /*Copyright reserved by KenLee@2016 ken4000kl@gmail.com*/
-#ifndef COORDINATE_SYSTEM_HPP
-#define COORDINATE_SYSTEM_HPP
+#ifndef COORDINATE_SYSTEM_CPP
+#define COORDINATE_SYSTEM_CPP
+
+// Common Headers
+#include "../NeneEngine/OpenGL/Nene.h"
+
 namespace CoordinateSystem{
 //窗口宽高
 const float ScreenHeight=600.0;
@@ -19,7 +23,7 @@ void tutorial(){
     glEnable(GL_DEPTH_TEST);
     showEnviroment();
     //创建Shader
-    Shader shaderProgram("shaders/CoordinateSystem/shader.vs","shaders/CoordinateSystem/shader.frag");
+    Shader shaderProgram("Resources/Shaders/CoordinateSystem/shader.vs","Resources/Shaders/CoordinateSystem/shader.frag");
     //读入数据
     GLuint VBO,VAO;
     glGenBuffers(1,&VBO);
@@ -33,8 +37,10 @@ void tutorial(){
         glEnableVertexAttribArray(1);
     glBindVertexArray(0);
     //设置纹理
-    GLuint tex2=Textures::loadTextureFromImage("textures/face.png",GL_RGBA,GL_BGRA,GL_REPEAT,GL_LINEAR);
-    GLuint tex1=Textures::loadTextureFromImage("textures/container.jpg",GL_RGB,GL_BGR,GL_REPEAT,GL_LINEAR);
+    Texture _tex2("Resources/Textures/face.png", GL_BGRA, GL_RGBA);
+    Texture _tex1("Resources/Textures/container.jpg", GL_BGR, GL_RGB);
+    GLuint tex2 = _tex2.getTexID();
+    GLuint tex1 = _tex1.getTexID();
     //初始化矩阵
     //模型矩阵(局部coord -> 世界coord)
     glm::mat4 model;
@@ -76,7 +82,7 @@ void tutorial(){
         for(GLuint i=0;i<10;i++){
           model=glm::mat4();
           model = glm::translate(model, cubePositions[i]);
-          GLfloat angle = 20.0f * i*(GLfloat)glfwGetTime();
+          GLfloat angle = Radians(20.0f * i*(GLfloat)glfwGetTime());
           model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
           glUniformMatrix4fv(modelPos, 1, GL_FALSE, glm::value_ptr(model));
 

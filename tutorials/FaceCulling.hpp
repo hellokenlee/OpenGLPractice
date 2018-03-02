@@ -1,31 +1,32 @@
 /*Copyright reserved by KenLee@2016 ken4000kl@gmail.com*/
-#ifndef FACE_CULLING_HPP
-#define FACE_CULLING_HPP
+#ifndef FACE_CULLING_CPP
+#define FACE_CULLING_CPP
+
+// Common Headers
+#include "../NeneEngine/OpenGL/Nene.h"
+
 namespace FaceCulling{
 
 extern GLfloat cubeVertices[36*5];
 
 void tutorial(){
     // Init window
-    GLFWwindow* window=initWindow("Blending",800,600);
+    GLFWwindow* window = initWindow("FaceCulling",800,600);
     showEnviroment();
     // Set the required callback functions
     CameraController::bindControl(window);
+    Camera* pCamera = CameraController::getCamera();
     // Options
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     // Setup some OpenGL options
     glEnable(GL_DEPTH_TEST);
-
     // Cube obejct define
-    Object cube(cubeVertices,36,POSITIONS_TEXTURES,GL_TRIANGLES);
-    Shader shader("shaders/FaceCulling/scene1.vs","shaders/FaceCulling/scene1.frag");
-    cube.setShader(&shader);
-    cube.setCamera(&CameraController::camera);
+    Shape cube(cubeVertices, 36, POSITIONS_TEXTURES,GL_TRIANGLES);
+    Shader shader("Resources/Shaders/FaceCulling/scene1.vs","Resources/Shaders/FaceCulling/scene1.frag");
     // Texutures
-    TextureManager *tm=TextureManager::getManager();
-    tm->loadTexture("textures/container2.png",0,GL_BGRA,GL_RGBA);
+    Texture tex("Resources/Textures/container2.png", GL_BGRA, GL_RGBA);
     //
-    CoordinateAxes ca(&CameraController::camera);
+    CoordinateAxes ca(pCamera);
     //
     glEnable(GL_CULL_FACE);
     glFrontFace(GL_CW);
@@ -38,8 +39,8 @@ void tutorial(){
 
         ca.draw();
 
-        tm->bindTexture(0);
-        cube.draw();
+        tex.use();
+        cube.draw(&shader, pCamera);
         glfwSwapBuffers(window);
     }
     glfwDestroyWindow(window);
@@ -48,25 +49,22 @@ void tutorial(){
 
 void exercise1(){
     // Init window
-    GLFWwindow* window=initWindow("Blending",800,600);
+    GLFWwindow* window = initWindow("FaceCulling-Ex1",800,600);
     showEnviroment();
     // Set the required callback functions
     CameraController::bindControl(window);
+    Camera* pCamera = CameraController::getCamera();
     // Options
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     // Setup some OpenGL options
     glEnable(GL_DEPTH_TEST);
-
     // Cube obejct define
-    Object cube(cubeVertices,36,POSITIONS_TEXTURES,GL_TRIANGLES);
-    Shader shader("shaders/FaceCulling/scene1.vs","shaders/FaceCulling/scene1.frag");
-    cube.setShader(&shader);
-    cube.setCamera(&CameraController::camera);
+    Shape cube(cubeVertices, 36, POSITIONS_TEXTURES, GL_TRIANGLES);
+    Shader shader("Resources/Shaders/FaceCulling/scene1.vs","Resources/Shaders/FaceCulling/scene1.frag");
     // Texutures
-    TextureManager *tm=TextureManager::getManager();
-    tm->loadTexture("textures/container2.png",0,GL_BGRA,GL_RGBA);
+    Texture tex("Resources/Textures/container2.png", GL_BGRA, GL_RGBA);
     //
-    CoordinateAxes ca(&CameraController::camera);
+    CoordinateAxes ca(pCamera);
 
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
@@ -77,8 +75,8 @@ void exercise1(){
 
         ca.draw();
 
-        tm->bindTexture(0);
-        cube.draw();
+        tex.use();
+        cube.draw(&shader, pCamera);
         glfwSwapBuffers(window);
     }
     glfwDestroyWindow(window);

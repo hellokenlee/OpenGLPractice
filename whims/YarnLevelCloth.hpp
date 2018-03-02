@@ -2,6 +2,8 @@
 #ifndef YARN_LEVEL_CLOTH_HPP
 #define YARN_LEVEL_CLOTH_HPP
 
+// Common Headers
+#include "../NeneEngine/OpenGL/Nene.h"
 #include <cmath>
 
 namespace YarnLevelCloth {
@@ -10,19 +12,19 @@ namespace YarnLevelCloth {
 void _main() {
     // 初始化
     GLFWwindow *window = initWindow("Yarn_level_Cloth", 800, 600,3 ,3);
+    Camera *pCamera = CameraController::getCamera();
     showEnviroment();
     glfwSwapInterval(0);
     CameraController::bindControl(window);
-    CoordinateAxes ca(&CameraController::camera);
-    Camera *cam = &CameraController::camera;
+    CoordinateAxes ca(pCamera);
     ControlPanel panel(window);
     FPSCounter fc;
     // 初始化一个曲线集合
-    Union *bcc = CurveCollection::genFromBBCFile("textures/Yarn-level Cloth Models/openwork_trellis_pattern.bcc");
+    Union *bcc = CurveCollection::genFromBBCFile("Resources/Textures/Yarn-level Cloth Models/openwork_trellis_pattern.bcc");
     bcc->isShareModel= true;
     // 简单着色器
-    Shader whiteShader("shaders/Share/Color.vert", "shaders/Share/Color.frag");
-    bcc->setCamera(cam);
+    Shader whiteShader("Resources/Shaders/Share/Color.vert", "Resources/Shaders/Share/Color.frag");
+    bcc->setCamera(pCamera);
     bcc->setShader(&whiteShader);
     // 主循环
     while(!glfwWindowShouldClose(window)) {
@@ -93,7 +95,7 @@ const GLfloat s = 1.0;
 vector<glm::vec3> calcPlyCenter(vector<glm::vec3> &yarnCenter, GLfloat theta_Ply) {
     vector<glm::vec3> plyCenter(yarnCenter);
     // 通过z轴反求出 极坐标角度 theta。(`c_i(\theta).z = \altha \theta / 2\pi`)
-    for(int i = 0; i < yarnCenter.size(); ++i) {
+    for(unsigned int i = 0; i < yarnCenter.size(); ++i) {
         // 反求theta
         GLfloat theta = (2.0 * glm::pi<float>() * yarnCenter[i].z) / alpha;
         // 转换成弧度
@@ -127,14 +129,14 @@ vector<vector<glm::vec3>> calcMigrationFiber(vector<glm::vec3> &plyCenter, vecto
     }
     //
     vector<vector<glm::vec3>> fiberCenter(R_initial.size(), vector<glm::vec3>(plyCenter.size() * 2));
-    for(int i = 0; i < R_initial.size(); ++i) {
-        FiberType ft;
+    for(unsigned int i = 0; i < R_initial.size(); ++i) {
+        //FiberType ft = MIGRATION;
         int tmp = rand() % 1000;
         GLfloat _R_max, _R_min;
         GLfloat _alpha = alpha;
         if(tmp < 20){
             // 模拟 Hair-Fiber： 概率 0.5%
-            ft = HAIR;
+            //ft = HAIR;
             _R_max = R_max;
             _R_max = R_max + (rand()/(double)(RAND_MAX) * 4.0f);
             _R_min = R_min;
@@ -142,19 +144,19 @@ vector<vector<glm::vec3>> calcMigrationFiber(vector<glm::vec3> &plyCenter, vecto
             cout<<_R_max<<endl;
         } else if(tmp < 30) {
             // 模拟 Loop-Fiber： 概率 1.0%
-            ft = LOOP;
+            //ft = LOOP;
             _R_max = R_max;
             //_R_max = R_loop_max;
             _R_min = R_min;
         } else {
             // 模拟 Migration-Fiber： 剩下的概率
-            ft = MIGRATION;
+            //ft = MIGRATION;
             _R_max = R_max;
             _R_min = R_min;
         }
-        GLfloat lastR = _R_min;
+        //GLfloat lastR = _R_min;
         // 对于每一根Fiber， 根据Ply中心计算Fiber位置
-        for(int j = 0; j < plyCenter.size(); ++j) {
+        for(unsigned int j = 0; j < plyCenter.size(); ++j) {
             // 反求theta
             GLfloat theta = (2.0 * glm::pi<float>() * yarnCenter[j].z) / _alpha;
             // 转换成弧度
@@ -179,7 +181,7 @@ vector<vector<glm::vec3>> calcMigrationFiber(vector<glm::vec3> &plyCenter, vecto
     return fiberCenter;
 }
 
-vector<GLuint> createIndices(vector<glm::vec3> &positionsArray, int strap) {
+vector<GLuint> createIndices(vector<glm::vec3> &positionsArray, unsigned int strap) {
     vector<GLuint> indices;
     for(unsigned int i = 0; i < positionsArray.size() - 1; ++i) {
         for(unsigned int j = 0; j < strap; ++j) {
@@ -197,33 +199,31 @@ void singleYarnWithTess() {
     GLFWwindow *window = initWindow("TessellationShader", 800, 600, 4, 0);
     showEnviroment();
     CameraController::bindControl(window);
-    Camera *cam = &CameraController::camera;
+    Camera *pCamera = CameraController::getCamera();
     // 一些设置
     glEnable(GL_PROGRAM_POINT_SIZE);
     glPointSize(2.0);
     glLineWidth(1.0);
-    CameraController::camera.moveto(glm::vec3(25.0f, 5.0f, 50.0f));
+    pCamera->moveto(glm::vec3(25.0f, 5.0f, 50.0f));
     CameraController::yaw = -180.0f;
     CameraController::pitch = 0.0f;
-    CoordinateAxes ca(cam);
+    CoordinateAxes ca(pCamera);
     ControlPanel panel(window);
     // 简单颜色着色器
-    Shader shader("shaders/YarnLevelCloth/color.vert", "shaders/YarnLevelCloth/color.frag");
+    Shader shader("Resources/Shaders/YarnLevelCloth/color.vert", "Resources/Shaders/YarnLevelCloth/color.frag");
     // 细分着色器
-    Shader tesShader("shaders/YarnLevelCloth/genPlyCenter.vert", "shaders/YarnLevelCloth/genPlyCenter.frag");
-    tesShader.addOptionalShader("shaders/YarnLevelCloth/genPlyCenter.tesc", GL_TESS_CONTROL_SHADER);
-    tesShader.addOptionalShader("shaders/YarnLevelCloth/genPlyCenter.tese", GL_TESS_EVALUATION_SHADER);
+    Shader tesShader("Resources/Shaders/YarnLevelCloth/genPlyCenter.vert", "Resources/Shaders/YarnLevelCloth/genPlyCenter.frag");
+    tesShader.addOptionalShader("Resources/Shaders/YarnLevelCloth/genPlyCenter.tesc", GL_TESS_CONTROL_SHADER);
+    tesShader.addOptionalShader("Resources/Shaders/YarnLevelCloth/genPlyCenter.tese", GL_TESS_EVALUATION_SHADER);
     // TCS输入的每一个Patch中有多少个顶点
     glPatchParameteri(GL_PATCH_VERTICES, 2);
     // 纺线中心
     yarnCenter = Curve::CRChain(yarnCenter, 100);
     vector<GLuint> indices = createIndices(yarnCenter, 2);
-    Object *yarn = new Object(&yarnCenter[0].x, yarnCenter.size(), POSITIONS, GL_LINES, &indices[0], indices.size());
-    yarn->setCamera(cam);
+    Shape *yarn = new Shape(&yarnCenter[0].x, yarnCenter.size(), POSITIONS, GL_LINES, &indices[0], indices.size());
     //
     vector<glm::vec3> plyCenter1 = calcPlyCenter(yarnCenter, 1.0f * 2.0f * glm::pi<float>() / 3.0f);
-    Object *ply1 = new Object(&plyCenter1[0].x, plyCenter1.size(), POSITIONS, GL_LINE_STRIP);
-    ply1->setCamera(cam);
+    Shape *ply1 = new Shape(&plyCenter1[0].x, plyCenter1.size(), POSITIONS, GL_LINE_STRIP);
     //
     while(!glfwWindowShouldClose(window)) {
         glfwPollEvents();
@@ -235,15 +235,12 @@ void singleYarnWithTess() {
         shader.use();
         glUniform3f(glGetUniformLocation(shader.programID, "fragmentColor"), 1.0, 1.0, 1.0);
         yarn->setDrawMode(GL_LINES);
-        yarn->setShader(&shader);
         yarn->draw();
         glUniform3f(glGetUniformLocation(shader.programID, "fragmentColor"), 1.0, 0.0, 0.0);
-        ply1->setShader(&shader);
         ply1->draw();
 
         tesShader.use();
         yarn->setDrawMode(GL_PATCHES);
-        yarn->setShader(&tesShader);
         yarn->draw();
 
         //
@@ -264,8 +261,8 @@ void singleYarn() {
     glPointSize(2.0);
     glLineWidth(1.0);
     CameraController::bindControl(window);
-    Camera *cam = &CameraController::camera;
-    CameraController::camera.moveto(glm::vec3(25.0f, 5.0f, 50.0f));
+    Camera* cam = CameraController::getCamera();
+    cam->moveto(glm::vec3(25.0f, 5.0f, 50.0f));
     CameraController::yaw = -180.0f;
     CameraController::pitch = 0.0f;
     CoordinateAxes ca(cam);
@@ -280,54 +277,54 @@ void singleYarn() {
     glGetIntegerv(GL_PATCH_VERTICES, &patchVerticesNum);
     cout<<"Vertices in Each Patch has been Setted to: "<<patchVerticesNum<<endl<<endl;
     // 简单颜色着色器
-    Shader shader("shaders/YarnLevelCloth/color.vert", "shaders/YarnLevelCloth/color.frag");
+    Shader shader("Resources/Shaders/YarnLevelCloth/color.vert", "Resources/Shaders/YarnLevelCloth/color.frag");
     // 显示法线的着色器
-    Shader showNormalShader("shaders/YarnLevelCloth/showNormals.vert", "shaders/YarnLevelCloth/showNormals.frag");
-    showNormalShader.addOptionalShader("shaders/YarnLevelCloth/showNormals.geom", GL_GEOMETRY_SHADER);
+    Shader showNormalShader("Resources/Shaders/YarnLevelCloth/showNormals.vert", "Resources/Shaders/YarnLevelCloth/showNormals.frag");
+    showNormalShader.addOptionalShader("Resources/Shaders/YarnLevelCloth/showNormals.geom", GL_GEOMETRY_SHADER);
     // 光照着色器
-    Shader bpShader("shaders/YarnLevelCloth/blinnPhong.vert", "shaders/YarnLevelCloth/blinnPhong.frag");
+    Shader bpShader("Resources/Shaders/YarnLevelCloth/blinnPhong.vert", "Resources/Shaders/YarnLevelCloth/blinnPhong.frag");
     // 细分着色器
-    Shader tesShader("shaders/YarnLevelCloth/yarn.vert", "shaders/YarnLevelCloth/yarn.frag");
-    tesShader.addOptionalShader("shaders/TessellationShader/yarn.tesc", GL_TESS_CONTROL_SHADER);
-    tesShader.addOptionalShader("shaders/TessellationShader/yarn.tese", GL_TESS_EVALUATION_SHADER);
+    Shader tesShader("Resources/Shaders/YarnLevelCloth/yarn.vert", "Resources/Shaders/YarnLevelCloth/yarn.frag");
+    tesShader.addOptionalShader("Resources/Shaders/TessellationShader/yarn.tesc", GL_TESS_CONTROL_SHADER);
+    tesShader.addOptionalShader("Resources/Shaders/TessellationShader/yarn.tese", GL_TESS_EVALUATION_SHADER);
     //
     yarnCenter = Curve::CRChain(yarnCenter, 100);
     vector<glm::vec3> plyCenter1 = calcPlyCenter(yarnCenter, 1.0f * 2.0f * glm::pi<float>() / 3.0f);
     vector<glm::vec3> plyCenter2 = calcPlyCenter(yarnCenter, 2.0f * 2.0f * glm::pi<float>() / 3.0f);
     vector<glm::vec3> plyCenter3 = calcPlyCenter(yarnCenter, 3.0f * 2.0f * glm::pi<float>() / 3.0f);
     //
-    Object *yarn = new Object(&yarnCenter[0].x, yarnCenter.size(), POSITIONS, DRAW_MODE);
-    yarn->setCamera(cam);
-    Object *ply1 = new Object(&plyCenter1[0].x, plyCenter1.size(), POSITIONS, DRAW_MODE);
-    ply1->setCamera(cam);
+    Shape *yarn = new Shape(&yarnCenter[0].x, yarnCenter.size(), POSITIONS, DRAW_MODE);
 
-    Object *ply2 = new Object(&plyCenter2[0].x, plyCenter2.size(), POSITIONS, DRAW_MODE);
-    ply2->setCamera(cam);
+    Shape *ply1 = new Shape(&plyCenter1[0].x, plyCenter1.size(), POSITIONS, DRAW_MODE);
 
-    Object *ply3 = new Object(&plyCenter3[0].x, plyCenter3.size(), POSITIONS, DRAW_MODE);
-    ply3->setCamera(cam);
+
+    Shape *ply2 = new Shape(&plyCenter2[0].x, plyCenter2.size(), POSITIONS, DRAW_MODE);
+
+
+    Shape *ply3 = new Shape(&plyCenter3[0].x, plyCenter3.size(), POSITIONS, DRAW_MODE);
+
     //
     Union *ply1Fibers = new Union();
     vector<vector<glm::vec3>> ply1FiberCenter = calcMigrationFiber(plyCenter1, yarnCenter);
     for(auto f : ply1FiberCenter) {
-        Object *fiber = new Object(&f[0].x, f.size() / 2, POSITIONS_NORMALS, DRAW_MODE);
-        ply1Fibers->addObject(fiber);
+        Shape *fiber = new Shape(&f[0].x, f.size() / 2, POSITIONS_NORMALS, DRAW_MODE);
+        ply1Fibers->addShape(fiber);
     }
     ply1Fibers->setCamera(cam);
     //
     Union *ply2Fibers = new Union();
     vector<vector<glm::vec3>> ply2FiberCenter = calcMigrationFiber(plyCenter2, yarnCenter);
     for(auto f : ply2FiberCenter) {
-        Object *fiber = new Object(&f[0].x, f.size() / 2, POSITIONS_NORMALS, DRAW_MODE);
-        ply2Fibers->addObject(fiber);
+        Shape *fiber = new Shape(&f[0].x, f.size() / 2, POSITIONS_NORMALS, DRAW_MODE);
+        ply2Fibers->addShape(fiber);
     }
     ply2Fibers->setCamera(cam);
     //
     Union *ply3Fibers = new Union();
     vector<vector<glm::vec3>> ply3FiberCenter = calcMigrationFiber(plyCenter3, yarnCenter);
     for(auto f : ply3FiberCenter) {
-        Object *fiber = new Object(&f[0].x, f.size() / 2, POSITIONS_NORMALS, DRAW_MODE);
-        ply3Fibers->addObject(fiber);
+        Shape *fiber = new Shape(&f[0].x, f.size() / 2, POSITIONS_NORMALS, DRAW_MODE);
+        ply3Fibers->addShape(fiber);
     }
     ply3Fibers->setCamera(cam);
     // 可视化横截面的Fiber分布
@@ -344,14 +341,14 @@ void singleYarn() {
         crossSectionFiberNum *= 2;
     }
     vector<glm::vec3> crossSectionPoints(R_initial.size());
-    for(int i = 0; i < R_initial.size(); ++i) {
+    for(unsigned int i = 0; i < R_initial.size(); ++i) {
         crossSectionPoints[i].x = R_initial[i] * cos(theta_initial[i]);
         crossSectionPoints[i].y = R_initial[i] * sin(theta_initial[i]);
         crossSectionPoints[i].z = 0;
     }
     cout<<"Visualizing a ply cross-section with total "<<crossSectionPoints.size()<<" fibers."<<endl;
-    Object *cs = new Object(&crossSectionPoints[0].x, crossSectionPoints.size(), POSITIONS, GL_POINTS);
-    cs->setCamera(cam);
+    Shape *cs = new Shape(&crossSectionPoints[0].x, crossSectionPoints.size(), POSITIONS, GL_POINTS);
+
     // 主循环
     while(!glfwWindowShouldClose(window)) {
         glfwPollEvents();
@@ -362,7 +359,7 @@ void singleYarn() {
         //
         shader.use();
         glUniform3f(glGetUniformLocation(shader.programID, "fragmentColor"), 1.0, 1.0, 1.0);
-        yarn->setShader(&shader);
+
         yarn->draw();
         /* 绘制3个Ply的中心
         shader.use();
@@ -410,7 +407,7 @@ void hairVisualize() {
     GLFWwindow *window = initWindow("Hair", 800, 600, 4, 0);
     showEnviroment();
     CameraController::bindControl(window);
-    Camera *cam = &CameraController::camera;
+    Camera *cam = CameraController::getCamera();
     // 一些设置
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_PROGRAM_POINT_SIZE);
@@ -419,12 +416,12 @@ void hairVisualize() {
     CoordinateAxes ca(cam);
     ControlPanel panel(window);
     // 简单颜色着色器
-    Shader shader("shaders/YarnLevelCloth/color.vert", "shaders/YarnLevelCloth/color.frag");
+    Shader shader("Resources/Shaders/YarnLevelCloth/color.vert", "Resources/Shaders/YarnLevelCloth/color.frag");
     // 读取
-    //const char filename[] = "textures/Yarns/fiber.txt";
-    const char filename[] = "textures/Yarns/YarnPlies.txt";
+    //const char filename[] = "Resources/Textures/Yarns/fiber.txt";
+    const char filename[] = "Resources/Textures/Yarns/YarnPlies.txt";
     FILE *f = fopen(filename, "r");
-    Union* hair = new Union();
+    //Union* hair = new Union();
     Union* ply0 = new Union();
     Union* ply1 = new Union();
     Union* ply2 = new Union();
@@ -441,9 +438,9 @@ void hairVisualize() {
             points[j].y = (points[j].y / 990.0f) - 0.5;
             points[j].z = (points[j].z / 990.0f) - 0.5;
         }
-        Object* line = new Object(&points[0].x, points.size(), POSITIONS, GL_LINE_STRIP);
-        //hair->addObject(line);
-        ply0->addObject(line);
+        Shape* line = new Shape(&points[0].x, points.size(), POSITIONS, GL_LINE_STRIP);
+        //hair->addShape(line);
+        ply0->addShape(line);
         printf("  %dth Line has %d Points.\n", i, pointsNum);
         printf("    start: (%.2f, %.2f, %.2f); end: (%.2f, %.2f, %.2f)\n", points[0].x, points[0].y, points[0].z, points.back().x, points.back().y, points.back().z);
     }
@@ -457,9 +454,9 @@ void hairVisualize() {
             points[j].y = (points[j].y / 990.0f) - 0.5;
             points[j].z = (points[j].z / 990.0f) - 0.5;
         }
-        Object* line = new Object(&points[0].x, points.size(), POSITIONS, GL_LINE_STRIP);
-        //hair->addObject(line);
-        ply1->addObject(line);
+        Shape* line = new Shape(&points[0].x, points.size(), POSITIONS, GL_LINE_STRIP);
+        //hair->addShape(line);
+        ply1->addShape(line);
         printf("  %dth Line has %d Points.\n", i, pointsNum);
         printf("    start: (%.2f, %.2f, %.2f); end: (%.2f, %.2f, %.2f)\n", points[0].x, points[0].y, points[0].z, points.back().x, points.back().y, points.back().z);
     }
@@ -473,9 +470,9 @@ void hairVisualize() {
             points[j].y = (points[j].y / 990.0f) - 0.5;
             points[j].z = (points[j].z / 990.0f) - 0.5;
         }
-        Object* line = new Object(&points[0].x, points.size(), POSITIONS, GL_LINE_STRIP);
-        //hair->addObject(line);
-        ply2->addObject(line);
+        Shape* line = new Shape(&points[0].x, points.size(), POSITIONS, GL_LINE_STRIP);
+        //hair->addShape(line);
+        ply2->addShape(line);
         printf("  %dth Line has %d Points.\n", i, pointsNum);
         printf("    start: (%.2f, %.2f, %.2f); end: (%.2f, %.2f, %.2f)\n", points[0].x, points[0].y, points[0].z, points.back().x, points.back().y, points.back().z);
     }

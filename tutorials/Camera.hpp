@@ -1,6 +1,10 @@
 /*Copyright reserved by KenLee@2016 ken4000kl@gmail.com*/
-#ifndef CAMERAS_HPP
-#define CAMERAS_HPP
+#ifndef CAMERAS_CPP
+#define CAMERAS_CPP
+
+// Common Headers
+#include "../NeneEngine/OpenGL/Nene.h"
+
 namespace Cameras{
 //窗口宽高
 const float ScreenHeight=600.0;
@@ -53,7 +57,7 @@ void tutorial(){
     //显示环境
     showEnviroment();
     //创建Shader
-    Shader shaderProgram("shaders/CoordinateSystem/shader.vs","shaders/CoordinateSystem/shader.frag");
+    Shader shaderProgram("Resources/Shaders/CoordinateSystem/shader.vs","Resources/Shaders/CoordinateSystem/shader.frag");
     //读入数据
     GLuint VBO,VAO;
     glGenBuffers(1,&VBO);
@@ -67,8 +71,10 @@ void tutorial(){
         glEnableVertexAttribArray(1);
     glBindVertexArray(0);
     //设置纹理
-    GLuint tex2=Textures::loadTextureFromImage("textures/face.png",GL_RGBA,GL_BGRA,GL_REPEAT,GL_LINEAR);
-    GLuint tex1=Textures::loadTextureFromImage("textures/container.jpg",GL_RGB,GL_BGR,GL_REPEAT,GL_LINEAR);
+    Texture _tex2("Resources/Textures/face.png", GL_BGRA, GL_RGBA);
+    Texture _tex1("Resources/Textures/container.jpg", GL_BGR, GL_RGB);
+    GLuint tex2 = _tex2.getTexID();
+    GLuint tex1 = _tex1.getTexID();
     //初始化矩阵
     //模型矩阵(局部coord -> 世界coord)
     glm::mat4 model;
@@ -114,7 +120,7 @@ void tutorial(){
         for(GLuint i=0;i<10;i++){
           model=glm::mat4();
           model = glm::translate(model, cubePositions[i]);
-          GLfloat angle = 20.0f * i*(GLfloat)glfwGetTime();
+          GLfloat angle = Radians(20.0f * i*(GLfloat)glfwGetTime());
           model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
           glUniformMatrix4fv(modelPos, 1, GL_FALSE, glm::value_ptr(model));
 
@@ -156,6 +162,8 @@ void exercise1(){
     //窗口初始化
     GLFWwindow *window=initWindow("Camera-EX1", ScreenWidth, ScreenHeight);
     glfwSetScrollCallback(window,scroll_callback);
+    glfwSetKeyCallback(window, key_callback);
+    glfwSetCursorPosCallback(window, mouse_callback);
     //关闭垂直同步
     glfwSwapInterval(0);
     //启用深度测试
@@ -165,7 +173,7 @@ void exercise1(){
     //显示环境
     showEnviroment();
     //创建Shader
-    Shader shaderProgram("shaders/CoordinateSystem/shader.vs","shaders/CoordinateSystem/shader.frag");
+    Shader shaderProgram("Resources/Shaders/CoordinateSystem/shader.vs","Resources/Shaders/CoordinateSystem/shader.frag");
     //读入数据
     GLuint VBO,VAO;
     glGenBuffers(1,&VBO);
@@ -179,8 +187,10 @@ void exercise1(){
         glEnableVertexAttribArray(1);
     glBindVertexArray(0);
     //设置纹理
-    GLuint tex2=Textures::loadTextureFromImage("textures/face.png",GL_RGBA,GL_BGRA,GL_REPEAT,GL_LINEAR);
-    GLuint tex1=Textures::loadTextureFromImage("textures/container.jpg",GL_RGB,GL_BGR,GL_REPEAT,GL_LINEAR);
+    Texture _tex2("Resources/Textures/face.png", GL_BGRA, GL_RGBA);
+    Texture _tex1("Resources/Textures/container.jpg", GL_BGR, GL_RGB);
+    GLuint tex2 = _tex2.getTexID();
+    GLuint tex1 = _tex1.getTexID();
     //初始化矩阵
     //模型矩阵(局部coord -> 世界coord)
     glm::mat4 model;
@@ -209,7 +219,7 @@ void exercise1(){
             cameraPos+cameraFront,//摄像机需要看到的位置//正前方
             cameraUp//摄像机的正上方（需要指定上方的原因是，在同一个位置看同一个地方，头可以歪）
         );
-        projection=glm::perspective(fov, (GLfloat)ScreenWidth/(GLfloat)ScreenHeight, 0.1f, 100.0f);
+        projection=glm::perspective(glm::radians(fov), (GLfloat)ScreenWidth/(GLfloat)ScreenHeight, 0.1f, 100.0f);
         glUniformMatrix4fv(viewPos,1,GL_FALSE,glm::value_ptr(view));
         glUniformMatrix4fv(projPos,1,GL_FALSE,glm::value_ptr(projection));
         //绑定纹理1
@@ -226,7 +236,7 @@ void exercise1(){
         for(GLuint i=0;i<10;i++){
           model=glm::mat4();
           model = glm::translate(model, cubePositions[i]);
-          GLfloat angle = 20.0f * i*(GLfloat)glfwGetTime();
+          GLfloat angle = Radians(20.0f * i*(GLfloat)glfwGetTime());
           model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
           glUniformMatrix4fv(modelPos, 1, GL_FALSE, glm::value_ptr(model));
           glDrawArrays(GL_TRIANGLES, 0, 36);

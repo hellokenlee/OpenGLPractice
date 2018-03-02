@@ -1,11 +1,11 @@
 /*Copyright reserved by KenLee@2017 ken4000kl@gmail.com*/
-#ifndef NORMAL_MAPPING_HPP
-#define NORMAL_MAPPING_HPP
+#ifndef NORMAL_MAPPING_CPP
+#define NORMAL_MAPPING_CPP
+
+// Common Headers
+#include "../NeneEngine/OpenGL/Nene.h"
+
 namespace NormalMapping{
-//GLM
-#include "../wmdge/glm/glm.hpp"
-#include "../wmdge/glm/gtc/matrix_transform.hpp"
-#include "../wmdge/glm/gtc/type_ptr.hpp"
 
 glm::vec3 lightPos = glm::vec3(2.0, 2.0, 1.0);
 
@@ -52,31 +52,21 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
     }
 }
 void tutorial(){
-
-    GLFWwindow *window = initWindow("NormalMapping2", 800, 600);
+    //
+    GLFWwindow *window = initWindow("NormalMapping", 800, 600);
     glfwSetKeyCallback(window, keyCallback);
     glfwSetCursorPosCallback(window, CameraController::mouseCallback);
     showEnviroment();
-
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    CameraController::camera.moveto(glm::vec3(0.0f, 0.0f, 10.0f));
+    Camera* pCamera = CameraController::getCamera();
+    pCamera->moveto(glm::vec3(0.0f, 0.0f, 10.0f));
     glEnable(GL_DEPTH_TEST);
-
-    Shader shader("shaders/NormalMapping/brick_wall2.vs", "shaders/NormalMapping/brick_wall2.frag");
-    shader.use();
-    glUniform3f(glGetUniformLocation(shader.programID, "vLight.position"), lightPos.x, lightPos.y, lightPos.z);
-    glUniform1i(glGetUniformLocation(shader.programID, "texture_diffuse1"), 0);
-    glUniform1i(glGetUniformLocation(shader.programID, "texture_normal1"), 1);
-
-    CoordinateAxes ca(&CameraController::camera);
-
-
-    Object wall(planeVertices, 6, POSITIONS_TEXTURES, GL_TRIANGLES);
+    //
+    Shader shader("Resources/Shaders/NormalMapping/brick_wall2.vs", "Resources/Shaders/NormalMapping/brick_wall2.frag");
+    //
+    Shape wall(planeVertices, 6, POSITIONS_TEXTURES, GL_TRIANGLES);
     wall.scaleTo(5.0f);
-    wall.model = glm::rotate(wall.model, glm::radians(-40.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-    wall.setCamera(&CameraController::camera);
-    wall.setShader(&shader);
-
+    wall.setModelMat(glm::rotate(wall.getModelMat(), glm::radians(-40.0f), glm::vec3(1.0f, 0.0f, 0.0f)));
     // 计算TBN矩阵
     glm::vec3 TBN[3 * 2];
     glm::vec3 normal(0.0f, 0.0f, 1.0f);
@@ -124,36 +114,32 @@ void tutorial(){
             glVertexAttribDivisor(4, 1);
         glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    TextureManager* tm = TextureManager::getManager();
-    tm->loadTexture("textures/brickwall.jpg", 0, GL_BGR, GL_SRGB);
-    tm->loadTexture("textures/brickwall_normal.jpg", 1, GL_BGR, GL_RGB);
-
-    Camera *cam = &CameraController::camera;
-
+    //
+    Texture tex0("Resources/Textures/brickwall.jpg", GL_BGR, GL_SRGB);
+    Texture tex1("Resources/Textures/brickwall_normal.jpg", GL_BGR, GL_RGB);
+    //
     cout<<"Normal Mapping : "<<(normalMap ? "ON" : "OFF")<<endl;
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
         CameraController::update();
-
         glClearColor(0.1, 0.1, 0.1, 1.0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        glActiveTexture(GL_TEXTURE0);
-        tm->bindTexture(0);
-        glActiveTexture(GL_TEXTURE1);
-        tm->bindTexture(1);
+        //
         shader.use();
         glUniform1i(glGetUniformLocation(shader.programID, "normalMap"), normalMap);
-        glUniform3f(glGetUniformLocation(shader.programID, "viewPosition"), cam->cameraPos.x, cam->cameraPos.y, cam->cameraPos.z);
+        glUniform3f(glGetUniformLocation(shader.programID, "viewPosition"),
+                    pCamera->cameraPos.x, pCamera->cameraPos.y, pCamera->cameraPos.z);
+        glUniform1i(glGetUniformLocation(shader.programID, "texture_diffuse1"), 0);
+        glUniform1i(glGetUniformLocation(shader.programID, "texture_normal1"), 1);
+        glUniform3f(glGetUniformLocation(shader.programID, "vLight.position"), lightPos.x, lightPos.y, lightPos.z);
         wall.scaleTo(5.0f);
-        wall.model = glm::rotate(wall.model, glm::radians((GLfloat)(glfwGetTime() * -10.0)), glm::vec3(1.0f, 0.0f, 0.0f));
-        wall.draw();
-
+        wall.setModelMat(glm::rotate(wall.getModelMat(), glm::radians((GLfloat)(glfwGetTime() * -10.0)), glm::vec3(1.0f, 0.0f, 0.0f)));
+        tex0.use(0);
+        tex1.use(1);
+        wall.draw(&shader, pCamera);
+        //
         glfwSwapBuffers(window);
-
     }
-
     glfwDestroyWindow(window);
     glfwTerminate();
 }

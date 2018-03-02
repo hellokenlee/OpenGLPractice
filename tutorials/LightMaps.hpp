@@ -1,7 +1,9 @@
 /*Copyright reserved by KenLee@2016 ken4000kl@gmail.com*/
-#ifndef LIGHT_MAPS_HPP
-#define LIGHT_MAPS_HPP
+#ifndef LIGHT_MAPS_CPP
+#define LIGHT_MAPS_CPP
 
+// Common Headers
+#include "../NeneEngine/OpenGL/Nene.h"
 
 namespace LightMaps{
 //顶点信息前置声明
@@ -20,9 +22,10 @@ void tutorial(){
     GLFWwindow *window=initWindow("LightMaps",800,600);
     showEnviroment();
     glEnable(GL_DEPTH_TEST);
+    Camera* pCamera = CameraController::getCamera();
     //着色器程序初始化
-    Shader cubeShader("shaders/LightMaps/cube.vs","shaders/LightMaps/cube.frag");
-    Shader lampShader("shaders/LightMaps/lamp.vs","shaders/LightMaps/lamp.frag");
+    Shader cubeShader("Resources/Shaders/LightMaps/cube.vs","Resources/Shaders/LightMaps/cube.frag");
+    Shader lampShader("Resources/Shaders/LightMaps/lamp.vs","Resources/Shaders/LightMaps/lamp.frag");
     cubeShader.use();
     GLint matDiffuseLoc = glGetUniformLocation(cubeShader.programID, "material.diffuse");
     GLint matSpecularLoc = glGetUniformLocation(cubeShader.programID, "material.specular");
@@ -46,49 +49,38 @@ void tutorial(){
     GLint lampColorLoc=glGetUniformLocation(lampShader.programID,"lampColor");
     glUniform3f(lampColorLoc,lightColor.x,lightColor.y,lightColor.z);
     //物体对象初始化
-    Object cube(cubeVertices,36,POSITIONS_NORMALS_TEXTURES,GL_TRIANGLES);
-    cube.setCamera(&CameraController::camera);
-    cube.setShader(&cubeShader);
+    Shape cube(cubeVertices,36,POSITIONS_NORMALS_TEXTURES,GL_TRIANGLES);
     cube.moveTo(cubePos);
 
-    Object* lamp=cube.clone();
-    lamp->setShader(&lampShader);
-    lamp->moveTo(lampPos);
-    lamp->scaleTo(0.4);
+    Shape lamp(cubeVertices,36,POSITIONS_NORMALS_TEXTURES,GL_TRIANGLES);
+    lamp.moveTo(lampPos);
+    lamp.scaleTo(glm::vec3(0.4f));
     //绑定控制
     CameraController::bindControl(window);
     //关闭鼠标显示
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     //显示坐标轴
-    CoordinateAxes ca(&CameraController::camera);
-
+    CoordinateAxes ca(pCamera);
     //ca.showGrid(false);
     //帧数计数器
     FPSCounter fc;
     //载入纹理
-    TextureManager* tm=TextureManager::getManager();
-    if(!tm->loadTexture("textures/container2.png",0,GL_BGRA,GL_RGBA))
-        return ;
-    if(!tm->loadTexture("textures/container2_specular.png",1,GL_BGRA,GL_RGBA))
-        return ;
+    Texture tex0("Resources/Textures/container2.png", GL_BGRA, GL_RGBA);
+    Texture tex1("Resources/Textures/container2_specular.png", GL_BGRA, GL_RGBA);
     //主循环
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
         CameraController::update();
         glClearColor(0.0f,0.0f,0.0f,1.0f);
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-
+        //
         ca.draw();
-
-        lamp->draw();
-
-        cube.shader->use();
-        glActiveTexture(GL_TEXTURE0);
-        tm->bindTexture(0);
-        glActiveTexture(GL_TEXTURE1);
-        tm->bindTexture(1);
-        cube.draw();
-
+        lamp.draw(&lampShader, pCamera);
+        //
+        tex0.use(0);
+        tex1.use(1);
+        cube.draw(&cubeShader, pCamera);
+        //
         glfwSwapBuffers(window);
         fc.update();
     }
@@ -103,9 +95,10 @@ void exercise2(){
     GLFWwindow *window=initWindow("LightMapsEx2",800,600);
     showEnviroment();
     glEnable(GL_DEPTH_TEST);
+    Camera* pCamera = CameraController::getCamera();
     //着色器程序初始化
-    Shader cubeShader("shaders/LightMaps/cube.vs","shaders/LightMaps/cubeEx2.frag");
-    Shader lampShader("shaders/LightMaps/lamp.vs","shaders/LightMaps/lamp.frag");
+    Shader cubeShader("Resources/Shaders/LightMaps/cube.vs","Resources/Shaders/LightMaps/cubeEx2.frag");
+    Shader lampShader("Resources/Shaders/LightMaps/lamp.vs","Resources/Shaders/LightMaps/lamp.frag");
     cubeShader.use();
     GLint matDiffuseLoc = glGetUniformLocation(cubeShader.programID, "material.diffuse");
     GLint matSpecularLoc = glGetUniformLocation(cubeShader.programID, "material.specular");
@@ -130,31 +123,24 @@ void exercise2(){
     GLint lampColorLoc=glGetUniformLocation(lampShader.programID,"lampColor");
     glUniform3f(lampColorLoc,lightColor.x,lightColor.y,lightColor.z);
     //物体对象初始化
-    Object cube(cubeVertices,36,POSITIONS_NORMALS_TEXTURES,GL_TRIANGLES);
-    cube.setCamera(&CameraController::camera);
-    cube.setShader(&cubeShader);
+    Shape cube(cubeVertices,36,POSITIONS_NORMALS_TEXTURES,GL_TRIANGLES);
     cube.moveTo(cubePos);
 
-    Object lamp(cubeVertices,36,POSITIONS_NORMALS_TEXTURES,GL_TRIANGLES);
-    lamp.setCamera(&CameraController::camera);
-    lamp.setShader(&lampShader);
+    Shape lamp(cubeVertices,36,POSITIONS_NORMALS_TEXTURES,GL_TRIANGLES);
     lamp.moveTo(lampPos);
-    lamp.scaleTo(0.4);
+    lamp.scaleTo(glm::vec3(0.4f));
     //绑定控制
     CameraController::bindControl(window);
     //关闭鼠标显示
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     //显示坐标轴
-    CoordinateAxes ca(&CameraController::camera);
+    CoordinateAxes ca(pCamera);
     //ca.showGrid(false);
     //帧数计数器
     FPSCounter fc;
     //载入纹理
-    TextureManager* tm=TextureManager::getManager();
-    if(!tm->loadTexture("textures/container2.png",0,GL_BGRA,GL_RGBA))
-        return ;
-    if(!tm->loadTexture("textures/container2_specular.png",1,GL_BGRA,GL_RGBA))
-        return ;
+    Texture tex0("Resources/Textures/container2.png", GL_BGRA, GL_RGBA);
+    Texture tex1("Resources/Textures/container2_specular.png", GL_BGRA, GL_RGBA);
     //主循环
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
@@ -164,14 +150,12 @@ void exercise2(){
 
         ca.draw();
 
-        lamp.draw();
+        lamp.draw(&lampShader, pCamera);
 
-        cube.shader->use();
-        glActiveTexture(GL_TEXTURE0);
-        tm->bindTexture(0);
-        glActiveTexture(GL_TEXTURE1);
-        tm->bindTexture(1);
-        cube.draw();
+        cubeShader.use();
+        tex0.use(0);
+        tex1.use(1);
+        cube.draw(&cubeShader, pCamera);
 
         glfwSwapBuffers(window);
         fc.update();
@@ -186,9 +170,10 @@ void exercise3(){
     GLFWwindow *window=initWindow("LightMapsEx3",800,600);
     showEnviroment();
     glEnable(GL_DEPTH_TEST);
+    Camera* pCamera = CameraController::getCamera();
     //着色器程序初始化
-    Shader cubeShader("shaders/LightMaps/cube.vs","shaders/LightMaps/cube.frag");
-    Shader lampShader("shaders/LightMaps/lamp.vs","shaders/LightMaps/lamp.frag");
+    Shader cubeShader("Resources/Shaders/LightMaps/cube.vs","Resources/Shaders/LightMaps/cube.frag");
+    Shader lampShader("Resources/Shaders/LightMaps/lamp.vs","Resources/Shaders/LightMaps/lamp.frag");
     cubeShader.use();
     GLint matDiffuseLoc = glGetUniformLocation(cubeShader.programID, "material.diffuse");
     GLint matSpecularLoc = glGetUniformLocation(cubeShader.programID, "material.specular");
@@ -213,48 +198,37 @@ void exercise3(){
     GLint lampColorLoc=glGetUniformLocation(lampShader.programID,"lampColor");
     glUniform3f(lampColorLoc,lightColor.x,lightColor.y,lightColor.z);
     //物体对象初始化
-    Object cube(cubeVertices,36,POSITIONS_NORMALS_TEXTURES,GL_TRIANGLES);
-    cube.setCamera(&CameraController::camera);
-    cube.setShader(&cubeShader);
+    Shape cube(cubeVertices,36,POSITIONS_NORMALS_TEXTURES,GL_TRIANGLES);
     cube.moveTo(cubePos);
 
-    Object lamp(cubeVertices,36,POSITIONS_NORMALS_TEXTURES,GL_TRIANGLES);
-    lamp.setCamera(&CameraController::camera);
-    lamp.setShader(&lampShader);
+    Shape lamp(cubeVertices,36,POSITIONS_NORMALS_TEXTURES,GL_TRIANGLES);
     lamp.moveTo(lampPos);
-    lamp.scaleTo(0.4);
+    lamp.scaleTo(glm::vec3(0.4f));
     //绑定控制
     CameraController::bindControl(window);
     //关闭鼠标显示
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     //显示坐标轴
-    CoordinateAxes ca(&CameraController::camera);
+    CoordinateAxes ca(pCamera);
     //ca.showGrid(false);
     //帧数计数器
     FPSCounter fc;
     //载入纹理
-    TextureManager* tm=TextureManager::getManager();
-    if(!tm->loadTexture("textures/container2.png",0,GL_BGRA,GL_RGBA))
-        return ;
-    if(!tm->loadTexture("textures/container2_specular_color.png",1,GL_BGRA,GL_RGBA))
-        return ;
+    Texture tex0("Resources/Textures/container2.png", GL_BGRA, GL_RGBA);
+    Texture tex1("Resources/Textures/container2_specular.png", GL_BGRA, GL_RGBA);
     //主循环
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
         CameraController::update();
         glClearColor(0.0f,0.0f,0.0f,1.0f);
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-
+        //
         ca.draw();
-
-        lamp.draw();
-
-        cube.shader->use();
-        glActiveTexture(GL_TEXTURE0);
-        tm->bindTexture(0);
-        glActiveTexture(GL_TEXTURE1);
-        tm->bindTexture(1);
-        cube.draw();
+        lamp.draw(&lampShader, pCamera);
+        cubeShader.use();
+        tex0.use(0);
+        tex1.use(1);
+        cube.draw(&cubeShader, pCamera);
 
         glfwSwapBuffers(window);
         fc.update();
@@ -270,9 +244,10 @@ void exercise4(){
     GLFWwindow *window=initWindow("LightMapsEx4",800,600);
     showEnviroment();
     glEnable(GL_DEPTH_TEST);
+    Camera* pCamera = CameraController::getCamera();
     //着色器程序初始化
-    Shader cubeShader("shaders/LightMaps/cube.vs","shaders/LightMaps/cube.frag");
-    Shader lampShader("shaders/LightMaps/lampEx4.vs","shaders/LightMaps/lampEx4.frag");
+    Shader cubeShader("Resources/Shaders/LightMaps/cube.vs","Resources/Shaders/LightMaps/cube.frag");
+    Shader lampShader("Resources/Shaders/LightMaps/lampEx4.vs","Resources/Shaders/LightMaps/lampEx4.frag");
     cubeShader.use();
     GLint matDiffuseLoc = glGetUniformLocation(cubeShader.programID, "material.diffuse");
     GLint matSpecularLoc = glGetUniformLocation(cubeShader.programID, "material.specular");
@@ -299,53 +274,39 @@ void exercise4(){
     glUniform3f(lampColorLoc,lightColorEx4.x,lightColorEx4.y,lightColorEx4.z);
     glUniform1i(lampEmissionLoc,0);
     //物体对象初始化
-    Object cube(cubeVertices,36,POSITIONS_NORMALS_TEXTURES,GL_TRIANGLES);
-    cube.setCamera(&CameraController::camera);
-    cube.setShader(&cubeShader);
+    Shape cube(cubeVertices,36,POSITIONS_NORMALS_TEXTURES,GL_TRIANGLES);
     cube.moveTo(cubePos);
 
-    Object lamp(cubeVertices,36,POSITIONS_NORMALS_TEXTURES,GL_TRIANGLES);
-    lamp.setCamera(&CameraController::camera);
-    lamp.setShader(&lampShader);
+    Shape lamp(cubeVertices,36,POSITIONS_NORMALS_TEXTURES,GL_TRIANGLES);
     lamp.moveTo(lampPos);
-    lamp.scaleTo(0.4);
+    lamp.scaleTo(glm::vec3(0.4f));
     //绑定控制
     CameraController::bindControl(window);
     //关闭鼠标显示
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     //显示坐标轴
-    CoordinateAxes ca(&CameraController::camera);
+    CoordinateAxes ca(pCamera);
     //ca.showGrid(false);
     //帧数计数器
     FPSCounter fc;
     //载入纹理
-    TextureManager* tm=TextureManager::getManager();
-    if(!tm->loadTexture("textures/container2.png",0,GL_BGRA,GL_RGBA))
-        return ;
-    if(!tm->loadTexture("textures/container2_specular.png",1,GL_BGRA,GL_RGBA))
-        return ;
-    if(!tm->loadTexture("textures/matrix.jpg",2))
-        return ;
+    Texture tex0("Resources/Textures/container2.png", GL_BGRA, GL_RGBA);
+    Texture tex1("Resources/Textures/container2_specular.png", GL_BGRA, GL_RGBA);
+    Texture tex2("Resources/Textures/matrix.jpg");
     //主循环
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
         CameraController::update();
         glClearColor(0.0f,0.0f,0.0f,1.0f);
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-
+        //
         ca.draw();
+        tex2.use(0);
+        lamp.draw(&lampShader, pCamera);
 
-        lamp.shader->use();
-        glActiveTexture(GL_TEXTURE0);
-        tm->bindTexture(2);
-        lamp.draw();
-
-        cube.shader->use();
-        glActiveTexture(GL_TEXTURE0);
-        tm->bindTexture(0);
-        glActiveTexture(GL_TEXTURE1);
-        tm->bindTexture(1);
-        cube.draw();
+        tex0.use(0);
+        tex1.use(1);
+        cube.draw(&cubeShader, pCamera);
 
         glfwSwapBuffers(window);
         fc.update();
