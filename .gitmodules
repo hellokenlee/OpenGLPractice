@@ -1,0 +1,3 @@
+[submodule "NeneEngine"]
+	path = NeneEngine
+	url = git@github.com:hellokenlee/NeneEngine.git
