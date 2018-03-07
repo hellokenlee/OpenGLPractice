@@ -2,9 +2,6 @@
 #ifndef CAMERAS_CPP
 #define CAMERAS_CPP
 
-// Common Headers
-#include "../NeneEngine/OpenGL/Nene.h"
-
 namespace Cameras{
 //窗口宽高
 const float ScreenHeight=600.0;
@@ -26,7 +23,7 @@ glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);      //摄像机位置
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);   //摄像机前方(摄像机永远注视着摄像机的以摄像机为原点 0,0,-1的 位置)
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);       //摄像机的上方向(喂！不许歪着头看东西!)
 //FPS计数器
-FPSCounter fc;
+
 //按键记录
 bool keys[1024]={0};
 //鼠标灵敏度
@@ -128,7 +125,7 @@ void tutorial(){
         }
         glBindVertexArray(0);
         glfwSwapBuffers(window);
-        fc.update();
+
     }//GLFW
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
@@ -243,7 +240,7 @@ void exercise1(){
         }
         glBindVertexArray(0);
         glfwSwapBuffers(window);
-        fc.update();
+
     }//GLFW
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);

@@ -2,9 +2,6 @@
 #ifndef DEPTH_TEST_CPP
 #define DEPTH_TEST_CPP
 
-// Common Headers
-#include "../NeneEngine/OpenGL/Nene.h"
-
 namespace DepthTest{
 
 //顶点信息前置声明

@@ -2,9 +2,6 @@
 #ifndef POINT_SHADOWS_CPP
 #define POINT_SHADOWS_CPP
 
-// Common Headers
-#include "../NeneEngine/OpenGL/Nene.h"
-
 namespace PointShadows{
 
 // 前置顶点声明
@@ -86,7 +83,7 @@ void tutorial(){
         lightSpaceMatrices[i] = lightProjection * lightViews[i];
     }
     //
-    FPSCounter fc;
+
     // 主循环
     char lightSpaceMatricesUniformName[64];
     while(!glfwWindowShouldClose(window)){
@@ -131,7 +128,7 @@ void tutorial(){
             cubes[5].draw(&objectWithShadow, pCamera);
             ca.draw();
         glfwSwapBuffers(window);
-        fc.update();
+
     }
 
     glfwDestroyWindow(window);

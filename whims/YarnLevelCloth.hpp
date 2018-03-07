@@ -18,7 +18,7 @@ void _main() {
     CameraController::bindControl(window);
     CoordinateAxes ca(pCamera);
     ControlPanel panel(window);
-    FPSCounter fc;
+
     // 初始化一个曲线集合
     Union *bcc = CurveCollection::genFromBBCFile("Resources/Textures/Yarn-level Cloth Models/openwork_trellis_pattern.bcc");
     bcc->isShareModel= true;

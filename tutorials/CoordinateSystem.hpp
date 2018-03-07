@@ -2,8 +2,6 @@
 #ifndef COORDINATE_SYSTEM_CPP
 #define COORDINATE_SYSTEM_CPP
 
-// Common Headers
-#include "../NeneEngine/OpenGL/Nene.h"
 
 namespace CoordinateSystem{
 //窗口宽高
@@ -15,7 +13,7 @@ extern GLfloat vertices[36*5];
 extern glm::vec3 cubePositions[10];
 //教程实现：
 void tutorial(){
-    FPSCounter fc;
+
     //窗口初始化
     GLFWwindow *window=initWindow("CoordinateSystem", ScreenWidth, ScreenHeight);
     //关闭垂直同步
@@ -90,7 +88,7 @@ void tutorial(){
         }
         glBindVertexArray(0);
         glfwSwapBuffers(window);
-        fc.update();
+
     }
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);

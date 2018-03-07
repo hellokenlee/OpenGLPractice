@@ -2,10 +2,6 @@
 #ifndef HELLO_TRIANGLE_CPP
 #define HELLO_TRIANGLE_CPP
 
-// Common Headers
-#include "../NeneEngine/OpenGL/Nene.h"
-
-
 //Chapcter 1 namespace
 namespace HelloTriangle{
 //所有顶点数据

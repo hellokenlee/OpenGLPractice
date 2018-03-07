@@ -2,9 +2,6 @@
 #ifndef COLORS_CPP
 #define COLORS_CPP
 
-// Common Headers
-#include "../NeneEngine/OpenGL/Nene.h"
-
 namespace Colors{
 //顶点信息前置声明
 extern GLfloat cubeVertices[36*5];
@@ -73,7 +70,7 @@ void tutorial(){
     //显示坐标轴
     CoordinateAxes ca(CameraController::getCamera());
     //帧数计数器
-    FPSCounter fc;
+
     //Main loop
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
@@ -99,7 +96,7 @@ void tutorial(){
 
         glfwSwapBuffers(window);
 
-        fc.update();
+
     }
     glDeleteVertexArrays(1, &lampVAO);
     glDeleteVertexArrays(1, &cubeVAO);

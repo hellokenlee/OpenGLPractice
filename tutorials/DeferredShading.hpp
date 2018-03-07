@@ -2,9 +2,6 @@
 #ifndef DEFERRED_SHADING_CPP
 #define DEFERRED_SHADING_CPP
 
-// Common Headers
-#include "../NeneEngine/OpenGL/Nene.h"
-
 namespace DeferredShading{
 
 // 场景内光源的数量
@@ -50,7 +47,7 @@ void tutorial(){
     CoordinateAxes ca(pCamera);
     //
     ControlPanel panel(window);
-    FPSCounter fc;
+
     cout<<"Lights Num: "<<NR_LIGHTS<<endl;
     // 准备G缓冲
     GLuint gBuffer;
@@ -186,7 +183,7 @@ void tutorial(){
         panel.draw();
         // 双缓冲交换
         glfwSwapBuffers(window);
-        fc.update();
+
     }
     glfwDestroyWindow(window);
     glfwTerminate();
@@ -205,7 +202,7 @@ void exercise1(){
     //
     CoordinateAxes ca(pCamera);
     ControlPanel panel(window);
-    FPSCounter fc;
+
     //
     vector<glm::vec3> lightPositions;
     vector<glm::vec3> lightColors;
@@ -269,7 +266,7 @@ void exercise1(){
         // 双缓冲
         panel.draw();
         glfwSwapBuffers(window);
-        fc.update();
+
     }
     //
     glfwDestroyWindow(window);

@@ -2,8 +2,6 @@
 #ifndef BLINN_PHONG_CPP
 #define BLINN_PHONG_CPP
 
-// Common Headers
-#include "../NeneEngine/OpenGL/Nene.h"
 #include <cstdio>
 
 namespace BlinnPhong{

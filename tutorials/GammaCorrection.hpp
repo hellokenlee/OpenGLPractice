@@ -2,9 +2,6 @@
 #ifndef GAMMA_CORRECTION_CPP
 #define GAMMA_CORRECTION_CPP
 
-// Common Headers
-#include "../NeneEngine/OpenGL/Nene.h"
-
 namespace GammaCorrection{
 //
 GLfloat planeVertices[] = {

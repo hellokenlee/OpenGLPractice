@@ -2,9 +2,6 @@
 #ifndef STENCIL_TEST_CPP
 #define STENCIL_TEST_CPP
 
-// Common Headers
-#include "../NeneEngine/OpenGL/Nene.h"
-
 namespace StencilTest{
 
 //顶点信息前置声明

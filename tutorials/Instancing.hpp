@@ -23,7 +23,7 @@ void tutorial_without_instancing(){
     //
     cout<<"Rock Num: "<<ROCK_AMOUNT<<" [without instancing]"<<endl;
     CoordinateAxes ca(pCamera);
-    FPSCounter fc;
+
     //
     Shader plaentShader("Resources/Shaders/Instancing/model.vs", "Resources/Shaders/Instancing/model.frag");
     //
@@ -73,7 +73,7 @@ void tutorial_without_instancing(){
         }
         //
         glfwSwapBuffers(window);
-        fc.update();
+
     }
     glfwDestroyWindow(window);
     glfwTerminate();
@@ -93,7 +93,7 @@ void tutorial_with_instancing_by_IA(){
     //
     cout<<"Rock Num: "<<ROCK_AMOUNT<<" [with instancing by instanced array]"<<endl;
     CoordinateAxes ca(pCamera);
-    FPSCounter fc;
+
     //
     Shader plaentShader("Resources/Shaders/Instancing/model.vs", "Resources/Shaders/Instancing/model.frag");
     Shader rockShader("Resources/Shaders/Instancing/rocks_instancing2.vs", "Resources/Shaders/Instancing/rocks_instancing.frag");
@@ -196,7 +196,7 @@ void tutorial_with_instancing_by_UBO(){
     glEnable(GL_DEPTH_TEST);
 
     CoordinateAxes ca(&CameraController::camera);
-    FPSCounter fc;
+
     Camera *cam = &CameraController::camera;
 
     Shader plaentShader("Resources/Shaders/Instancing/model.vs", "Resources/Shaders/Instancing/model.frag");
@@ -314,7 +314,7 @@ void exercise_without_instancing(){
         }
     }
 
-    FPSCounter fc;
+
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
         CameraController::update();
@@ -327,7 +327,7 @@ void exercise_without_instancing(){
         }
 
         glfwSwapBuffers(window);
-        fc.update();
+
     }
     glfwDestroyWindow(window);
     glfwTerminate();
@@ -370,7 +370,7 @@ void exercise_with_instancing_by_UBO(){
     //物体
     Shape quad(quadVertices, 6, POSITIONS_COLORS, GL_TRIANGLES);
 
-    FPSCounter fc;
+
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
         CameraController::update();
@@ -384,7 +384,7 @@ void exercise_with_instancing_by_UBO(){
         glBindVertexArray(0);
 
         glfwSwapBuffers(window);
-        fc.update();
+
     }
     glfwDestroyWindow(window);
     glfwTerminate();

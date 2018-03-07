@@ -2,8 +2,6 @@
 #ifndef TRANSFORMATIONS_CPP
 #define TRANSFORMATIONS_CPP
 
-// Common Headers
-#include "../NeneEngine/OpenGL/Nene.h"
 
 namespace Transformations{
 GLfloat vertices[] = {
@@ -86,7 +84,7 @@ void tutorial(){
 //   矩阵操作事实上是逆着的，因此盒子是平移到右下角，然后绕着原点做旋转。看起来就像圆周运动。
 void exercise1(){
     //
-    FPSCounter fc;
+
     //创建窗口
     GLFWwindow *window=initWindow("Transformation-EX1", 800, 600);
     showEnviroment();
@@ -142,14 +140,14 @@ void exercise1(){
         glBindVertexArray(0);
         glfwSwapBuffers(window);
         //
-        fc.update();
+
     }
     glfwTerminate();
     return;
 }
 //练习2：生成另一个盒子。只用平移把这个盒子移到左上角。然后让它随着时间缩放。
 void exercise2(){
-    FPSCounter fc;
+
     //创建窗口
     GLFWwindow *window=initWindow("Transformation-EX2", 800, 600);
     showEnviroment();
@@ -212,7 +210,7 @@ void exercise2(){
         glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
         glBindVertexArray(0);
         glfwSwapBuffers(window);
-        fc.update();
+
     }
     //注销显存资源
     glDeleteVertexArrays(1, &VAO);

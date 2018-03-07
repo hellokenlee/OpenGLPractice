@@ -2,9 +2,6 @@
 #ifndef PARALLAX_MAPPING_CPP
 #define PARALLAX_MAPPING_CPP
 
-// Common Headers
-#include "../NeneEngine/OpenGL/Nene.h"
-
 namespace ParallaxMapping{
 
 glm::vec3 lightPos = glm::vec3(2.0, 2.0, 1.0);
@@ -121,7 +118,7 @@ void tutorial(){
     Texture tex0("Resources/Textures/wood.png", GL_BGRA, GL_SRGB);
     Texture tex1("Resources/Textures/toy_box_normal.png", GL_BGRA, GL_RGBA);
     Texture tex2("Resources/Textures/toy_box_disp.png", GL_BGRA, GL_RGBA);
-    FPSCounter fc;
+
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
         CameraController::update();
@@ -140,7 +137,7 @@ void tutorial(){
         wall.draw(&shader, pCamera);
 
         glfwSwapBuffers(window);
-        fc.update();
+
     }
 
     glfwDestroyWindow(window);

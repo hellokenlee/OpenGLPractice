@@ -2,9 +2,6 @@
 #ifndef GEOMETRY_SHADER_CPP
 #define GEOMETRY_SHADER_CPP
 
-// Common Headers
-#include "../NeneEngine/OpenGL/Nene.h"
-
 namespace GeometyShader{
 GLfloat vertices[]={
     // Positions         // Colors

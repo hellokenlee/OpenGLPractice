@@ -2,9 +2,6 @@
 #ifndef ADVANCED_DATA_CPP
 #define ADVANCED_DATA_CPP
 
-// Common Headers
-#include "../NeneEngine/OpenGL/Nene.h"
-
 namespace AdvancedData{
 
 GLfloat cubeVertices1[] = {

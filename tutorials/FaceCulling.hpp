@@ -2,9 +2,6 @@
 #ifndef FACE_CULLING_CPP
 #define FACE_CULLING_CPP
 
-// Common Headers
-#include "../NeneEngine/OpenGL/Nene.h"
-
 namespace FaceCulling{
 
 extern GLfloat cubeVertices[36*5];

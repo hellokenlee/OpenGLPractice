@@ -2,9 +2,6 @@
 #ifndef TEXTURES_CPP
 #define TEXTURES_CPP
 
-// Common Headers
-#include "../NeneEngine/OpenGL/Nene.h"
-
 namespace Textures{
 //从图片文件生产纹理
 GLuint loadTextureFromImage(const char* filename,GLenum texformat,GLenum imageformat,GLenum wrap,GLenum filter){
@@ -308,7 +305,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 //
 void exercise4(){
     //FPS计算
-    FPSCounter fc;
+
     //创建窗口
     GLFWwindow *window=initWindow("Texture-EX4", 800, 600);
     //绑定按键回调函数
@@ -363,7 +360,7 @@ void exercise4(){
         glBindVertexArray(0);
         glfwSwapBuffers(window);
         //Count FPS
-        fc.update();
+
     }
     glfwTerminate();
     return;

@@ -2,9 +2,6 @@
 #ifndef ADVANCED_GLSL_CPP
 #define ADVANCED_GLSL_CPP
 
-// Common Headers
-#include "../NeneEngine/OpenGL/Nene.h"
-
 namespace AdvancedGLSL{
 extern GLfloat cubeVertices[6*6*5];
 extern GLfloat cubePositions[6*6*3];

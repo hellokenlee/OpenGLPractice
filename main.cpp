@@ -1,19 +1,10 @@
 /*Copyright reserved by KenLee@2018 ken4000kl@gmail.com*/
 
-// GLEW
-#define GLEW_STATIC
-#include <GL/glew.h>
-// GLFW
-#include <GLFW/glfw3.h>
-// ASSIMP
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
-// FreeImage
-#include <FreeImage.h>
 // Graphics Engine
-#include "NeneEngine/OpenGL/Nene.h"
-
+#include "NeneEngine/Sources/OpenGL/Nene.h"
+// STD Lib
+#include <iostream>
+using namespace std;
 // Tutorials
 #include "Tutorials/HelloTriangle.hpp"
 #include "Tutorials/Shaders.hpp"
@@ -103,12 +94,12 @@ void runAllTutoials() {
 
     Materials::tutorial();
     Materials::exercise1();
-    */
+
     LightMaps::tutorial();
     LightMaps::exercise2();
     LightMaps::exercise3();
     LightMaps::exercise4();
-    /*
+
     LightCasters::tutorialDirectionalLight();
     LightCasters::tutorialPointLight();
     LightCasters::tutorialSpotLight();
@@ -169,4 +160,6 @@ void runAllTutoials() {
     DeferredShading::exercise1();
     SSAO::tutorial();
     //*/
+
+    Mirror::_main();
 }

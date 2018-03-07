@@ -2,9 +2,6 @@
 #ifndef ANTI_ALIASING_CPP
 #define ANTI_ALIASING_CPP
 
-// Common Headers
-#include "../NeneEngine/OpenGL/Nene.h"
-
 namespace AntiAliasing{
 
 extern GLfloat cubeVertices[6*6*5];

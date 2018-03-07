@@ -2,9 +2,6 @@
 #ifndef SHADOW_MAPPING_CPP
 #define SHADOW_MAPPING_CPP
 
-// Common Headers
-#include "../NeneEngine/OpenGL/Nene.h"
-
 namespace ShadowMapping{
 
 const int SCR_WIDTH  = 1080;
@@ -86,7 +83,7 @@ void tutorial(){
     // Œ∆¿Ì
     Texture tex0("Resources/Textures/container.jpg", GL_BGR, GL_RGB);
     Texture tex1("Resources/Textures/wood.jpg", GL_BGR, GL_RGB);
-    FPSCounter fc;
+
     // MainLoop
     while(!glfwWindowShouldClose(window)){
         //
@@ -142,7 +139,7 @@ void tutorial(){
         plane.draw(&sceneShader, pCamera);
         //*/
         glfwSwapBuffers(window);
-        fc.update();
+
     }
     delete cube1;
     delete cube2;
@@ -219,7 +216,7 @@ void exercise1(){
     Texture tex0("Resources/Textures/container.jpg", GL_BGR, GL_RGB);
     Texture tex1("Resources/Textures/wood.jpg", GL_BGR, GL_RGB);
     //
-    FPSCounter fc;
+
     // MainLoop
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
@@ -272,7 +269,7 @@ void exercise1(){
         plane.draw(&sceneShader, pCamera);
         //
         glfwSwapBuffers(window);
-        fc.update();
+
     }
     delete cube1;
     delete cube2;
@@ -352,7 +349,7 @@ void exercise2(){
     // Œ∆¿Ì
     Texture tex0("Resources/Textures/container.jpg", GL_BGR, GL_RGB);
     Texture tex1("Resources/Textures/wood.jpg", GL_BGR, GL_RGB);
-    FPSCounter fc;
+
     ControlPanel panel(window);
     // MainLoop
     while(!glfwWindowShouldClose(window)){
@@ -407,7 +404,7 @@ void exercise2(){
         //
         panel.draw();
         glfwSwapBuffers(window);
-        fc.update();
+
     }
     delete cube1;
     delete cube2;

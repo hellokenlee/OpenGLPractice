@@ -8,8 +8,6 @@
 #include <sstream>
 #include <iostream>
 
-// Common Headers
-#include "../NeneEngine/OpenGL/Nene.h"
 
 //Chapcter2 namespace
 namespace Shaders{

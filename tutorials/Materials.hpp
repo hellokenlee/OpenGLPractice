@@ -2,9 +2,6 @@
 #ifndef MATERIALS_CPP
 #define MATERIALS_CPP
 
-// Common Headers
-#include "../NeneEngine/OpenGL/Nene.h"
-
 namespace Materials{
 //顶点信息前置声明
 extern GLfloat cubeVertices[36*6];
@@ -61,7 +58,7 @@ void tutorial(){
     //显示坐标轴
     CoordinateAxes ca(pCamera);
     //帧数计数器
-    FPSCounter fc;
+
     //主循环
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
@@ -87,7 +84,7 @@ void tutorial(){
         cube.draw(&cubeShader, pCamera);
 
         glfwSwapBuffers(window);
-        fc.update();
+
     }
     glfwDestroyWindow(window);
     glfwTerminate();
@@ -143,7 +140,7 @@ void exercise1(){
     //显示坐标轴
     CoordinateAxes ca(pCamera);
     //帧数计数器
-    FPSCounter fc;
+
     //主循环
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
@@ -156,7 +153,7 @@ void exercise1(){
         cube.draw(&cubeShader, pCamera);
 
         glfwSwapBuffers(window);
-        fc.update();
+
     }
     glfwDestroyWindow(window);
     glfwTerminate();

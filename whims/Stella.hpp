@@ -2,8 +2,6 @@
 #ifndef STELLA_HPP
 #define STELLA_HPP
 
-// Common Headers
-#include "../NeneEngine/OpenGL/Nene.h"
 #include <random>
 
 namespace Stella{
@@ -40,7 +38,7 @@ void _main() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     CoordinateAxes ca(pCamera);
-    FPSCounter fc;
+
 
     Shader shader("Resources/Shaders/Stella/stella.vs","Resources/Shaders/Stella/stella.frag");
 
@@ -136,7 +134,7 @@ void _main() {
         glBindVertexArray(0);
 
         glfwSwapBuffers(window);
-        fc.update();
+
     }
     glfwDestroyWindow(window);
     glfwTerminate();

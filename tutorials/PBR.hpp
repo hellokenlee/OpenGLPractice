@@ -2,9 +2,6 @@
 #ifndef PBR_CPP
 #define PBR_CPP
 
-// Common Headers
-#include "../NeneEngine/OpenGL/Nene.h"
-
 namespace PBR{
 
 // 光源位置
@@ -34,7 +31,7 @@ void tutorial(){
     Camera *pCamera = CameraController::getCamera();
     //
     CoordinateAxes ca(pCamera);
-    FPSCounter fc;
+
     ControlPanel panel(window);
     //
     Shader pbrShader("Resources/Shaders/PBR/pbr.vs", "Resources/Shaders/PBR/pbr.frag");
@@ -97,7 +94,7 @@ void exercise1(){
     Camera *pCamera = CameraController::getCamera();
     //
     CoordinateAxes ca(pCamera);
-    FPSCounter fc;
+
     //
     Shader pbrShader("Resources/Shaders/PBR/pbr_texture3.vs", "Resources/Shaders/PBR/pbr_texture3.frag");
     Shader showTBNShader("Resources/Shaders/PBR/showTBN.vs", "Resources/Shaders/PBR/showTBN.frag");
@@ -156,7 +153,7 @@ void exercise1(){
             }
         }
         glfwSwapBuffers(window);
-        fc.update();
+
     }
     glfwDestroyWindow(window);
     glfwTerminate();

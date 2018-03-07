@@ -2,9 +2,6 @@
 #ifndef LIGHT_CASTERS_CPP
 #define LIGHT_CASTERS_CPP
 
-// Common Headers
-#include "../NeneEngine/OpenGL/Nene.h"
-
 namespace LightCasters{
 //顶点信息前置声明
 extern GLfloat cubeVertices[36*8];
@@ -49,7 +46,7 @@ void tutorialDirectionalLight(){
     CoordinateAxes ca(pCamera);
     ca.showGrid(false);
     //帧数计数器
-    FPSCounter fc;
+
     //载入纹理
     Texture tex0("Resources/Textures/container2.png", GL_BGRA, GL_RGBA);
     Texture tex1("Resources/Textures/container2_specular.png", GL_BGRA, GL_RGBA);
@@ -75,7 +72,7 @@ void tutorialDirectionalLight(){
             cubes[i].draw(&cubeShader, pCamera);
         }
         glfwSwapBuffers(window);
-        fc.update();
+
     }
     glfwDestroyWindow(window);
     glfwTerminate();
@@ -132,7 +129,7 @@ void tutorialPointLight(){
     CoordinateAxes ca(pCamera);
     ca.showGrid(false);
     //帧数计数器
-    FPSCounter fc;
+
     //载入纹理
     Texture tex0("Resources/Textures/container2.png", GL_BGRA, GL_RGBA);
     Texture tex1("Resources/Textures/container2_specular.png", GL_BGRA, GL_RGBA);
@@ -154,7 +151,7 @@ void tutorialPointLight(){
         }
 
         glfwSwapBuffers(window);
-        fc.update();
+
     }
     glfwDestroyWindow(window);
     glfwTerminate();
@@ -198,7 +195,7 @@ void tutorialSpotLight(){
     CoordinateAxes ca(pCamera);
     ca.showGrid(false);
     //帧数计数器
-    FPSCounter fc;
+
     //载入纹理
     Texture tex0("Resources/Textures/container2.png", GL_BGRA, GL_RGBA);
     Texture tex1("Resources/Textures/container2_specular.png", GL_BGRA, GL_RGBA);
@@ -225,7 +222,7 @@ void tutorialSpotLight(){
         }
 
         glfwSwapBuffers(window);
-        fc.update();
+
     }
     glfwDestroyWindow(window);
     glfwTerminate();

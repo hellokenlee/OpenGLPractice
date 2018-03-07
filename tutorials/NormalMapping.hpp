@@ -2,9 +2,6 @@
 #ifndef NORMAL_MAPPING_CPP
 #define NORMAL_MAPPING_CPP
 
-// Common Headers
-#include "../NeneEngine/OpenGL/Nene.h"
-
 namespace NormalMapping{
 
 glm::vec3 lightPos = glm::vec3(2.0, 2.0, 1.0);

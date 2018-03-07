@@ -2,9 +2,6 @@
 #ifndef FRAMEBUFFERS_CPP
 #define FRAMEBUFFERS_CPP
 
-// Common Headers
-#include "../NeneEngine/OpenGL/Nene.h"
-
 namespace Framebuffers{
 //顶点信息前置声明
 extern GLfloat cubeVertices[36*5];

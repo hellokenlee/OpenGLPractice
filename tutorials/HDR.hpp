@@ -2,9 +2,6 @@
 #ifndef HDR_CPP
 #define HDR_CPP
 
-// Common Headers
-#include "../NeneEngine/OpenGL/Nene.h"
-
 namespace HDR{
 
 extern GLfloat screenVertices[6*5];
@@ -40,7 +37,7 @@ void tutorial(){
     glEnable(GL_DEPTH_TEST);
     Camera *pCamera = CameraController::getCamera();
     CoordinateAxes ca(pCamera);
-    FPSCounter fc;
+
     // 生成HDR纹理附件
     GLuint hdrTexture;
     glGenTextures(1, &hdrTexture);

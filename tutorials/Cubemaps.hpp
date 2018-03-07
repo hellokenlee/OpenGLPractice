@@ -2,9 +2,6 @@
 #ifndef CUBEMAPS_CPP
 #define CUBEMAPS_CPP
 
-// Common Headers
-#include "../NeneEngine/OpenGL/Nene.h"
-
 namespace Cubemapes{
 
 extern GLfloat skyboxVertices[6*6*3];
@@ -60,7 +57,7 @@ void tutorial(){
     // 盒子纹理
     Texture texBox("Resources/Textures/container2.png", GL_BGRA, GL_RGBA);
     // FPS计数器
-    FPSCounter fc;
+
     // 主循环
     while(!glfwWindowShouldClose(window)){
         // 邻询时间
@@ -90,7 +87,7 @@ void tutorial(){
         skybox.draw(&skyboxShader, pCamera);
         // 交换双缓冲
         glfwSwapBuffers(window);
-        fc.update();
+
     }
     glfwDestroyWindow(window);
     glfwTerminate();
@@ -142,7 +139,7 @@ void exercise1(){
     Shader modelShader("Resources/Shaders/Cubemaps/nanosuit_reflect.vs","Resources/Shaders/Cubemaps/nanosuit_reflect.frag");
     Model model((GLchar*)"Resources/Meshes/nanosuit_reflection/nanosuit.obj");
     // FPS计数器
-    FPSCounter fc;
+
     // 主循环
     while(!glfwWindowShouldClose(window)){
         // 邻询时间
@@ -172,7 +169,7 @@ void exercise1(){
 
         // 交换双缓冲
         glfwSwapBuffers(window);
-        fc.update();
+
     }
     glfwDestroyWindow(window);
     glfwTerminate();

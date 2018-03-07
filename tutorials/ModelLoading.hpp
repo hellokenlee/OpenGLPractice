@@ -2,9 +2,6 @@
 #ifndef MODEL_LOADING_CPP
 #define MODEL_LOADING_CPP
 
-// Common Headers
-#include "../NeneEngine/OpenGL/Nene.h"
-
 namespace ModelLoading{
 //顶点信息前置声明
 extern GLfloat cubeVertices[36*8];

@@ -2,9 +2,6 @@
 #ifndef BLOOM_CPP
 #define BLOOM_CPP
 
-// Common Headers
-#include "../NeneEngine/OpenGL/Nene.h"
-
 namespace Bloom{
 
 //顶点数据前置声明
@@ -45,7 +42,7 @@ void tutorial(){
     glEnable(GL_DEPTH_TEST);
     Camera *pCamera = CameraController::getCamera();
     CoordinateAxes ca(pCamera);
-    FPSCounter fc;
+
     // init Shaders
     Shader cubeShader("Resources/Shaders/Bloom/cube.vert", "Resources/Shaders/Bloom/cube.frag");
     Shader lightShader("Resources/Shaders/Bloom/light.vert", "Resources/Shaders/Bloom/light.frag");
@@ -187,7 +184,7 @@ void tutorial(){
         glBindTexture(GL_TEXTURE_2D, 0);
 
         glfwSwapBuffers(window);
-        //fc.update();
+        //
     }
     glfwDestroyWindow(window);
     glfwTerminate();

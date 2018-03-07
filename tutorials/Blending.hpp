@@ -2,9 +2,6 @@
 #ifndef BLENDING_CPP
 #define BLENDING_CPP
 
-// Common Headers
-#include "../NeneEngine/OpenGL/Nene.h"
-//
 #include <map>
 
 namespace Blending{
@@ -111,7 +108,6 @@ void exercise1(){
     Texture tex1("Resources/Textures/timg2.jpg", GL_BGR,GL_RGB);
     Texture tex2("Resources/Textures/container2.png", GL_BGRA, GL_RGBA);
     //
-    FPSCounter fp;
     while(!glfwWindowShouldClose(window)){
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
@@ -138,7 +134,6 @@ void exercise1(){
         }
 
         glfwSwapBuffers(window);
-        fp.update();
     }
     glfwDestroyWindow(window);
     glfwTerminate();
